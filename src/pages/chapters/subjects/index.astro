@@ -1,11 +1,14 @@
 ---
 import Document from '../../../layouts/Document.astro';
+import Annot from '../../../components/Annot.astro';
+import AnnotLine from '../../../components/AnnotLine.astro';
 import { DOSSIERS } from '../../../lib/dossiers';
 ---
 
 <Document title="THE BLACK LEDGER — 03 Subjects">
   <section class="section section--first">
     <p class="chapter-title">Subjects.</p>
+    <p class="onramp" style="margin-top:20px">Six case files. Each one takes a single number from the ledger — a disclosed budget, a leaked document, a failed audit — and explains where it came from, what it covers, and how much confidence it deserves.</p>
   </section>
 
   <section class="section">
@@ -21,4 +24,11 @@ import { DOSSIERS } from '../../../lib/dossiers';
       ))}
     </ul>
   </section>
+
+  <!-- Chapter closer (v3.1 §3) -->
+  <div class="chapter-close">
+    <Annot>
+      <AnnotLine key="What this chapter established">below two published totals, everything known comes from one leak, a handful of released records, and labeled estimates.</AnnotLine>
+    </Annot>
+  </div>
 </Document>

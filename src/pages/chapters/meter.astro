@@ -18,12 +18,14 @@ const day = '$277,000,000'; // spec §5: $101.1 bn ÷ 365 days, stated to 277.0 
 <Document title="THE BLACK LEDGER — 01 The Meter">
   <section class="section section--first">
     <p class="chapter-title">The meter.</p>
+    <p class="onramp" style="margin-top:20px">This chapter turns the classified budget into time. The government publishes one yearly total for secret spending; divided into seconds and days, that total becomes something you can watch move.</p>
   </section>
 
   <!-- Meter 1 — the one large figure (live counter, signal) -->
   <section class="section">
     <Counter label="SINCE YOU OPENED THIS PAGE:" />
     <Annot>
+      <AnnotLine key="In plain words">Since you opened this page, this is how much admitted secret spending has piled up, counting every second.</AnnotLine>
       <AnnotLine key="Rate">{rate}</AnnotLine>
       <AnnotLine>{acknowledged} — annual acknowledged classified expenditure</AnnotLine>
       <AnnotLine>Updated every second</AnnotLine>
@@ -38,6 +40,7 @@ const day = '$277,000,000'; // spec §5: $101.1 bn ÷ 365 days, stated to 277.0 
     <div class="label" style="margin-bottom:12px">TODAY:</div>
     <div class="figure-med">{day}</div>
     <Annot>
+      <AnnotLine key="In plain words">In one day, the admitted secret budget spends about 277 million dollars.</AnnotLine>
       <AnnotLine key="Computation">{acknowledged} ÷ 365 days</AnnotLine>
       <AnnotLine>Ledger: <CId id="C-0013" /></AnnotLine>
     </Annot>
@@ -48,6 +51,7 @@ const day = '$277,000,000'; // spec §5: $101.1 bn ÷ 365 days, stated to 277.0 
     <div class="label" style="margin-bottom:12px">THIS FISCAL YEAR, TOTAL OUTLAYS TO DATE:</div>
     <div class="figure-med" id="mts-figure" data-fallback={ytd}>{ytd}</div>
     <Annot>
+      <AnnotLine key="In plain words">This is everything the whole government has paid out so far this budget year — the yardstick for every number here.</AnnotLine>
       <AnnotLine key="Source">Treasury MTS Table 5 · record <span id="mts-record">2026-05-31</span></AnnotLine>
       <AnnotLine>Ledger: <CId id="C-0004" /> · Tier 1</AnnotLine>
       <AnnotLine>The denominator of this audit</AnnotLine>
@@ -57,6 +61,13 @@ const day = '$277,000,000'; // spec §5: $101.1 bn ÷ 365 days, stated to 277.0 
   <section class="section">
     <p class="body">The acknowledged classified budget spends roughly what a public school teacher earns in a year every twenty seconds. These meters use only the two disclosed toplines; the unreported and unattributed figures documented in Chapter 02 are not included in any meter, because their annual rates cannot be stated honestly.</p>
   </section>
+
+  <!-- Chapter closer (v3.1 §3) -->
+  <div class="chapter-close">
+    <Annot class="annot--tight">
+      <AnnotLine key="What this chapter established">the acknowledged secret budget spends about $3,206 every second.</AnnotLine>
+    </Annot>
+  </div>
 
   <script>
     // The ONE runtime fetch in the whole document (spec §1): refresh the Treasury MTS

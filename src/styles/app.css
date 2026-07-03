@@ -216,6 +216,21 @@ a:focus-visible {
 .compare + .compare { margin-top: 0.3em; }
 .compare .accent { font-family: var(--font-data); font-weight: 500; }
 
+/* Chapter on-ramp — plain-language lede, first body text of a chapter (v3.1 §2) */
+.onramp {
+  max-width: var(--maxw-text);
+  font-size: 1.1875rem;
+  line-height: 1.55;
+  color: var(--ink);
+}
+.onramp + .onramp { margin-top: 1em; }
+
+/* Chapter closer line (v3.1 §3) — annotation grammar, last line before next-chapter */
+.chapter-close {
+  margin-top: var(--rhythm);
+  max-width: var(--maxw-text);
+}
+
 /* ---- Component: body paragraph (spec §7.3) ---- */
 .body {
   max-width: var(--maxw-text);

@@ -17,6 +17,7 @@ const unreported = exactUsd(getClaim('C-0009')); // $206,921,871,135
 <Document title="THE BLACK LEDGER — 02 The Reconciliation">
   <section class="section section--first">
     <p class="chapter-title">The reconciliation.</p>
+    <p class="onramp" style="margin-top:20px">This chapter does one piece of arithmetic that no other website does. The Treasury publishes how much the government actually paid out last year. A second government website tracks where that money went. Subtract the second number from the first, and you get everything the tracking can't see. The secret budget lives inside that difference. Here is the subtraction, line by line.</p>
   </section>
 
   <!-- Ledger block 1: the subtraction (spec §5, §7.6) -->
@@ -27,6 +28,7 @@ const unreported = exactUsd(getClaim('C-0009')); // $206,921,871,135
         <span class="lrow__amount">{paidOut}</span>
       </div>
       <Annot>
+        <AnnotLine key="In plain words">Start with everything the government paid out; subtract what can be traced to contracts and grants; the rest is what tracking can't see.</AnnotLine>
         <AnnotLine key="Source">Monthly Treasury Statement, Table 5 · Total Outlays</AnnotLine>
         <ClaimRef id="C-0001" />
       </Annot>
@@ -65,6 +67,7 @@ const unreported = exactUsd(getClaim('C-0009')); // $206,921,871,135
         <span class="lrow__amount">{unreported}</span>
       </div>
       <Annot>
+        <AnnotLine key="In plain words">The government's own tracking site admits it was never told where about 207 billion dollars went last year.</AnnotLine>
         <AnnotLine key="Label in source">"Unreported Data" · USAspending Spending Explorer, FY2025</AnnotLine>
         <ClaimRef id="C-0009" />
         <AnnotLine key="Prior year">$164.4 bn (<CId id="C-0010" />) · change: +$42.5 bn · +25.9%</AnnotLine>
@@ -78,6 +81,7 @@ const unreported = exactUsd(getClaim('C-0009')); // $206,921,871,135
     <p class="compare"><CountUp value={2.9} decimals={1} suffix="%" signal={true} /> of everything the Treasury paid out is unreported to the government's own tracking system.</p>
     <p class="compare"><CountUp value={1.4} decimals={1} suffix="%" /> is acknowledged as classified.</p>
     <Annot>
+      <AnnotLine key="In plain words">Almost 3% of all federal spending can't be traced to anything; 1.4% is the admitted secret budget.</AnnotLine>
       <AnnotLine key="Computation">$206.9 bn ÷ $7.010 tn · $101.1 bn ÷ $7.010 tn</AnnotLine>
       <AnnotLine>The first figure is the one that grew 26% in a year.</AnnotLine>
     </Annot>
@@ -86,4 +90,11 @@ const unreported = exactUsd(getClaim('C-0009')); // $206,921,871,135
   <section class="section">
     <p class="body">No other public resource performs this subtraction. USAspending prints the unreported line but does not total it against the Treasury. The Treasury publishes the total but does not decompose it. The sites that explain federal spending in plain language exclude classified expenditure entirely, and say so in a footnote. This chapter is that footnote, given a ledger of its own.</p>
   </section>
+
+  <!-- Chapter closer (v3.1 §3) -->
+  <div class="chapter-close">
+    <Annot>
+      <AnnotLine key="What this chapter established">the money the government cannot or does not account for publicly is larger than the money it admits is secret.</AnnotLine>
+    </Annot>
+  </div>
 </Document>
