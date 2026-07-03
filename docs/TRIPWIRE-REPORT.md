@@ -144,4 +144,59 @@ counter ticks and the count-ups animate once on scroll-in. **PASS.**
    spend (`$3,206.11`) so the first paint is never `$0.00`; under reduced motion it holds that
    static value.
 
+---
+
+# Edition I.1 — THE PLAIN LAYER (amendment v3.1)
+
+Applied on top of Edition I. Re-ran the v3 tripwires 1–10 (all still pass) plus the four new
+amendment tripwires. **All pass; no drift found.**
+
+## Amendment tripwires §8 (11–14)
+
+### 11 — Every table and large figure carries an `— In plain words:` first annotation
+Automated coverage check: on every page, the count of `— In plain words:` lines is ≥ the number
+of `<table>` elements plus standalone large figures. 21 distinct plain-words lines in all;
+each validated at ≤ 26 words (longest 23), containing no claim ID and no acronym undefined in
+its chapter (spelled "Central Intelligence Agency", "budget year", etc.). **PASS.**
+
+### 12 — Internal build language absent from rendered pages
+Grep of the built HTML for each forbidden token returns zero:
+`mts_total_outlays` · `gap_a_residual` · `FLAGSHIP` · `THE DENOMINATOR` · `Never sum` ·
+`the build must` · `No note registered` — all 0. Raw metric keys (`nip_appropriated`,
+`cia_budget`, …) also return 0: the register dropped its metric column, the `— Ledger:` line and
+the dossier "Registry entries" now render `display_name`, and every row's note renders
+`public_note`. The internal `notes` column is retained in `claims.csv` but never rendered.
+To clear this, the demoted methodology's "never summed with T1–T3" / "Never summed with anything"
+were changed to "never combined …" and its `# BLACK LEDGER — Methodology` title stripped, with
+"the engine" / "the build" replaced by "this site" (v3.1 §6). **PASS.**
+
+### 13 — Chapters 01–04 open with the §2 on-ramp and close with the §3 line, verbatim
+On-ramps present and verbatim on 01 (Meter), 02 (Reconciliation), 03 (Subjects), 04 (Your
+Share) — and 05 (Record). Closers present and verbatim on 01–04
+(`— What this chapter established: …`). **PASS.**
+
+### 14 — The word "Tier" does not appear in the 05.1 table header
+The 05.1 header is `Name · Amount / range · Year · Confidence · Source`. Grep for a `Tier`
+`<th>` in the register returns 0; confidence renders spelled out
+(`1 — Official` … `5 — Unverified`). **PASS.**
+
+## v3 tripwires 1–10, re-confirmed after the amendment
+5 hex tokens only; 2 font families only; §5 verbatim copy intact (glossary links wrap words
+without changing text); ≤ 1 large figure per page; zero forbidden properties/elements; every
+figure data-bound to a claim; Tier-4 renders as a range with "estimate" in its first sentence;
+counter math `3,206.11/sec`; tabular-nums (no layout shift); reduced-motion counter static and
+count-ups render final values. No page scrolls horizontally at 360px.
+
+## Amendment interpretive decisions
+5. **Ledger numbers vs. build language.** Claim codes (`C-00NN`) are a deliberate public feature
+   ("every figure carries its ledger number") and remain as inline references; only raw *metric
+   keys* and build directives were internal and are now gone. The `— Ledger:` line renders the
+   plain `display_name`, linked to the register row (whose anchor is still the `C-00NN` id).
+6. **Glossary at point of use (§7).** The seven terms are defined and anchored in 05.3; each is
+   linked at its first use in the chapters where it appears in flowing prose (cover, reconciliation,
+   the NIP and Audit dossiers). Occurrences that appear only inside uppercase mono labels are left
+   unlinked by design.
+7. **Confidence ceiling.** The 05.3 sources table header was also relabeled "Confidence ceiling"
+   (from "Tier ceiling") and shows the bare grade number, consistent with §5's rename.
+
 *End of report.*
