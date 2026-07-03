@@ -1,0 +1,99 @@
+---
+import '../styles/tokens.css';
+import '../styles/app.css';
+import { NAV, pageFor, nextPage, navFor, TOTAL_PAGES } from '../lib/document';
+
+interface Props {
+  title: string;
+  description?: string;
+  /** show the 3-line running colophon in the foot (spec §5). Cover supplies its own. */
+  footColophon?: boolean;
+}
+
+const { title, description = 'An open audit of the classified expenditure of the United States for fiscal year 2025.', footColophon = true } = Astro.props;
+
+const pathname = Astro.url.pathname;
+const current = pageFor(pathname);
+const next = nextPage(pathname);
+const activeNav = navFor(pathname);
+---
+
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>{title}</title>
+    <meta name="description" content={description} />
+    <meta name="robots" content="index,follow" />
+    <link rel="preload" as="font" type="font/woff2" href="/fonts/ibmplexmono-400.woff2" crossorigin />
+    <link rel="preload" as="font" type="font/woff2" href="/fonts/ibmplexmono-500.woff2" crossorigin />
+    <link rel="preload" as="font" type="font/woff2" href="/fonts/newsreader-400.woff2" crossorigin />
+    <link rel="preload" as="font" type="font/woff2" href="/fonts/newsreader-500.woff2" crossorigin />
+  </head>
+  <body>
+    <a class="skip" href="#main">Skip to document</a>
+    <div class="page">
+      <header class="masthead">
+        <div class="masthead__inner">
+          <div class="masthead__mark">THE BLACK LEDGER · EDITION I · MMXXVI</div>
+          <nav class="masthead__nav" aria-label="Chapters">
+            {NAV.map((n) => (
+              <a href={n.path} aria-current={n.match === activeNav ? 'page' : undefined}>{n.label}</a>
+            ))}
+          </nav>
+          <button class="masthead__index" type="button" data-index-open aria-expanded="false">INDEX</button>
+        </div>
+      </header>
+
+      <div class="index-overlay" data-index-overlay>
+        <button class="index-overlay__close" type="button" data-index-close aria-label="Close index">CLOSE</button>
+        <nav class="index-overlay__list" aria-label="Chapters">
+          {NAV.map((n) => (
+            <a href={n.path} aria-current={n.match === activeNav ? 'page' : undefined}>{n.label}</a>
+          ))}
+        </nav>
+      </div>
+
+      <main class="main" id="main">
+        <slot />
+
+        {next && (
+          <a class="next-chapter" href={next.path}>
+            ↓ CHAPTER {next.chapterLabel.split(' ')[0]} — {next.chapterName}
+          </a>
+        )}
+      </main>
+
+      <footer class="foot">
+        {footColophon && (
+          <div class="foot__colophon">
+            THE BLACK LEDGER · FIRST EDITION · MMXXVI<br />
+            COMPILED FROM 20 REGISTERED SOURCES · 27 CLAIMS · METHODOLOGY PUBLIC · CORRECTIONS PUBLIC<br />
+            SET IN NEWSREADER AND IBM PLEX MONO · PROOF COPY
+          </div>
+        )}
+        <div class="foot__rule">
+          <span>FILE No. {current.fileNo} — {current.chapterName}</span>
+          <span>P. {current.page} / {TOTAL_PAGES}</span>
+        </div>
+      </footer>
+    </div>
+
+    <script>
+      // Mobile INDEX overlay (spec §6). No icons — the word INDEX toggles a full-screen list.
+      const openBtn = document.querySelector('[data-index-open]');
+      const closeBtn = document.querySelector('[data-index-close]');
+      const overlay = document.querySelector('[data-index-overlay]');
+      function setOpen(open: boolean) {
+        if (!overlay || !openBtn) return;
+        overlay.setAttribute('data-open', String(open));
+        openBtn.setAttribute('aria-expanded', String(open));
+        document.body.style.overflow = open ? 'hidden' : '';
+      }
+      openBtn?.addEventListener('click', () => setOpen(true));
+      closeBtn?.addEventListener('click', () => setOpen(false));
+      document.addEventListener('keydown', (e) => { if (e.key === 'Escape') setOpen(false); });
+    </script>
+  </body>
+</html>

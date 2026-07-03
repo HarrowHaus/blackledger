@@ -1,0 +1,17 @@
+{
+  "name": "black-ledger",
+  "type": "module",
+  "version": "1.0.0",
+  "private": true,
+  "description": "THE BLACK LEDGER — an open audit of classified United States expenditure, FY2025. Static paginated document.",
+  "scripts": {
+    "dev": "astro dev",
+    "start": "astro dev",
+    "build": "astro build",
+    "preview": "astro preview",
+    "astro": "astro"
+  },
+  "dependencies": {
+    "astro": "^4.16.18"
+  }
+}

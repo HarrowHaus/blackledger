@@ -1,0 +1,73 @@
+/* THE BLACK LEDGER — DESIGN TOKENS (locked, spec §2). No additions, no substitutions. */
+
+/* ---- Fonts: self-hosted, two families only (spec §2.2) ---- */
+@font-face {
+  font-family: 'Newsreader';
+  font-style: normal;
+  font-weight: 400;
+  font-display: swap;
+  src: url('/fonts/newsreader-400.woff2') format('woff2');
+}
+@font-face {
+  font-family: 'Newsreader';
+  font-style: normal;
+  font-weight: 500;
+  font-display: swap;
+  src: url('/fonts/newsreader-500.woff2') format('woff2');
+}
+@font-face {
+  font-family: 'Newsreader';
+  font-style: italic;
+  font-weight: 400;
+  font-display: swap;
+  src: url('/fonts/newsreader-italic-400.woff2') format('woff2');
+}
+@font-face {
+  font-family: 'IBM Plex Mono';
+  font-style: normal;
+  font-weight: 400;
+  font-display: swap;
+  src: url('/fonts/ibmplexmono-400.woff2') format('woff2');
+}
+@font-face {
+  font-family: 'IBM Plex Mono';
+  font-style: normal;
+  font-weight: 500;
+  font-display: swap;
+  src: url('/fonts/ibmplexmono-500.woff2') format('woff2');
+}
+
+:root {
+  /* ---- Color: 5 values total (spec §2.1) ---- */
+  --ground: #0B0B0A;   /* page background, everywhere */
+  --ink: #E7E4DC;      /* primary text */
+  --ink-dim: #8A877D;  /* annotations, metadata, captions */
+  --line: #2A2925;     /* all rules/borders (1px only) */
+  --signal: #C8371F;   /* counter digits, ratio results, one accent word per chapter */
+
+  /* ---- Typography (spec §2.2) ---- */
+  --font-text: 'Newsreader';
+  --font-data: 'IBM Plex Mono';
+
+  --fs-annot: 0.625rem;    /* labels / annotations */
+  --fs-meta: 0.75rem;      /* meta */
+  --fs-data: 0.9375rem;    /* mono data */
+  --fs-body: 1.0625rem;    /* body */
+  --fs-section: 1.5rem;    /* section titles */
+  --fs-chapter: 2.25rem;   /* chapter titles */
+  --fs-figure: clamp(4.5rem, 9vw, 7rem); /* the one large figure per chapter */
+
+  --track-label: 0.18em;   /* uppercase mono label letter-spacing */
+  --track-figure: -0.02em; /* large figure letter-spacing */
+
+  /* ---- Layout (spec §2.3) ---- */
+  --maxw-text: 720px;
+  --maxw-data: 960px;
+  --gutter: 24px;
+  --rhythm: 96px;
+  --annot-gap: 8px;
+}
+
+@media (min-width: 720px) {
+  :root { --gutter: 48px; }
+}
