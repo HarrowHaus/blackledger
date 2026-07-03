@@ -28,7 +28,7 @@ const cited = cites.map(getClaim);
     <div class="plabel">— Registry entries</div>
     <ul class="annot" style="margin-top:12px">
       {cited.map((c) => (
-        <li>{'— '}<a href={`/chapters/record#${c.id}`}>{c.id}</a>{` · ${c.metric} · Tier ${c.tier}`}</li>
+        <li>{'— '}<a href={`/chapters/record#${c.id}`}>{c.displayName}</a></li>
       ))}
     </ul>
   </section>

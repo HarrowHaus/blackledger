@@ -13,37 +13,49 @@ function amountCell(c: Claim): string {
   if (c.low !== null && c.high !== null) return rangeAbbrev(c);
   return '—'; // status claim (e.g. C-0017)
 }
+
+// Confidence grade labels (v3.1 §5) — spelled out, replacing raw tier codes.
+const CONFIDENCE: Record<number, string> = {
+  1: '1 — Official',
+  2: '2 — Authenticated leak',
+  3: '3 — Released record',
+  4: '4 — Estimate',
+  5: '5 — Unverified',
+};
 ---
 
 <Document title="THE BLACK LEDGER — 05 The Record">
   <section class="section section--first">
     <p class="chapter-title">The record.</p>
+    <p class="onramp" style="margin-top:20px">This is the raw material. Every number used anywhere on this site is a row in the table below, with its source, its date, and an honesty grade from 1 (published by the government itself) to 5 (someone's unverified claim). If a figure isn't in this table, it isn't on this site.</p>
   </section>
 
   <!-- 05.1 THE LEDGER -->
   <section class="section" id="ledger">
     <p class="section-title">05.1 — The ledger.</p>
+    <Annot>
+      <AnnotLine key="In plain words">every number on this site, in one table — what it is, how big, and how much you should trust it.</AnnotLine>
+      <AnnotLine>Confidence runs 1 (the government published it) to 5 (someone claimed it). Estimates are never added to official figures.</AnnotLine>
+    </Annot>
     <div class="scroll-x" style="margin-top:24px">
       <table class="register">
         <thead>
           <tr>
-            <th>ID</th><th>Metric</th><th>FY</th><th class="r-amount">Amount / range</th><th>Tier</th><th>Method</th><th>Source</th>
+            <th>Name</th><th class="r-amount">Amount / range</th><th>Year</th><th>Confidence</th><th>Source</th>
           </tr>
         </thead>
         <tbody>
           {claims.map((c) => (
             <>
               <tr id={c.id} class={c.tier === 5 ? 'unverified' : undefined}>
-                <td class="r-id"><a href={`#${c.id}`}>{c.tier === 5 ? `UNVERIFIED — ${c.id}` : c.id}</a></td>
-                <td>{c.metric}</td>
-                <td>{c.fiscalYear}</td>
+                <td class="r-id"><a href={`#${c.id}`}>{c.tier === 5 ? `UNVERIFIED — ${c.displayName}` : c.displayName}</a></td>
                 <td class="r-amount">{amountCell(c)}</td>
-                <td>T{c.tier}</td>
-                <td>{c.method}</td>
+                <td>{c.fiscalYear}</td>
+                <td>{CONFIDENCE[c.tier]}</td>
                 <td><a href={`#${c.sourceId}`}>{c.sourceId}</a></td>
               </tr>
               <tr class="r-notes">
-                <td colspan="7">{`— ${c.publicNote}`}</td>
+                <td colspan="5">{`— ${c.publicNote}`}</td>
               </tr>
             </>
           ))}
@@ -51,14 +63,20 @@ function amountCell(c: Claim): string {
       </table>
     </div>
     <Annot>
-      <AnnotLine key="Registry">{String(claims.length)} claims · amounts abbreviated; full provenance in each source's raw file</AnnotLine>
-      <AnnotLine>Tier 5 (claimed / unverified): none registered at launch.</AnnotLine>
+      <AnnotLine>{String(claims.length)} claims. Open any row to read its note. Confidence 5 (unverified): none registered at launch.</AnnotLine>
     </Annot>
   </section>
 
   <!-- 05.2 METHODOLOGY -->
   <section class="section" id="methodology">
-    <p class="section-title">05.2 — Methodology.</p>
+    <p class="section-title">05.2 — How this site works.</p>
+    <div class="stack" style="margin-top:16px;max-width:var(--maxw-text)">
+      <p class="body">This site measures two gaps. The first: the difference between what the Treasury says the government spent and what the government's own tracking site can show — a difference of $1.7 trillion this year, most of it ordinary and explainable, some of it not. The second: what is known about the inside of the secret budget, beneath the two totals the government publishes.</p>
+      <p class="body">Every number carries a confidence grade from 1 to 5. Grade 1 means the government published it. Grade 4 means we estimated it, and every estimate is shown as a range with its assumptions printed beside it. Estimates are never mixed into official figures — anywhere, ever.</p>
+      <p class="body">Two famous claims are handled with care here. The Pentagon really has failed eight audits in a row; that is grade 1, published by its own inspectors. But the "$21 trillion missing" claim circulating online refers to accounting entries booked repeatedly in both directions — proof the books are a mess, not proof the money vanished. This site says the first thing loudly and refuses to say the second, because the difference is what makes the rest of this document trustworthy.</p>
+      <p class="body">The full technical rulebook follows, unchanged, for readers who want it.</p>
+    </div>
+    <p class="section-title" style="margin-top:64px">The technical rulebook.</p>
     <div class="prose" style="margin-top:16px">
       <Methodology />
     </div>
@@ -70,7 +88,7 @@ function amountCell(c: Claim): string {
     <div class="scroll-x" style="margin-top:24px">
       <table class="sources-table">
         <thead>
-          <tr><th>ID</th><th>Source</th><th>Publisher</th><th class="s-tier">Tier ceiling</th><th>URL</th></tr>
+          <tr><th>ID</th><th>Source</th><th>Publisher</th><th class="s-tier">Confidence ceiling</th><th>URL</th></tr>
         </thead>
         <tbody>
           {sources.map((s) => (
@@ -78,7 +96,7 @@ function amountCell(c: Claim): string {
               <td>{s.id}</td>
               <td>{s.name}</td>
               <td>{s.publisher}</td>
-              <td class="s-tier">T{s.tierCeiling}</td>
+              <td class="s-tier">{s.tierCeiling}</td>
               <td><a href={s.url} rel="nofollow noopener" target="_blank">link</a></td>
             </tr>
           ))}
@@ -88,7 +106,8 @@ function amountCell(c: Claim): string {
 
     <div class="glossary" style="margin-top:48px">
       <div class="label" style="margin-bottom:16px">Glossary</div>
-      <p><strong>MTS</strong> — Monthly Treasury Statement, the Treasury's monthly account of receipts and outlays. <strong>NIP / MIP</strong> — National and Military Intelligence Programs, the two disclosed classified toplines. <strong>R-1 / P-1</strong> — the Department of Defense's published research and procurement justification books, in which classified program line items appear with printed dollar amounts. <strong>Disclaimer of opinion</strong> — an auditor's statement that the books cannot support an opinion at all. <strong>CBJ</strong> — Congressional Budget Justification; the FY2013 CBJ, disclosed in 2013, remains the only complete public map of the intelligence budget's interior.</p>
+      <p><strong id="g-outlays">Outlays</strong> — money actually paid out. <strong id="g-obligations">Obligations</strong> — money legally committed, which may be paid over several years. <strong id="g-appropriated">Appropriated</strong> — the amount Congress actually approved. <strong id="g-requested">Requested</strong> — the amount an agency asked for. <strong id="g-topline">Topline</strong> — a single total with no breakdown beneath it. <strong id="g-fiscal-year">Fiscal year</strong> — the government's accounting year, October through September; FY2025 ended 30 Sep 2025.</p>
+      <p style="margin-top:0.9em"><strong>MTS</strong> — Monthly Treasury Statement, the Treasury's monthly account of receipts and outlays. <strong>NIP / MIP</strong> — National and Military Intelligence Programs, the two disclosed classified toplines. <strong>R-1 / P-1</strong> — the Department of Defense's published research and procurement justification books, in which classified program line items appear with printed dollar amounts. <strong id="g-disclaimer-of-opinion">Disclaimer of opinion</strong> — an auditor's statement that the books cannot support an opinion at all. <strong>CBJ</strong> — Congressional Budget Justification; the FY2013 CBJ, disclosed in 2013, remains the only complete public map of the intelligence budget's interior.</p>
     </div>
   </section>
 

@@ -1,0 +1,8 @@
+---
+// Glossary link at point of use (v3.1 §7). Wraps the first use of a term in a
+// chapter as an underlined link to its entry in the 05.3 glossary.
+// Usage: <G t="outlays">outlays</G>  (child text is the visible word, unchanged)
+interface Props { t: string; }
+const { t } = Astro.props;
+---
+<a class="glosslink" href={`/chapters/record#g-${t}`}><slot /></a>

@@ -4,6 +4,7 @@ import Figure from '../../../components/Figure.astro';
 import Annot from '../../../components/Annot.astro';
 import AnnotLine from '../../../components/AnnotLine.astro';
 import ClaimRef from '../../../components/ClaimRef.astro';
+import G from '../../../components/G.astro';
 ---
 
 <Dossier slug="audit" cites={['C-0016', 'C-0017']}>
@@ -30,7 +31,7 @@ import ClaimRef from '../../../components/ClaimRef.astro';
 
   <section class="section">
     <div class="stack">
-      <p class="body">The Department of Defense has received a disclaimer of opinion on its financial statements eight consecutive times, for every fiscal year from 2018 through 2025 (C-0017). It is the only major federal agency never to have passed an audit. A disclaimer is not a finding of loss; it is a finding that the records will not support any opinion, favorable or otherwise.</p>
+      <p class="body">The Department of Defense has received a <G t="disclaimer-of-opinion">disclaimer of opinion</G> on its financial statements eight consecutive times, for every <G t="fiscal-year">fiscal year</G> from 2018 through 2025 (C-0017). It is the only major federal agency never to have passed an audit. A disclaimer is not a finding of loss; it is a finding that the records will not support any opinion, favorable or otherwise.</p>
       <p class="body">The fiscal year 2025 result carries 26 material weaknesses and two significant deficiencies. Among them, the auditors could not verify the existence and completeness of the F-35 Global Spares Pool, producing a material misstatement on the department's agency-wide statements. The reported asset base against which these weaknesses stand is $4.65 trillion (C-0016).</p>
       <p class="body">A statutory deadline now applies: the National Defense Authorization Act for fiscal year 2024 requires a clean audit by 31 December 2028 (C-0017). This file records the audit history as published. It draws no inference about the classified budget from the audit result, because none is available.</p>
     </div>

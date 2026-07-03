@@ -556,6 +556,11 @@ a:focus-visible {
 }
 .prose hr { border: 0; border-top: 1px solid var(--line); margin: 2em 0; }
 
+/* Glossary link at point of use (v3.1 §7) — underlined link to the 05.3 entry */
+.glosslink { color: inherit; text-decoration: underline; text-underline-offset: 0.18em; text-decoration-thickness: 1px; }
+.glosslink:hover { text-decoration-thickness: 2px; }
+.glossary strong[id] { scroll-margin-top: 80px; }
+
 /* Glossary (spec §5 05.3) */
 .glossary { max-width: var(--maxw-text); }
 .glossary p { font-size: var(--fs-body); line-height: 1.6; margin: 0.9em 0; }

@@ -4,6 +4,7 @@ import Figure from '../../../components/Figure.astro';
 import Annot from '../../../components/Annot.astro';
 import AnnotLine from '../../../components/AnnotLine.astro';
 import ClaimRef from '../../../components/ClaimRef.astro';
+import G from '../../../components/G.astro';
 import { toplines } from '../../../lib/data';
 
 const fmt = (n: number | null) => (n === null ? '—' : n.toFixed(1));
@@ -60,8 +61,8 @@ const rows = toplines.filter((t) => Number(t.fiscalYear) >= 2007).sort((a, b) =>
 
   <section class="section">
     <div class="stack">
-      <p class="body">The National Intelligence Program is the larger of the two disclosed classified toplines. Its appropriated total is published each year under 50 U.S.C. §3306, which directs the Director of National Intelligence to disclose the aggregate amount. For fiscal year 2025 that total is $73.3 billion (C-0011).</p>
-      <p class="body">Disclosure began with fiscal year 2007, the first year the statute took effect; the table records every appropriated and requested figure released since, each linked to its ODNI or Department of Defense source. For fiscal year 2026 the requested figure is $81.9 billion (C-0014), $8.5 billion above the prior year's request. What the toplines disclose is the aggregate. What sits beneath them is the subject of the files that follow.</p>
+      <p class="body">The National Intelligence Program is the larger of the two disclosed classified <G t="topline">toplines</G>. Its <G t="appropriated">appropriated</G> total is published each year under 50 U.S.C. §3306, which directs the Director of National Intelligence to disclose the aggregate amount. For <G t="fiscal-year">fiscal year</G> 2025 that total is $73.3 billion (C-0011).</p>
+      <p class="body">Disclosure began with fiscal year 2007, the first year the statute took effect; the table records every appropriated and requested figure released since, each linked to its ODNI or Department of Defense source. For fiscal year 2026 the <G t="requested">requested</G> figure is $81.9 billion (C-0014), $8.5 billion above the prior year's request. What the toplines disclose is the aggregate. What sits beneath them is the subject of the files that follow.</p>
     </div>
   </section>
 </Dossier>

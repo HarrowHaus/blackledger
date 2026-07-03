@@ -5,6 +5,7 @@ import AnnotLine from '../../components/AnnotLine.astro';
 import CId from '../../components/CId.astro';
 import ClaimRef from '../../components/ClaimRef.astro';
 import CountUp from '../../components/CountUp.astro';
+import G from '../../components/G.astro';
 import { getClaim } from '../../lib/data';
 import { exactUsd } from '../../lib/format';
 
@@ -29,7 +30,7 @@ const unreported = exactUsd(getClaim('C-0009')); // $206,921,871,135
       </div>
       <Annot>
         <AnnotLine key="In plain words">Start with everything the government paid out; subtract what can be traced to contracts and grants; the rest is what tracking can't see.</AnnotLine>
-        <AnnotLine key="Source">Monthly Treasury Statement, Table 5 · Total Outlays</AnnotLine>
+        <AnnotLine key="Source">Monthly Treasury Statement, Table 5 · Total <G t="outlays">Outlays</G></AnnotLine>
         <ClaimRef id="C-0001" />
       </Annot>
 
@@ -40,7 +41,7 @@ const unreported = exactUsd(getClaim('C-0009')); // $206,921,871,135
       <Annot>
         <AnnotLine key="Source">USAspending · all award types, FY2025</AnnotLine>
         <ClaimRef id="C-0005" />
-        <AnnotLine key="Basis note">outlays and obligations differ; treatment in Chapter 05.2</AnnotLine>
+        <AnnotLine key="Basis note">outlays and <G t="obligations">obligations</G> differ; treatment in Chapter 05.2</AnnotLine>
       </Annot>
 
       <div class="lrow lrow--total">

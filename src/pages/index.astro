@@ -4,6 +4,7 @@ import Counter from '../components/Counter.astro';
 import Annot from '../components/Annot.astro';
 import AnnotLine from '../components/AnnotLine.astro';
 import CId from '../components/CId.astro';
+import G from '../components/G.astro';
 import { getClaim, claims, sources } from '../lib/data';
 import { abbrev, grouped, COUNTER_RATE } from '../lib/format';
 
@@ -37,8 +38,8 @@ const rate = `~$${grouped(Math.round(COUNTER_RATE))} / sec`; // ~$3,206 / sec
   <section class="section">
     <div class="plabel">— What this is</div>
     <div class="stack" style="margin-top:24px">
-      <p class="body">An open audit of the classified expenditure of the United States for fiscal year 2025 — compiled entirely from official disclosures, authenticated leaked documents, records released under the Freedom of Information Act, and published audits, designed for any reader.</p>
-      <p class="body">The United States publishes exactly two classified spending figures each year. The first, the National Intelligence Program topline, is required by statute — 50 U.S.C. §3306. The second, the Military Intelligence Program topline, has been disclosed voluntarily by the Department of Defense every year since 2007. For fiscal year 2025 the two figures total $101.1 billion. Below these toplines, disclosure ends. The department responsible for the majority of this spending has failed its financial audit eight consecutive times and is the only major federal agency never to have passed one.</p>
+      <p class="body">An open audit of the classified expenditure of the United States for <G t="fiscal-year">fiscal year</G> 2025 — compiled entirely from official disclosures, authenticated leaked documents, records released under the Freedom of Information Act, and published audits, designed for any reader.</p>
+      <p class="body">The United States publishes exactly two classified spending figures each year. The first, the National Intelligence Program <G t="topline">topline</G>, is required by statute — 50 U.S.C. §3306. The second, the Military Intelligence Program topline, has been disclosed voluntarily by the Department of Defense every year since 2007. For fiscal year 2025 the two figures total $101.1 billion. Below these toplines, disclosure ends. The department responsible for the majority of this spending has failed its financial audit eight consecutive times and is the only major federal agency never to have passed one.</p>
       <p class="body">This document brings the available numbers into one place. It makes no accusations; it documents what is published, what is admitted, and what can be bounded. Every figure links to its source and carries a stated evidence tier. Nothing modeled is ever combined with anything official.</p>
     </div>
   </section>
