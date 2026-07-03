@@ -500,14 +500,84 @@ a:focus-visible {
   vertical-align: baseline;
 }
 .register .r-amount { text-align: right; white-space: nowrap; font-variant-numeric: tabular-nums; }
-.register tr:target td { color: var(--ink); }
-.register tr:target { outline: 1px solid var(--line); }
+.register tbody tr[id] { scroll-margin-top: 80px; }
+.register tbody tr[id]:target td { color: var(--ink); }
+.register tbody tr[id]:target { outline: 1px solid var(--line); }
+.register .r-id a { color: var(--ink); }
+/* Notes render inline beneath a row only when its anchor is targeted (spec §5 05.1) */
+.register .r-notes { display: none; }
+.register tbody tr[id]:target + .r-notes { display: table-row; }
 .register .r-notes td {
   color: var(--ink-dim);
   padding-top: 0;
   border-bottom: 1px solid var(--line);
+  font-size: var(--fs-annot);
 }
 .register .unverified { color: var(--signal); }
+
+/* Restyled markdown (spec §5 05.2 renders docs/METHODOLOGY.md into this system) */
+.prose { max-width: var(--maxw-text); }
+.prose h1, .prose h2, .prose h3, .prose h4 {
+  font-family: var(--font-text);
+  font-weight: 500;
+  line-height: 1.2;
+  margin: 2.2em 0 0.6em;
+}
+.prose h1 { font-size: var(--fs-chapter); }
+.prose h2 { font-size: var(--fs-section); }
+.prose h3 { font-size: 1.1875rem; }
+.prose h4 { font-size: 1.0625rem; }
+.prose p, .prose li { font-size: var(--fs-body); line-height: 1.6; }
+.prose p { margin: 0.9em 0; }
+.prose ul, .prose ol { margin: 0.9em 0; padding-left: 1.4em; }
+.prose li { margin: 0.35em 0; }
+.prose strong, .prose b { font-weight: 500; } /* never bold >500 (spec §9) */
+.prose em, .prose i { font-style: italic; }
+.prose a { color: var(--ink); text-decoration: underline; text-underline-offset: 0.2em; }
+.prose code, .prose pre {
+  font-family: var(--font-data);
+  font-size: 0.875rem;
+  color: var(--ink-dim);
+}
+.prose hr { border: 0; border-top: 1px solid var(--line); margin: 2em 0; }
+
+/* Glossary (spec §5 05.3) */
+.glossary { max-width: var(--maxw-text); }
+.glossary p { font-size: var(--fs-body); line-height: 1.6; margin: 0.9em 0; }
+.glossary strong { font-weight: 500; }
+
+/* Source registry table */
+.sources-table { width: 100%; border-collapse: collapse; font-family: var(--font-data); font-size: var(--fs-annot); }
+.sources-table th, .sources-table td {
+  text-align: left;
+  padding: 12px 14px 12px 0;
+  border-bottom: 1px solid var(--line);
+  vertical-align: baseline;
+}
+.sources-table th {
+  font-weight: 500;
+  letter-spacing: var(--track-label);
+  text-transform: uppercase;
+  color: var(--ink-dim);
+}
+.sources-table tbody tr[id] { scroll-margin-top: 80px; }
+.sources-table tbody tr[id]:target { outline: 1px solid var(--line); }
+.sources-table .s-tier { text-align: right; white-space: nowrap; }
+.sources-table a { color: var(--ink); }
+
+/* Share links (spec §5 05.5) — plain mono text links, no icons */
+.sharelinks { list-style: none; font-family: var(--font-data); font-size: var(--fs-data); }
+.sharelinks li { margin: 12px 0; }
+.sharelinks a, .sharelinks button {
+  color: var(--ink);
+  background: none;
+  border: 0;
+  padding: 0;
+  font: inherit;
+  cursor: pointer;
+  text-align: left;
+}
+.sharelinks a:hover, .sharelinks button:hover { text-decoration: underline; text-underline-offset: 0.2em; }
 
 /* Generic data table (toplines etc.) */
 .dtable {

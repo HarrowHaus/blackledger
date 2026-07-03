@@ -1,6 +1,158 @@
 ---
 import Document from '../../layouts/Document.astro';
+import Annot from '../../components/Annot.astro';
+import AnnotLine from '../../components/AnnotLine.astro';
+import { Content as Methodology } from '../../../docs/METHODOLOGY.md';
+import { claims, sources, corrections } from '../../lib/data';
+import { abbrev, rangeAbbrev } from '../../lib/format';
+import type { Claim } from '../../lib/data';
+
+function amountCell(c: Claim): string {
+  if (c.tier === 4) return rangeAbbrev(c); // Tier-4: ranges only (spec §5 05.1)
+  if (c.amount !== null) return abbrev(c.amount);
+  if (c.low !== null && c.high !== null) return rangeAbbrev(c);
+  return '—'; // status claim (e.g. C-0017)
+}
 ---
-<Document title="THE BLACK LEDGER — record">
-  <p class="body">record — placeholder (Phase 3/4).</p>
+
+<Document title="THE BLACK LEDGER — 05 The Record">
+  <section class="section section--first">
+    <p class="chapter-title">The record.</p>
+  </section>
+
+  <!-- 05.1 THE LEDGER -->
+  <section class="section" id="ledger">
+    <p class="section-title">05.1 — The ledger.</p>
+    <div class="scroll-x" style="margin-top:24px">
+      <table class="register">
+        <thead>
+          <tr>
+            <th>ID</th><th>Metric</th><th>FY</th><th class="r-amount">Amount / range</th><th>Tier</th><th>Method</th><th>Source</th>
+          </tr>
+        </thead>
+        <tbody>
+          {claims.map((c) => (
+            <>
+              <tr id={c.id} class={c.tier === 5 ? 'unverified' : undefined}>
+                <td class="r-id"><a href={`#${c.id}`}>{c.tier === 5 ? `UNVERIFIED — ${c.id}` : c.id}</a></td>
+                <td>{c.metric}</td>
+                <td>{c.fiscalYear}</td>
+                <td class="r-amount">{amountCell(c)}</td>
+                <td>T{c.tier}</td>
+                <td>{c.method}</td>
+                <td><a href={`#${c.sourceId}`}>{c.sourceId}</a></td>
+              </tr>
+              <tr class="r-notes">
+                <td colspan="7">{c.notes ? `— ${c.notes}` : '— No note registered for this claim.'}</td>
+              </tr>
+            </>
+          ))}
+        </tbody>
+      </table>
+    </div>
+    <Annot>
+      <AnnotLine key="Registry">{String(claims.length)} claims · amounts abbreviated; full provenance in each source's raw file</AnnotLine>
+      <AnnotLine>Tier 5 (claimed / unverified): none registered at launch.</AnnotLine>
+    </Annot>
+  </section>
+
+  <!-- 05.2 METHODOLOGY -->
+  <section class="section" id="methodology">
+    <p class="section-title">05.2 — Methodology.</p>
+    <div class="prose" style="margin-top:16px">
+      <Methodology />
+    </div>
+  </section>
+
+  <!-- 05.3 REGISTRY OF SOURCES -->
+  <section class="section" id="sources">
+    <p class="section-title">05.3 — Registry of sources.</p>
+    <div class="scroll-x" style="margin-top:24px">
+      <table class="sources-table">
+        <thead>
+          <tr><th>ID</th><th>Source</th><th>Publisher</th><th class="s-tier">Tier ceiling</th><th>URL</th></tr>
+        </thead>
+        <tbody>
+          {sources.map((s) => (
+            <tr id={s.id}>
+              <td>{s.id}</td>
+              <td>{s.name}</td>
+              <td>{s.publisher}</td>
+              <td class="s-tier">T{s.tierCeiling}</td>
+              <td><a href={s.url} rel="nofollow noopener" target="_blank">link</a></td>
+            </tr>
+          ))}
+        </tbody>
+      </table>
+    </div>
+
+    <div class="glossary" style="margin-top:48px">
+      <div class="label" style="margin-bottom:16px">Glossary</div>
+      <p><strong>MTS</strong> — Monthly Treasury Statement, the Treasury's monthly account of receipts and outlays. <strong>NIP / MIP</strong> — National and Military Intelligence Programs, the two disclosed classified toplines. <strong>R-1 / P-1</strong> — the Department of Defense's published research and procurement justification books, in which classified program line items appear with printed dollar amounts. <strong>Disclaimer of opinion</strong> — an auditor's statement that the books cannot support an opinion at all. <strong>CBJ</strong> — Congressional Budget Justification; the FY2013 CBJ, disclosed in 2013, remains the only complete public map of the intelligence budget's interior.</p>
+    </div>
+  </section>
+
+  <!-- 05.4 CORRECTIONS -->
+  <section class="section" id="corrections">
+    <p class="section-title">05.4 — Corrections.</p>
+    {corrections.length === 0 ? (
+      <p class="body" style="margin-top:16px">No corrections registered. The register opened 02 Jul 2026.</p>
+    ) : (
+      <div class="scroll-x" style="margin-top:24px">
+        <table class="sources-table">
+          <thead>
+            <tr><th>ID</th><th>Date</th><th>Claim</th><th>Description</th><th>Status</th></tr>
+          </thead>
+          <tbody>
+            {corrections.map((c) => (
+              <tr>
+                <td>{c.id}</td>
+                <td>{c.date}</td>
+                <td><a href={`#${c.claimId}`}>{c.claimId}</a></td>
+                <td>{c.description}</td>
+                <td>{c.status}</td>
+              </tr>
+            ))}
+          </tbody>
+        </table>
+      </div>
+    )}
+    <Annot>
+      <AnnotLine>Public, append-only. Claims are versioned; nothing is silently edited.</AnnotLine>
+    </Annot>
+  </section>
+
+  <!-- 05.5 SHARE -->
+  <section class="section" id="share">
+    <p class="section-title">05.5 — Share.</p>
+    <ul class="sharelinks" style="margin-top:20px">
+      <li><button type="button" id="copy-url">Copy this page's URL</button></li>
+      <li><a id="share-bsky" href="https://bsky.app/" rel="nofollow noopener" target="_blank">Share on Bluesky</a></li>
+      <li><a id="share-masto" href="https://mastodon.social/" rel="nofollow noopener" target="_blank">Share on Mastodon</a></li>
+    </ul>
+  </section>
+
+  <script>
+    // Build share targets from the live URL; copy button uses the Clipboard API.
+    const title = 'THE BLACK LEDGER — an open audit of classified United States expenditure, FY2025';
+    const here = () => window.location.href;
+    const bsky = document.getElementById('share-bsky') as HTMLAnchorElement | null;
+    const masto = document.getElementById('share-masto') as HTMLAnchorElement | null;
+    const copy = document.getElementById('copy-url') as HTMLButtonElement | null;
+    const text = encodeURIComponent(`${title} ${here()}`);
+    if (bsky) bsky.href = `https://bsky.app/intent/compose?text=${text}`;
+    if (masto) masto.href = `https://mastodon.social/share?text=${text}`;
+    if (copy) {
+      copy.addEventListener('click', async () => {
+        try {
+          await navigator.clipboard.writeText(here());
+          const prev = copy.textContent;
+          copy.textContent = 'URL copied.';
+          setTimeout(() => { copy.textContent = prev; }, 2000);
+        } catch {
+          copy.textContent = here();
+        }
+      });
+    }
+  </script>
 </Document>
