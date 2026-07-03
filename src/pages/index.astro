@@ -17,8 +17,19 @@ const rate = `~$${grouped(Math.round(COUNTER_RATE))} / sec`; // ~$3,206 / sec
 ---
 
 <Document title="THE BLACK LEDGER — Edition I" footColophon={false}>
-  <!-- Registry strip (spec §7.1) -->
+  <!-- Cover opening (amendment v3.2 §1) — the first content on the page, above the registry strip -->
   <section class="section section--first">
+    <div class="plabel">— Before the file opens</div>
+    <div class="stack" style="margin-top:24px">
+      <p class="body">Every year, the United States government publishes two numbers about its secret spending and asks you to be satisfied.</p>
+      <p class="body">The first is the cost of its civilian intelligence agencies — the CIA, the NSA, and fifteen others. The second is the cost of military intelligence. For fiscal year 2025 the two add up to $101.1 billion, which works out to about $3,206 every second, including this one. What the money does, which programs it funds, whether any of it works — none of that is published, and by law none of it has to be.</p>
+      <p class="body">This is not a scandal. It is a system, now in its eighth decade, functioning mostly as designed. But the Constitution that created this government contains a sentence, written in 1787, requiring that "a regular Statement and Account" of all public money "shall be published from time to time." This website takes that sentence literally.</p>
+      <p class="body">What follows is an audit, assembled from the government's own publications, one authenticated leaked document, records pried loose under the Freedom of Information Act, and estimates that are always labeled as estimates. It is arranged as a case file, because that is what it is. Every number on every page can be traced to its source. Start anywhere.</p>
+    </div>
+  </section>
+
+  <!-- Registry strip (spec §7.1) -->
+  <section class="section">
     <dl class="registry">
       <dt>Case №</dt><dd>2026 / 001</dd>
       <dt>Scope</dt><dd>{acknowledged} acknowledged · {audited} audited</dd>
@@ -32,6 +43,19 @@ const rate = `~$${grouped(Math.round(COUNTER_RATE))} / sec`; // ~$3,206 / sec
       <AnnotLine key="Jurisdiction">United States of America</AnnotLine>
       <AnnotLine key="You are reading"><span id="local-time" class="mono">—</span></AnnotLine>
     </Annot>
+  </section>
+
+  <!-- How to read this (amendment v3.2 §2) — directly after the registry strip -->
+  <section class="section">
+    <div class="plabel">— How to read this</div>
+    <div class="stack" style="margin-top:24px">
+      <p class="body"><a href="/chapters/meter"><b>01 — The Meter.</b></a> The secret budget as a clock: what it spends per second, per day, and where those rates come from.</p>
+      <p class="body"><a href="/chapters/reconciliation"><b>02 — The Reconciliation.</b></a> One subtraction no other website performs: total spending, minus everything traceable, equals the space the secret budget lives in.</p>
+      <p class="body"><a href="/chapters/subjects"><b>03 — Subjects.</b></a> Six case files — the published totals, the one great leak, one careful estimate, the failed audits, a famous number that gets misused, and the government's own "unreported" line.</p>
+      <p class="body"><a href="/chapters/share"><b>04 — Your Share.</b></a> One division problem: what the acknowledged secret budget costs your household this year.</p>
+      <p class="body"><a href="/chapters/record"><b>05 — The Record.</b></a> Every number on this site in one table, each with a source, a date, and an honesty grade.</p>
+      <p class="body">Ten minutes reads the whole document. Chapter 02 is the heart of it.</p>
+    </div>
   </section>
 
   <!-- What this is -->
