@@ -1,6 +1,112 @@
 ---
 import Document from '../layouts/Document.astro';
+import Counter from '../components/Counter.astro';
+import Annot from '../components/Annot.astro';
+import AnnotLine from '../components/AnnotLine.astro';
+import CId from '../components/CId.astro';
+import { getClaim, claims, sources } from '../lib/data';
+import { abbrev, grouped, COUNTER_RATE } from '../lib/format';
+
+const acknowledged = abbrev(getClaim('C-0013').amount!); // $101.1 bn
+const audited = abbrev(getClaim('C-0001').amount!);      // $7.010 tn
+const nip = abbrev(getClaim('C-0011').amount!);          // $73.3 bn
+const mip = abbrev(getClaim('C-0012').amount!);          // $27.8 bn
+const unreported = abbrev(getClaim('C-0009').amount!);   // $206.9 bn
+const rate = `~$${grouped(Math.round(COUNTER_RATE))} / sec`; // ~$3,206 / sec
 ---
-<Document title="THE BLACK LEDGER" footColophon={false}>
-  <p class="body">Cover — placeholder (Phase 3).</p>
+
+<Document title="THE BLACK LEDGER — Edition I" footColophon={false}>
+  <!-- Registry strip (spec §7.1) -->
+  <section class="section section--first">
+    <dl class="registry">
+      <dt>Case №</dt><dd>2026 / 001</dd>
+      <dt>Scope</dt><dd>{acknowledged} acknowledged · {audited} audited</dd>
+      <dt>Subject</dt><dd>Classified expenditure of the United States · FY2025</dd>
+      <dt>Sources</dt><dd>{sources.length} registered · {claims.length} claims</dd>
+      <dt>Opened</dt><dd>02 Jul 2026</dd>
+    </dl>
+    <Annot>
+      <AnnotLine>Official registry</AnnotLine>
+      <AnnotLine key="Jurisdiction">United States of America</AnnotLine>
+      <AnnotLine key="You are reading"><span id="local-time" class="mono">—</span></AnnotLine>
+    </Annot>
+  </section>
+
+  <!-- What this is -->
+  <section class="section">
+    <div class="plabel">— What this is</div>
+    <div class="stack" style="margin-top:24px">
+      <p class="body">An open audit of the classified expenditure of the United States for fiscal year 2025 — compiled entirely from official disclosures, authenticated leaked documents, records released under the Freedom of Information Act, and published audits, designed for any reader.</p>
+      <p class="body">The United States publishes exactly two classified spending figures each year. The first, the National Intelligence Program topline, is required by statute — 50 U.S.C. §3306. The second, the Military Intelligence Program topline, has been disclosed voluntarily by the Department of Defense every year since 2007. For fiscal year 2025 the two figures total $101.1 billion. Below these toplines, disclosure ends. The department responsible for the majority of this spending has failed its financial audit eight consecutive times and is the only major federal agency never to have passed one.</p>
+      <p class="body">This document brings the available numbers into one place. It makes no accusations; it documents what is published, what is admitted, and what can be bounded. Every figure links to its source and carries a stated evidence tier. Nothing modeled is ever combined with anything official.</p>
+    </div>
+  </section>
+
+  <!-- Epigraph (spec §7.4) -->
+  <section class="section">
+    <div class="epigraph">
+      <p class="epigraph__text">a regular Statement and Account of the Receipts and Expenditures of all public Money shall be published from time to time.</p>
+      <p class="epigraph__attr">— Constitution of the United States · Article I, Section 9, Clause 7 · 1787</p>
+    </div>
+  </section>
+
+  <!-- The counter (spec §7.5) -->
+  <section class="section">
+    <Counter label="BEING SPENT AS YOU READ:" />
+    <Annot>
+      <AnnotLine key="Rate">{rate}</AnnotLine>
+      <AnnotLine>{acknowledged} — annual acknowledged classified expenditure</AnnotLine>
+      <AnnotLine>Updated every second</AnnotLine>
+      <AnnotLine key="Computation">{acknowledged} ÷ 31,536,000 sec / year</AnnotLine>
+      <AnnotLine>NIP: {nip} (<CId id="C-0011" />) · MIP: {mip} (<CId id="C-0012" />)</AnnotLine>
+      <AnnotLine key="Source">ODNI PR 39-25 · DoD MIP release · FY2025</AnnotLine>
+    </Annot>
+    <p class="linkline"><a href="/chapters/meter">→ See Chapter 01 — The Meter</a></p>
+  </section>
+
+  <!-- Subject of audit -->
+  <section class="section">
+    <div class="label">Subject of audit:</div>
+    <div style="margin-top:20px">
+      <p class="statement"><b>{acknowledged}</b> acknowledged and undisclosed in detail — by statute.</p>
+      <p class="statement"><b>{unreported}</b> unreported to the government's own tracking system — by practice.</p>
+    </div>
+    <Annot>
+      <AnnotLine key="Ratio, unreported to acknowledged">2.05 : 1</AnnotLine>
+      <AnnotLine>Acknowledged: <CId id="C-0013" /> · Unreported: <CId id="C-0009" /></AnnotLine>
+    </Annot>
+    <p class="linkline"><a href="/chapters/reconciliation">→ See Chapter 02 — The Reconciliation</a></p>
+  </section>
+
+  <!-- Methodology note -->
+  <section class="section">
+    <div class="label">Methodology:</div>
+    <p class="body" style="margin-top:20px">All figures are drawn from official sources — the Treasury Monthly Statement, USAspending.gov, the Office of the Director of National Intelligence, the Department of Defense Comptroller and Inspector General — or from authenticated documents and released records, each labeled with its evidence tier. The project makes no accusations. It documents how public money is accounted for, and where the accounting ends.</p>
+    <p class="linkline"><a href="/chapters/record">Full registry of sources → Chapter 05</a></p>
+  </section>
+
+  <!-- Cover colophon (spec §5 chapter 00) -->
+  <section class="section">
+    <div class="foot__colophon" style="margin-bottom:0">
+      PUBLISHED AS AN OPEN AUDIT<br />
+      FIRST EDITION · MMXXVI<br />
+      SET IN NEWSREADER AND IBM PLEX MONO<br />
+      EVERY FIGURE CARRIES ITS LEDGER NUMBER
+    </div>
+  </section>
+
+  <script>
+    // "You are reading" — visitor local time, updates each minute (spec §5 cover).
+    const el = document.getElementById('local-time');
+    if (el) {
+      const render = () => {
+        const now = new Date();
+        const t = now.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit', hour12: false });
+        const tz = Intl.DateTimeFormat().resolvedOptions().timeZone || 'local';
+        el.textContent = `${t} · ${tz}`;
+      };
+      render();
+      setInterval(render, 60000);
+    }
+  </script>
 </Document>

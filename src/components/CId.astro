@@ -1,0 +1,9 @@
+---
+// Inline claim-ID link: renders the ID linked to its row anchor in Chapter 05's
+// register (spec §3). Validates the claim exists at build.
+import { getClaim } from '../lib/data';
+interface Props { id: string; }
+const { id } = Astro.props;
+const claim = getClaim(id);
+---
+<a href={`/chapters/record#${claim.id}`}>{claim.id}</a>

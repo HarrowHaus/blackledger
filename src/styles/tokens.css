@@ -55,7 +55,8 @@
   --fs-body: 1.0625rem;    /* body */
   --fs-section: 1.5rem;    /* section titles */
   --fs-chapter: 2.25rem;   /* chapter titles */
-  --fs-figure: clamp(4.5rem, 9vw, 7rem); /* the one large figure per chapter */
+  --fs-figure: clamp(3rem, 8.5vw, 7rem); /* the one large figure per chapter (fluid, ≤7rem) */
+  --fs-figure-med: clamp(1.75rem, 5vw, 3rem); /* secondary meters (spec §8.4: only 1 large per chapter) */
 
   --track-label: 0.18em;   /* uppercase mono label letter-spacing */
   --track-figure: -0.02em; /* large figure letter-spacing */

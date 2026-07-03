@@ -1,6 +1,24 @@
 ---
 import Document from '../../../layouts/Document.astro';
+import { DOSSIERS } from '../../../lib/dossiers';
 ---
-<Document title="THE BLACK LEDGER — Subjects">
-  <p class="body">Subjects index — placeholder (Phase 3).</p>
+
+<Document title="THE BLACK LEDGER — 03 Subjects">
+  <section class="section section--first">
+    <p class="chapter-title">Subjects.</p>
+  </section>
+
+  <section class="section">
+    <ul class="dossier-index">
+      {DOSSIERS.map((d) => (
+        <li>
+          <a href={`/chapters/subjects/${d.slug}`}>
+            <span class="di__file">FILE No. 03/{d.n}</span>
+            <span class="di__name">{d.name}</span>
+            <span class="di__fig">{d.figure}</span>
+          </a>
+        </li>
+      ))}
+    </ul>
+  </section>
 </Document>

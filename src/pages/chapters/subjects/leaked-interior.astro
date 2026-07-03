@@ -1,6 +1,68 @@
 ---
-import Document from '../../../layouts/Document.astro';
+import Dossier from '../../../layouts/Dossier.astro';
+import Figure from '../../../components/Figure.astro';
+import Annot from '../../../components/Annot.astro';
+import AnnotLine from '../../../components/AnnotLine.astro';
+import ClaimRef from '../../../components/ClaimRef.astro';
+import CId from '../../../components/CId.astro';
+import { getClaim } from '../../../lib/data';
+import { abbrev } from '../../../lib/format';
+
+const parts = [
+  { label: 'Central Intelligence Agency', id: 'C-0019' },
+  { label: 'National Security Agency', id: 'C-0020' },
+  { label: 'National Reconnaissance Office', id: 'C-0021' },
+  { label: 'National Geospatial-Intelligence Agency', id: 'C-0022' },
+  { label: 'General Defense Intelligence Program', id: 'C-0023' },
+];
 ---
-<Document title="THE BLACK LEDGER — leaked-interior">
-  <p class="body">leaked-interior dossier — placeholder (Phase 3).</p>
-</Document>
+
+<Dossier
+  slug="leaked-interior"
+  cites={['C-0018', 'C-0019', 'C-0020', 'C-0021', 'C-0022', 'C-0023']}
+>
+  <section class="section">
+    <Figure id="C-0018" label="FY2013 NIP REQUEST · LEAKED:" />
+    <Annot>
+      <ClaimRef id="C-0018" />
+      <AnnotLine key="Source">FY2013 Congressional Budget Justification · Washington Post · 29 Aug 2013</AnnotLine>
+      <AnnotLine>Tier 2: authenticated leak, undisputed by government</AnnotLine>
+    </Annot>
+  </section>
+
+  <section class="section">
+    <div class="label" style="margin-bottom:16px">Interior of the request · by component · $ billion</div>
+    <div class="scroll-x">
+      <table class="dtable">
+        <thead>
+          <tr><th>Component</th><th>FY2013 request</th><th>Tier</th><th>Ledger</th></tr>
+        </thead>
+        <tbody>
+          {parts.map((p) => (
+            <tr>
+              <td>{p.label}</td>
+              <td>{abbrev(getClaim(p.id).amount!)}</td>
+              <td>2</td>
+              <td><CId id={p.id} /></td>
+            </tr>
+          ))}
+        </tbody>
+      </table>
+    </div>
+    <Annot>
+      <AnnotLine key="Source">Washington Post · The Black Budget · 29 Aug 2013</AnnotLine>
+      <AnnotLine>All components Tier 2. Never summed with Tier 1 figures.</AnnotLine>
+    </Annot>
+  </section>
+
+  <section class="section">
+    <p class="epigraph__text" style="text-align:left;max-width:var(--maxw-text)">This is the only complete internal map of the National Intelligence Program ever made public. It is thirteen years old. Every projection built on it is labeled as a projection.</p>
+  </section>
+
+  <section class="section">
+    <div class="stack">
+      <p class="body">The figures on this page come from a single disclosed document: the classified budget justification for fiscal year 2013, published by the Washington Post in August 2013. The request totaled $52.6 billion (C-0018), and for the first time attributed that total to individual agencies — the Central Intelligence Agency at $14.7 billion (C-0019), the National Security Agency at $10.8 billion (C-0020), the National Reconnaissance Office at $10.3 billion (C-0021).</p>
+      <p class="body">The government has never disputed the document, which is why it is carried here at Tier 2. It is also thirteen years old. It is the last time the interior of the National Intelligence Program was visible in this detail, and every modeled figure elsewhere in this ledger that leans on it carries that age as a stated caveat.</p>
+    </div>
+  </section>
+</Dossier>

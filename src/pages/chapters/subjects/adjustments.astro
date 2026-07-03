@@ -1,6 +1,27 @@
 ---
-import Document from '../../../layouts/Document.astro';
+import Dossier from '../../../layouts/Dossier.astro';
+import Figure from '../../../components/Figure.astro';
+import Annot from '../../../components/Annot.astro';
+import AnnotLine from '../../../components/AnnotLine.astro';
+import ClaimRef from '../../../components/ClaimRef.astro';
 ---
-<Document title="THE BLACK LEDGER — adjustments">
-  <p class="body">adjustments dossier — placeholder (Phase 3).</p>
-</Document>
+
+<Dossier slug="adjustments" cites={['C-0025']}>
+  <section class="section">
+    <Figure id="C-0025" label="ARMY UNSUPPORTED ADJUSTMENTS, FY2015:" />
+    <Annot>
+      <ClaimRef id="C-0025" />
+      <AnnotLine key="Source">DoD OIG · DODIG-2016-113 · Army General Fund</AnnotLine>
+      <AnnotLine>Tier 3. Quarantined from every sum in this document.</AnnotLine>
+      <AnnotLine key="Not">a spending figure. Not missing cash.</AnnotLine>
+    </Annot>
+  </section>
+
+  <section class="section">
+    <p class="epigraph__text" style="text-align:left;max-width:var(--maxw-text)">These are unsupported accounting adjustments — the same dollars re-entered repeatedly, in both directions. They are evidence that the books cannot be audited, not evidence that the money is missing. This document reports the finding as the Inspector General wrote it, and no further.</p>
+  </section>
+
+  <section class="section">
+    <p class="body">The Inspector General's 2016 report examined the Army General Fund statements for fiscal year 2015 and identified $6.5 trillion in journal-entry adjustments that lacked adequate documentation or support (C-0025). The figure is gross: a single dollar re-booked ten times, in and out, counts ten times toward it. It is the clearest published measure of how far the department's records fall short of an auditable standard, and for that reason it is recorded here and excluded from every total.</p>
+  </section>
+</Dossier>

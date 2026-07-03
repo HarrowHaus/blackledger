@@ -1,6 +1,65 @@
 ---
-import Document from '../../../layouts/Document.astro';
+import Dossier from '../../../layouts/Dossier.astro';
+import Figure from '../../../components/Figure.astro';
+import Annot from '../../../components/Annot.astro';
+import AnnotLine from '../../../components/AnnotLine.astro';
+import ClaimRef from '../../../components/ClaimRef.astro';
+import { toplines } from '../../../lib/data';
+
+const fmt = (n: number | null) => (n === null ? '—' : n.toFixed(1));
+const rows = toplines.filter((t) => Number(t.fiscalYear) >= 2007).sort((a, b) => Number(a.fiscalYear) - Number(b.fiscalYear));
 ---
-<Document title="THE BLACK LEDGER — national-intelligence-program">
-  <p class="body">national-intelligence-program dossier — placeholder (Phase 3).</p>
-</Document>
+
+<Dossier slug="national-intelligence-program" cites={['C-0011', 'C-0014']}>
+  <section class="section">
+    <Figure id="C-0011" label="NIP APPROPRIATED, FY2025:" />
+    <Annot>
+      <ClaimRef id="C-0011" />
+      <AnnotLine key="Source">ODNI PR 39-25 · statutory disclosure under 50 U.S.C. §3306</AnnotLine>
+      <AnnotLine>NIP: National Intelligence Program</AnnotLine>
+    </Annot>
+  </section>
+
+  <section class="section">
+    <div class="label" style="margin-bottom:16px">Appropriated and requested toplines · 2007–2026 · $ billion</div>
+    <div class="scroll-x">
+      <table class="dtable">
+        <thead>
+          <tr>
+            <th>FY</th>
+            <th>NIP req</th>
+            <th>NIP appr</th>
+            <th>MIP req</th>
+            <th>MIP appr</th>
+            <th>Total appr</th>
+            <th>Source</th>
+          </tr>
+        </thead>
+        <tbody>
+          {rows.map((t) => (
+            <tr>
+              <td>{t.fiscalYear}</td>
+              <td>{fmt(t.nipRequestedBn)}</td>
+              <td>{fmt(t.nipAppropriatedBn)}</td>
+              <td>{fmt(t.mipRequestedBn)}</td>
+              <td>{fmt(t.mipAppropriatedBn)}</td>
+              <td>{fmt(t.totalAppropriatedBn)}</td>
+              <td>{t.sourceUrl ? <a href={t.sourceUrl} rel="nofollow noopener" target="_blank">ODNI</a> : '—'}</td>
+            </tr>
+          ))}
+        </tbody>
+      </table>
+    </div>
+    <Annot>
+      <AnnotLine key="Source">data/toplines_nip_mip.csv · per-row ODNI / DoD release URLs</AnnotLine>
+      <AnnotLine>Figures in $ billion; blank cells were not separately released.</AnnotLine>
+    </Annot>
+  </section>
+
+  <section class="section">
+    <div class="stack">
+      <p class="body">The National Intelligence Program is the larger of the two disclosed classified toplines. Its appropriated total is published each year under 50 U.S.C. §3306, which directs the Director of National Intelligence to disclose the aggregate amount. For fiscal year 2025 that total is $73.3 billion (C-0011).</p>
+      <p class="body">Disclosure began with fiscal year 2007, the first year the statute took effect; the table records every appropriated and requested figure released since, each linked to its ODNI or Department of Defense source. For fiscal year 2026 the requested figure is $81.9 billion (C-0014), $8.5 billion above the prior year's request. What the toplines disclose is the aggregate. What sits beneath them is the subject of the files that follow.</p>
+    </div>
+  </section>
+</Dossier>

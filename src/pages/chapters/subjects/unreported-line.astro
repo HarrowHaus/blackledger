@@ -1,6 +1,58 @@
 ---
-import Document from '../../../layouts/Document.astro';
+import Dossier from '../../../layouts/Dossier.astro';
+import Figure from '../../../components/Figure.astro';
+import Annot from '../../../components/Annot.astro';
+import AnnotLine from '../../../components/AnnotLine.astro';
+import ClaimRef from '../../../components/ClaimRef.astro';
+import CId from '../../../components/CId.astro';
+import { agencyBreakdownFY2025 } from '../../../lib/data';
+import { grouped } from '../../../lib/format';
+
+const bd = agencyBreakdownFY2025();
 ---
-<Document title="THE BLACK LEDGER — unreported-line">
-  <p class="body">unreported-line dossier — placeholder (Phase 3).</p>
-</Document>
+
+<Dossier slug="unreported-line" cites={['C-0009', 'C-0010', 'C-0008']}>
+  <section class="section">
+    <Figure id="C-0009" label="UNREPORTED DATA · USAspending · FY2025:" />
+    <Annot>
+      <ClaimRef id="C-0009" />
+      <AnnotLine key="Label in source">"Unreported Data" · Spending Explorer, FY2025</AnnotLine>
+      <AnnotLine key="Prior year">$164.4 bn (<CId id="C-0010" />) · change: +$42.5 bn · +25.9%</AnnotLine>
+      <AnnotLine>Includes, but is not limited to, classified activity.</AnnotLine>
+    </Annot>
+  </section>
+
+  <section class="section">
+    <div class="stack">
+      <p class="body">USAspending.gov is the government's own account of federal spending, agency by agency. It carries a line the platform labels itself: "Unreported Data" — obligations agencies did not report to it. For fiscal year 2025 that line is $206.9 billion (C-0009), up from $164.4 billion the year before (C-0010), a rise of 25.9% in a single year.</p>
+      <p class="body">The line is not a classified-spending figure. It includes classified activity, but it is not limited to it, and this document does not claim otherwise. What it establishes is narrower and firmer: the government's primary spending-transparency system publishes, on its own face, the amount it was not told. The full agency breakdown for the fiscal year is reproduced below, exactly as retrieved, with the unreported line in its place among the agencies.</p>
+    </div>
+  </section>
+
+  <section class="section">
+    <div class="label" style="margin-bottom:16px">USAspending Spending Explorer · all agencies · FY2025 · obligations (USD)</div>
+    <div class="scroll-x">
+      <table class="dtable">
+        <thead>
+          <tr><th>Agency</th><th>Obligations (USD)</th></tr>
+        </thead>
+        <tbody>
+          {bd.results.map((a) => (
+            <tr>
+              <td>{a.name === 'Unreported Data' ? <><CId id="C-0009" /> — {a.name}</> : a.name}</td>
+              <td>{grouped(a.amount)}</td>
+            </tr>
+          ))}
+          <tr class="lrow--total" style="border-top:3px double var(--line)">
+            <td><CId id="C-0008" /> — Total (gross obligations, incl. intragovernmental)</td>
+            <td>{grouped(bd.total)}</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+    <Annot>
+      <AnnotLine key="Source">sources/usaspending_explorer_agency_fy2025.json · retrieved 2026-07-02</AnnotLine>
+      <AnnotLine key="Total">$10.33 tn gross obligations (<CId id="C-0008" />) exceeds outlays by design — see METHODOLOGY 3.2</AnnotLine>
+    </Annot>
+  </section>
+</Dossier>

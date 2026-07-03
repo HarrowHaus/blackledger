@@ -190,6 +190,32 @@ a:focus-visible {
   color: var(--ink-dim);
 }
 
+/* Plain (sentence-case) mono label, e.g. "— What this is" */
+.plabel {
+  font-family: var(--font-data);
+  font-size: var(--fs-annot);
+  letter-spacing: 0.04em;
+  color: var(--ink-dim);
+}
+
+/* Emphasised two-line statement (spec §5 subject block). Weight 500 max (§9). */
+.statement {
+  max-width: var(--maxw-text);
+  font-size: 1.375rem;
+  line-height: 1.4;
+}
+.statement + .statement { margin-top: 0.4em; }
+.statement b, .statement strong { font-weight: 500; }
+
+/* Comparison statement (spec §5 chapter 02): ratio result may take --signal. */
+.compare {
+  max-width: var(--maxw-text);
+  font-size: 1.5rem;
+  line-height: 1.35;
+}
+.compare + .compare { margin-top: 0.3em; }
+.compare .accent { font-family: var(--font-data); font-weight: 500; }
+
 /* ---- Component: body paragraph (spec §7.3) ---- */
 .body {
   max-width: var(--maxw-text);
@@ -230,7 +256,9 @@ a:focus-visible {
   line-height: 1.2;
   color: var(--ink-dim);
   max-width: var(--maxw-text);
+  margin-top: 16px;
 }
+.annot--tight { margin-top: 0; }
 .annot li { margin-top: var(--annot-gap); }
 .annot li:first-child { margin-top: 0; }
 .annot a { color: var(--ink); }
@@ -285,8 +313,32 @@ a:focus-visible {
   letter-spacing: var(--track-figure);
   font-variant-numeric: tabular-nums;
   font-feature-settings: 'tnum' 1, 'lnum' 1;
+  display: block;
+  max-width: 100%;
+  overflow-x: auto;
+  overflow-y: hidden;
+  white-space: nowrap;
 }
 .figure--signal { color: var(--signal); }
+
+/* Secondary meter figure — smaller than the one large figure (spec §8.4) */
+.figure-med {
+  font-family: var(--font-data);
+  font-weight: 500;
+  font-size: var(--fs-figure-med);
+  line-height: 1.1;
+  letter-spacing: var(--track-figure);
+  font-variant-numeric: tabular-nums;
+  font-feature-settings: 'tnum' 1, 'lnum' 1;
+  display: block;
+  max-width: 100%;
+  overflow-x: auto;
+  overflow-y: hidden;
+  white-space: nowrap;
+}
+
+/* Wide content (tables, long figures) scrolls in its own lane — page never scrolls x */
+.scroll-x { max-width: 100%; overflow-x: auto; }
 
 .counter {
   font-variant-numeric: tabular-nums;
@@ -316,6 +368,30 @@ a:focus-visible {
 .ledger__row--total .ledger__amount { color: var(--ink); }
 .ledger-annot { margin: 10px 0 24px; }
 
+/* Div-based ledger row (interleaves annotations between rows, spec §5 ch02) */
+.lrow {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: baseline;
+  gap: 6px 24px;
+  padding: 14px 0;
+  border-bottom: 1px solid var(--line);
+  font-family: var(--font-data);
+  font-size: var(--fs-data);
+  color: var(--ink);
+  max-width: var(--maxw-data);
+}
+.lrow__label { letter-spacing: 0.03em; }
+.lrow__amount {
+  margin-left: auto;
+  text-align: right;
+  white-space: nowrap;
+  font-variant-numeric: tabular-nums;
+  font-feature-settings: 'tnum' 1, 'lnum' 1;
+}
+.lrow--total { border-top: 3px double var(--line); }
+.lrow + .annot { margin-top: 10px; margin-bottom: 26px; }
+
 /* Amounts rendered inline in mono */
 .amount {
   font-family: var(--font-data);
@@ -340,6 +416,24 @@ a:focus-visible {
   text-transform: uppercase;
   color: var(--ink);
 }
+
+/* Dossier prev / index / next navigation (spec §5 ch03 template) */
+.dossier-nav {
+  margin-top: var(--rhythm);
+  padding-top: 20px;
+  border-top: 1px solid var(--line);
+  display: flex;
+  flex-wrap: wrap;
+  gap: 16px 24px;
+  justify-content: space-between;
+  font-family: var(--font-data);
+  font-size: var(--fs-annot);
+  letter-spacing: var(--track-label);
+  text-transform: uppercase;
+  color: var(--ink-dim);
+}
+.dossier-nav a { color: var(--ink-dim); }
+.dossier-nav a:hover { color: var(--ink); }
 
 /* ---- Component: dossier index rows (spec §7.8) ---- */
 .dossier-index { list-style: none; max-width: var(--maxw-data); }
@@ -370,11 +464,17 @@ a:focus-visible {
   line-height: 2;
   max-width: var(--maxw-data);
 }
-.formula__row { display: grid; grid-template-columns: minmax(0, max-content) 1fr; gap: 0 32px; }
-.formula__val { text-align: right; font-variant-numeric: tabular-nums; white-space: nowrap; }
-.formula__val--result { color: var(--signal); }
-.formula__note { color: var(--ink-dim); }
-.formula__rule { border-top: 1px solid var(--line); }
+.formula__row {
+  display: grid;
+  grid-template-columns: minmax(0, max-content) 1fr;
+  gap: 4px 40px;
+  align-items: baseline;
+  padding: 6px 0;
+}
+.formula__val { text-align: left; font-variant-numeric: tabular-nums; white-space: nowrap; }
+.formula__val--result { color: var(--signal); font-weight: 500; }
+.formula__note { color: var(--ink-dim); font-size: var(--fs-annot); }
+.formula__row--result { border-top: 1px solid var(--line); margin-top: 6px; }
 
 /* ---- Component: claims register table (spec §7.10, 05.1) ---- */
 .register {

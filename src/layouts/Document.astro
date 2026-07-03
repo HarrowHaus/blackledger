@@ -8,9 +8,11 @@ interface Props {
   description?: string;
   /** show the 3-line running colophon in the foot (spec §5). Cover supplies its own. */
   footColophon?: boolean;
+  /** suppress the automatic next-chapter link (dossiers carry their own prev/next). */
+  hideNextChapter?: boolean;
 }
 
-const { title, description = 'An open audit of the classified expenditure of the United States for fiscal year 2025.', footColophon = true } = Astro.props;
+const { title, description = 'An open audit of the classified expenditure of the United States for fiscal year 2025.', footColophon = true, hideNextChapter = false } = Astro.props;
 
 const pathname = Astro.url.pathname;
 const current = pageFor(pathname);
@@ -58,7 +60,7 @@ const activeNav = navFor(pathname);
       <main class="main" id="main">
         <slot />
 
-        {next && (
+        {next && !hideNextChapter && (
           <a class="next-chapter" href={next.path}>
             ↓ CHAPTER {next.chapterLabel.split(' ')[0]} — {next.chapterName}
           </a>

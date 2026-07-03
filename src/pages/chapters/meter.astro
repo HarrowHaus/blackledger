@@ -1,6 +1,108 @@
 ---
 import Document from '../../layouts/Document.astro';
+import Counter from '../../components/Counter.astro';
+import Annot from '../../components/Annot.astro';
+import AnnotLine from '../../components/AnnotLine.astro';
+import CId from '../../components/CId.astro';
+import { getClaim } from '../../lib/data';
+import { abbrev, exactUsd, grouped, COUNTER_RATE } from '../../lib/format';
+
+const acknowledged = abbrev(getClaim('C-0013').amount!); // $101.1 bn
+const nip = abbrev(getClaim('C-0011').amount!);
+const mip = abbrev(getClaim('C-0012').amount!);
+const rate = `~$${grouped(Math.round(COUNTER_RATE))} / sec`;
+const ytd = exactUsd(getClaim('C-0004')); // $4,901,851,413,144
+const day = '$277,000,000'; // spec §5: $101.1 bn ÷ 365 days, stated to 277.0 M (C-0013)
 ---
-<Document title="THE BLACK LEDGER — meter">
-  <p class="body">meter — placeholder (Phase 3/4).</p>
+
+<Document title="THE BLACK LEDGER — 01 The Meter">
+  <section class="section section--first">
+    <p class="chapter-title">The meter.</p>
+  </section>
+
+  <!-- Meter 1 — the one large figure (live counter, signal) -->
+  <section class="section">
+    <Counter label="SINCE YOU OPENED THIS PAGE:" />
+    <Annot>
+      <AnnotLine key="Rate">{rate}</AnnotLine>
+      <AnnotLine>{acknowledged} — annual acknowledged classified expenditure</AnnotLine>
+      <AnnotLine>Updated every second</AnnotLine>
+      <AnnotLine key="Computation">{acknowledged} ÷ 31,536,000 sec / year</AnnotLine>
+      <AnnotLine>NIP: {nip} (<CId id="C-0011" />) · MIP: {mip} (<CId id="C-0012" />)</AnnotLine>
+      <AnnotLine key="Source">ODNI PR 39-25 · DoD MIP release · FY2025</AnnotLine>
+    </Annot>
+  </section>
+
+  <!-- Meter 2 — TODAY (medium figure) -->
+  <section class="section">
+    <div class="label" style="margin-bottom:12px">TODAY:</div>
+    <div class="figure-med">{day}</div>
+    <Annot>
+      <AnnotLine key="Computation">{acknowledged} ÷ 365 days</AnnotLine>
+      <AnnotLine>Ledger: <CId id="C-0013" /></AnnotLine>
+    </Annot>
+  </section>
+
+  <!-- Meter 3 — fiscal-year outlays to date (medium figure, the one runtime fetch) -->
+  <section class="section">
+    <div class="label" style="margin-bottom:12px">THIS FISCAL YEAR, TOTAL OUTLAYS TO DATE:</div>
+    <div class="figure-med" id="mts-figure" data-fallback={ytd}>{ytd}</div>
+    <Annot>
+      <AnnotLine key="Source">Treasury MTS Table 5 · record <span id="mts-record">2026-05-31</span></AnnotLine>
+      <AnnotLine>Ledger: <CId id="C-0004" /> · Tier 1</AnnotLine>
+      <AnnotLine>The denominator of this audit</AnnotLine>
+    </Annot>
+  </section>
+
+  <section class="section">
+    <p class="body">The acknowledged classified budget spends roughly what a public school teacher earns in a year every twenty seconds. These meters use only the two disclosed toplines; the unreported and unattributed figures documented in Chapter 02 are not included in any meter, because their annual rates cannot be stated honestly.</p>
+  </section>
+
+  <script>
+    // The ONE runtime fetch in the whole document (spec §1): refresh the Treasury MTS
+    // Table 5 fiscal-year-to-date outlays. 24h localStorage cache; silent fallback to
+    // the build-time value (claim C-0004) on any error.
+    (async () => {
+      const fig = document.getElementById('mts-figure');
+      const rec = document.getElementById('mts-record');
+      if (!fig) return;
+      const CACHE_KEY = 'bl.mts.t5.ytd';
+      const DAY = 86400000;
+      const fmt = (n: number) => '$' + Math.round(n).toLocaleString('en-US');
+
+      const apply = (amount: number, date: string) => {
+        fig.textContent = fmt(amount);
+        if (rec && date) rec.textContent = date;
+      };
+
+      try {
+        const cachedRaw = localStorage.getItem(CACHE_KEY);
+        if (cachedRaw) {
+          const cached = JSON.parse(cachedRaw);
+          if (cached && Date.now() - cached.at < DAY && cached.amount) {
+            apply(cached.amount, cached.date);
+            return; // fresh cache; no network
+          }
+        }
+        const url =
+          'https://api.fiscaldata.treasury.gov/services/api/fiscal_service/v1/accounting/mts/mts_table_5' +
+          '?filter=classification_desc:eq:Total Outlays&sort=-record_date' +
+          '&fields=record_date,current_fytd_net_outly_amt&page[size]=1';
+        const ctrl = new AbortController();
+        const to = setTimeout(() => ctrl.abort(), 6000);
+        const res = await fetch(url, { signal: ctrl.signal });
+        clearTimeout(to);
+        if (!res.ok) return;
+        const json = await res.json();
+        const row = json?.data?.[0];
+        const amount = row ? Number(row.current_fytd_net_outly_amt) : NaN;
+        if (Number.isFinite(amount) && amount > 0) {
+          apply(amount, row.record_date);
+          localStorage.setItem(CACHE_KEY, JSON.stringify({ amount, date: row.record_date, at: Date.now() }));
+        }
+      } catch {
+        // silent fallback: the build-time C-0004 value is already rendered.
+      }
+    })();
+  </script>
 </Document>
