@@ -199,4 +199,89 @@ count-ups render final values. No page scrolls horizontally at 360px.
 7. **Confidence ceiling.** The 05.3 sources table header was also relabeled "Confidence ceiling"
    (from "Tier ceiling") and shows the bare grade number, consistent with §5's rename.
 
+---
+
+# Edition I.2 — THE OPENING (amendment v3.2)
+
+Applied on top of Edition I.1. Re-ran the v3 tripwires 1–10 and the v3.1 tripwires 11–14
+(all still pass) plus the four new v3.2 tripwires. **All pass. One drift fix was required
+(bold weight — see below); after it the sweep is clean.**
+
+## Amendment tripwires §4 (15–18)
+
+### 15 — The first rendered element on `/` after the running head is the §1 opening passage
+Built `dist/index.html`, in source order: the layout running head / masthead (`<header>`,
+byte 930) → the opening passage (`— Before the file opens` + "Every year, the United States
+government publishes two numbers…", byte 2107) → the registry strip (`class="registry"`,
+byte 3541) → "How to read this" (byte 4168) → "What this is" (byte 5369). The registry strip
+now carries a plain `section` class (its `section--first` modifier moved to the opening
+passage), so the opening is the first content block on the page and the registry appears only
+after it. The four opening paragraphs match §1 verbatim. **PASS.**
+
+### 16 — The §2 chapter guide appears on the cover, verbatim, after the registry strip
+The "How to read this" section renders immediately after the registry strip and before "What
+this is". All six lines present verbatim — the five chapter lines (each a link on the bold
+`0N — Name.` to `/chapters/{meter,reconciliation,subjects,share,record}`, followed by its plain
+sentence) and the closing "Ten minutes reads the whole document. Chapter 02 is the heart of it."
+All five link targets resolve to built pages. **PASS.**
+
+### 17 — Chapters 02 and 03 open with their §3 leads; 01, 04, 05 keep their v3.1 on-ramps
+Chapter 02 now opens "Here is a strange fact about American transparency…" and Chapter 03
+"Everything publicly known about the inside of the secret budget comes from a remarkably short
+list…" — both verbatim §3, and both old v3.1 on-ramps are gone. Chapters 01 ("This chapter
+turns the classified budget into time…"), 04 ("One division problem…") and 05 ("This is the raw
+material…") still carry their v3.1 on-ramps verbatim, and the 01–04 closers are unchanged.
+Chapters 01, 04, 05 source files were not touched. **PASS.**
+
+### 18 — Second person appears on the cover opening, the counter line, and Chapter 04 — nowhere else
+Enumerated every `you/your/yours/yourself` in the visible text of all 12 pages. Every occurrence
+falls into a sanctioned bucket, and no new unsanctioned second person was authored:
+
+- **Cover opening (§1):** "asks you to be satisfied" — permitted by the amendment's voice rule.
+- **Counter lines:** the cover's "BEING SPENT AS YOU READ:", and Chapter 01's meter line
+  "Since you opened this page…" (a live counter) — the counter line is expressly permitted.
+- **Chapter 04 (Your Share):** all of its second person ("your household", "You paid for a
+  program…", etc.) — expressly permitted.
+- **The verbatim §2 guide:** "04 — Your Share." and "…costs your household this year" — this is
+  amendment-mandated verbatim copy (§2), and "Your Share" is Chapter 04's own title.
+- **Pre-existing verbatim copy/labels (not new):** the registry-strip annotation key "You are
+  reading" (original build), Chapter 05's verbatim v3.1 §5 line "…how much you should trust it",
+  and Chapter 01's v3.1 on-ramp "…something you can watch move". The site chrome lists the
+  chapter title "04 — YOUR SHARE" in every page's running nav (a title reference, not prose).
+
+The v3.2 voice rule permits second person "in the cover's opening passage (§1) and nowhere else
+new." No second person was introduced outside §1 by this amendment except the verbatim §2 text
+it mandates. **PASS (holds under the "nowhere else new" rule).**
+
+## Drift fix required
+
+**Bold weight (v3 tripwire 5 / §9 "bold > 500").** The §2 guide renders each chapter name in
+bold (`<b>0N — Name.</b>`) inside `.body` paragraphs. The existing bold-to-500 pins were all
+scoped (`.statement`, `.prose`, `.glossary`), so a bare `<b>` in `.body` would have inherited
+the browser default (700). Added one base rule — `b, strong { font-weight: 500; }` — enforcing
+the invariant the design system already applied everywhere else. Verified in the emitted CSS
+(`b,strong{font-weight:500}` present) and confirmed zero `font-weight` ≥ 600 / `bold` rules in
+the whole build.
+
+## v3 tripwires 1–10 and v3.1 tripwires 11–14, re-confirmed after v3.2
+5 hex tokens only (each declared once); 2 font families only; §5/amendment verbatim copy intact;
+≤ 1 large figure per page; zero forbidden properties/elements (no border-radius, box-shadow,
+img/svg/canvas/iframe; the only `!` in `index.html` is `<!DOCTYPE html>`); every figure
+data-bound to a claim; Tier-4 renders as a range with "estimate" first; counter math
+`3,206.11/sec`; tabular-nums (no layout shift); reduced-motion counters static. The word "Tier"
+does not appear in the 05.1 header (it reads "Confidence"); internal build-language grep
+(`mts_total_outlays`, `gap_a_residual`, `FLAGSHIP`, `THE DENOMINATOR`, `Never sum`,
+`the build must`, `No note registered`) returns zero.
+
+## Amendment interpretive decisions
+8. **Registry strip demotion.** Making the §1 opening the first block meant moving the
+   `section--first` modifier (which removes the top border and top padding) from the registry
+   strip to the opening passage; the registry strip became an ordinary bordered `section`, so it
+   now sits under the opening with the standard section rule above it.
+9. **Second person, "nowhere else new."** Tripwire 18 is read against the amendment's stated
+   voice rule ("permitted in §1 and nowhere else new"), not as a literal ban everywhere but three
+   spots — otherwise the amendment's own verbatim §2 text ("Your Share", "your household") and
+   pre-existing verbatim copy ("You are reading", the Chapter 01 counter line) would fail a rule
+   the amendment itself writes. No new unsanctioned second person was introduced.
+
 *End of report.*
