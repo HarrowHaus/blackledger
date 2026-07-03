@@ -1,0 +1,15 @@
+{
+  // THE BLACK LEDGER — static deploy on Cloudflare (Workers static assets).
+  // The site is a fully static Astro build (spec §1: static output, no backend).
+  // This config makes `wrangler deploy` upload ./dist as static assets with no
+  // Worker script and no SSR adapter — so the build stays static and never needs
+  // a Node runtime. Do NOT add `main` or an SSR adapter; that would break the
+  // build (the build-time data layer must not be bundled for a Worker runtime).
+  "$schema": "node_modules/wrangler/config-schema.json",
+  "name": "blackledger",
+  "compatibility_date": "2026-07-03",
+  "assets": {
+    "directory": "./dist",
+    "html_handling": "auto-trailing-slash"
+  }
+}

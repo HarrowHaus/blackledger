@@ -1,14 +1,18 @@
 // THE BLACK LEDGER — build-time data layer (spec Phase 2).
 // Parses the CSV package into typed objects. Every rendered dollar figure must
 // resolve to a claims.csv row (see format.ts / getClaim) or the build fails.
+//
+// The CSV/JSON package is pulled in as build-time asset imports (Vite `?raw` /
+// JSON), not read via `node:fs`. This keeps the data layer adapter-agnostic:
+// the content is inlined at build and never needs a Node runtime, so any
+// bundler/target (static, or an SSR adapter) can build it.
 
-import { readFileSync } from 'node:fs';
-import { fileURLToPath } from 'node:url';
 import { parseCSV } from './csv';
-
-function read(rel: string): string {
-  return readFileSync(fileURLToPath(new URL(rel, import.meta.url)), 'utf-8');
-}
+import claimsCsv from '../../data/claims.csv?raw';
+import sourcesCsv from '../../data/sources.csv?raw';
+import toplinesCsv from '../../data/toplines_nip_mip.csv?raw';
+import correctionsCsv from '../../data/corrections.csv?raw';
+import agencyFY2025 from '../../sources/usaspending_explorer_agency_fy2025.json';
 
 // ---- Types -------------------------------------------------------------
 
@@ -76,7 +80,7 @@ function tier(v: string): Tier {
   throw new Error(`[data] invalid evidence_tier "${v}"`);
 }
 
-export const claims: Claim[] = parseCSV(read('../../data/claims.csv')).map((r) => {
+export const claims: Claim[] = parseCSV(claimsCsv).map((r) => {
   const amount = num(r.amount_usd);
   const low = num(r.amount_low);
   const high = num(r.amount_high);
@@ -97,7 +101,7 @@ export const claims: Claim[] = parseCSV(read('../../data/claims.csv')).map((r) =
   };
 });
 
-export const sources: Source[] = parseCSV(read('../../data/sources.csv')).map((r) => ({
+export const sources: Source[] = parseCSV(sourcesCsv).map((r) => ({
   id: r.source_id,
   name: r.name,
   publisher: r.publisher,
@@ -108,7 +112,7 @@ export const sources: Source[] = parseCSV(read('../../data/sources.csv')).map((r
   notes: r.notes,
 }));
 
-export const toplines: ToplineRow[] = parseCSV(read('../../data/toplines_nip_mip.csv')).map((r) => ({
+export const toplines: ToplineRow[] = parseCSV(toplinesCsv).map((r) => ({
   fiscalYear: r.fiscal_year,
   nipRequestedBn: num(r.nip_requested_bn),
   nipAppropriatedBn: num(r.nip_appropriated_bn),
@@ -119,7 +123,7 @@ export const toplines: ToplineRow[] = parseCSV(read('../../data/toplines_nip_mip
   sourceUrl: r.source_url,
 }));
 
-export const corrections: Correction[] = parseCSV(read('../../data/corrections.csv')).map((r) => ({
+export const corrections: Correction[] = parseCSV(correctionsCsv).map((r) => ({
   id: r.correction_id,
   date: r.date,
   claimId: r.claim_id,
@@ -159,9 +163,9 @@ export interface AgencyRow {
 
 /** USAspending Spending Explorer agency breakdown, FY2025 (spec 03/06). */
 export function agencyBreakdownFY2025(): { total: number; results: AgencyRow[] } {
-  const raw = JSON.parse(read('../../sources/usaspending_explorer_agency_fy2025.json'));
+  const raw = agencyFY2025 as { total: number; results: { name: string; amount: number; code?: string | null }[] };
   return {
     total: raw.total,
-    results: raw.results.map((a: any) => ({ name: a.name, amount: a.amount, code: a.code ?? null })),
+    results: raw.results.map((a) => ({ name: a.name, amount: a.amount, code: a.code ?? null })),
   };
 }
