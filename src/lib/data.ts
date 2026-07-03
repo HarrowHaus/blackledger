@@ -31,7 +31,12 @@ export interface Claim {
   method: string;
   sourceId: string;
   retrieved: string;
+  /** internal-only build notes (amendment v3.1 §4) — MUST NOT render on any public page */
   notes: string;
+  /** public, plain-language name shown in the register and every — Ledger: reference (v3.1 §4) */
+  displayName: string;
+  /** public, plain-language note shown as the row's note (v3.1 §4) */
+  publicNote: string;
   /** true when the claim carries only a low/high band (Tier 4 ranges) */
   isRange: boolean;
 }
@@ -97,6 +102,8 @@ export const claims: Claim[] = parseCSV(claimsCsv).map((r) => {
     sourceId: r.source_id,
     retrieved: r.retrieved,
     notes: r.notes,
+    displayName: r.display_name,
+    publicNote: r.public_note,
     isRange: amount === null && low !== null && high !== null,
   };
 });

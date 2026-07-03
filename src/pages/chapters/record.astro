@@ -43,7 +43,7 @@ function amountCell(c: Claim): string {
                 <td><a href={`#${c.sourceId}`}>{c.sourceId}</a></td>
               </tr>
               <tr class="r-notes">
-                <td colspan="7">{c.notes ? `— ${c.notes}` : '— No note registered for this claim.'}</td>
+                <td colspan="7">{`— ${c.publicNote}`}</td>
               </tr>
             </>
           ))}
