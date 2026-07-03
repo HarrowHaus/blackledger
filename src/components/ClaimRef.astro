@@ -1,0 +1,16 @@
+---
+// Ledger annotation line for a claim (spec §3):
+//   "— Ledger: C-0013 · Tier 1 · retrieved 2026-07-02"
+// The claim ID links to its row anchor in Chapter 05's register.
+import { getClaim } from '../lib/data';
+
+interface Props {
+  /** claim id, e.g. "C-0013" */
+  id: string;
+  /** annotation key; defaults to "Ledger" */
+  label?: string;
+}
+const { id, label = 'Ledger' } = Astro.props;
+const claim = getClaim(id); // throws at build if unknown (spec §1)
+---
+<li>{`— ${label}: `}<a href={`/chapters/record#${claim.id}`}>{claim.id}</a>{` · Tier ${claim.tier} · retrieved ${claim.retrieved}`}</li>

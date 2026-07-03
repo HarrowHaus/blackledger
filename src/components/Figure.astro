@@ -1,0 +1,20 @@
+---
+// The one large figure per chapter (spec §7.7, §2.2). Full-precision digits,
+// mono 500, optionally in --signal. Bound to a claim so it can never drift.
+import { getClaim } from '../lib/data';
+import { bigFigure } from '../lib/format';
+
+interface Props {
+  /** claim id to render as the large figure (full precision) */
+  id?: string;
+  /** or an explicit pre-formatted string (still must come from data upstream) */
+  value?: string;
+  signal?: boolean;
+  label?: string;
+}
+const { id, value, signal = false, label } = Astro.props;
+const text = id ? bigFigure(getClaim(id)) : value;
+if (!text) throw new Error('[Figure] requires either id or value');
+---
+{label && <div class="label" style="margin-bottom:12px">{label}</div>}
+<div class={`figure${signal ? ' figure--signal' : ''}`}>{text}</div>

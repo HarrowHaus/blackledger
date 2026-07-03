@@ -1,0 +1,6 @@
+---
+// One annotation line (spec §3): em-dash U+2014 + single space, then content.
+interface Props { key?: string; }
+const { key } = Astro.props;
+---
+<li>{'— '}{key ? <>{key}: <slot /></> : <slot />}</li>
