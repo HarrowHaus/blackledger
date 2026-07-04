@@ -284,4 +284,63 @@ does not appear in the 05.1 header (it reads "Confidence"); internal build-langu
    pre-existing verbatim copy ("You are reading", the Chapter 01 counter line) would fail a rule
    the amendment itself writes. No new unsanctioned second person was introduced.
 
+---
+
+# Edition I.3 — RECOVERY & POLISH (amendment v3.3)
+
+Applied on top of Edition I.2. Forensic recovery first (§1), then polish (§3–§8), audited
+against the LIVE site at `blackledger.donald-dcd.workers.dev` where the tripwire says so.
+
+## Forensic recovery (§1)
+Branches found: `main` (default) and `claude/spec-amendment-phase-0-x7u97i` (another session's
+v3.2 "the opening" work), which was **already merged into `main` via PR #1** (edition I.2). The
+local checkout had been stale at the v3.1 tip; a rebase synced it, bringing v3.2 into the working
+tree. §1.3 verification passed with no gaps: `claims.csv` has `display_name`/`public_note`; the
+cover has "Before the file opens" and "How to read this"; chapter 02 has "two websites that do
+not talk to each other"; the Record reads "Confidence". Nothing needed re-applying.
+
+## Deployment (§2)
+The Worker deploys via a git-connected Cloudflare build: a push to `main` auto-deploys. Verified
+empirically — a push updated the live site within ~1 minute (the deleted cover paragraph
+disappeared, "Copy link" appeared, the running foot changed to "CH. 00 — COVER"). No manual
+`wrangler` authentication is required, so §2.2's login gate does not apply; "deploy" = push.
+
+## Amendment tripwires §9 (19–24)
+
+- **19 — exactly one branch.** ⚠ NOT YET MET. The merged v3.2 branch is fully contained in
+  `main` (safe to delete — no commits are lost), but deleting it from the remote was blocked by
+  the environment's safety policy (a destructive remote action inferred from the spec file rather
+  than an explicit user instruction). Awaiting the owner's authorization; once deleted, only
+  `main` remains.
+- **20 — v3.1 greps clean on the LIVE pages.** `mts_total_outlays`, `gap_a_residual`, `FLAGSHIP`,
+  `THE DENOMINATOR`, `No note registered` all return zero against the live cover, record, and
+  reconciliation HTML. **PASS.**
+- **21 — live cover has the opening, not the deleted content.** Live `/` contains "Before the
+  file opens"; it does not contain "This document brings the available numbers" or the deleted
+  methodology paragraph. **PASS.**
+- **22 — register loads collapsed.** The live Record renders 27 `<details class="reg-row">`
+  disclosures, none with an `open` attribute — notes are hidden until a row is activated.
+  Native, keyboard-accessible, no JS required. **PASS.**
+- **23 — no dangling "—".** The "You are reading" line is hidden by default and revealed only
+  when JS populates a real value (`HH:MM, DD Mon YYYY`); the live cover shows no
+  "You are reading: —". **PASS.**
+- **24 — Bluesky link opens a pre-filled compose window.** `#share-bsky` resolves at runtime to
+  `https://bsky.app/intent/compose?text=` + the encoded blurb and page URL. **PASS.**
+
+## Prior tripwires 1–18, re-confirmed after v3.3
+5 hex tokens; 2 font families; ≤1 large figure/page; zero forbidden properties/elements;
+Tier-4 as range with "estimate" first; counter math `3,206.11/sec`; tabular-nums; reduced-motion
+static; In-plain-words on every table/register/large-figure; "Tier" absent from the 05.1 header;
+cover opening precedes the registry strip; chapters 02/03 carry the v3.2 leads while 01/04/05
+keep their v3.1 on-ramps; verbatim copy intact (cover "What this is" para 3 intentionally deleted
+per §4). No page scrolls horizontally at 360px.
+
+## Amendment interpretive decisions
+10. **Running feet unified to chapter numbering (§5).** Feet read `CH. {NN} — {CHAPTER NAME} ·
+    P. {page} / {total}`; the six dossier pages retain their `FILE No. 03/0N` content labels, the
+    one place a file number still means something.
+11. **Register source column (§3/§7).** In the collapsed disclosure the source shows as its
+    registry code (e.g. S-03) in the summary; the human-readable source link and its `— API:`
+    endpoint live in the 05.3 registry, which the code cross-references.
+
 *End of report.*
