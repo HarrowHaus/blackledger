@@ -590,6 +590,8 @@ a:focus-visible {
 .sources-table tbody tr[id]:target { outline: 1px solid var(--line); }
 .sources-table .s-tier { text-align: right; white-space: nowrap; }
 .sources-table a { color: var(--ink); }
+.sources-table .s-api-row td { border-bottom: 1px solid var(--line); padding-top: 0; }
+.sources-table .s-api { color: var(--ink-dim); word-break: break-all; }
 
 /* Share links (spec §5 05.5) — plain mono text links, no icons */
 .sharelinks { list-style: none; font-family: var(--font-data); font-size: var(--fs-data); }
@@ -604,6 +606,47 @@ a:focus-visible {
   text-align: left;
 }
 .sharelinks a:hover, .sharelinks button:hover { text-decoration: underline; text-underline-offset: 0.2em; }
+
+/* ---- Component 14: expandable register row (v3.3 §3) ----
+   Each claim is ONE row; its note is collapsed by default and expands inline via a
+   native <details> disclosure — semantic, keyboard-accessible, works with no JS. */
+.reg { max-width: var(--maxw-data); font-family: var(--font-data); font-size: var(--fs-annot); }
+.reg-head,
+.reg-summary {
+  display: grid;
+  grid-template-columns: minmax(190px, 1.7fr) minmax(96px, auto) 48px minmax(128px, auto) 56px;
+  gap: 0 16px;
+  align-items: baseline;
+}
+.reg-head {
+  color: var(--ink-dim);
+  letter-spacing: var(--track-label);
+  text-transform: uppercase;
+  padding: 10px 0;
+  border-bottom: 1px solid var(--line);
+}
+.reg-row { border-bottom: 1px solid var(--line); }
+.reg-summary {
+  padding: 12px 0;
+  cursor: pointer;
+  list-style: none;
+  color: var(--ink);
+}
+.reg-summary::-webkit-details-marker { display: none; }
+.reg-summary::marker { content: ''; }
+.reg-summary:focus-visible { outline: 1px solid var(--line); outline-offset: 2px; }
+.reg-amount { text-align: right; white-space: nowrap; font-variant-numeric: tabular-nums; font-feature-settings: 'tnum' 1, 'lnum' 1; }
+.reg-name::before { content: '+ '; color: var(--ink-dim); }
+.reg-row[open] > .reg-summary .reg-name::before { content: '− '; color: var(--ink-dim); }
+.reg-head .reg-name::before { content: ''; }
+.reg-note {
+  padding: 0 0 14px;
+  color: var(--ink-dim);
+  max-width: var(--maxw-text);
+  line-height: 1.4;
+}
+.reg-row:target { outline: 1px solid var(--line); }
+.reg-row.unverified .reg-name { color: var(--signal); }
 
 /* Generic data table (toplines etc.) */
 .dtable {

@@ -41,7 +41,7 @@ const rate = `~$${grouped(Math.round(COUNTER_RATE))} / sec`; // ~$3,206 / sec
       <AnnotLine key="In plain words">This is the case file's cover — what we're auditing, how big it is, and when the file opened.</AnnotLine>
       <AnnotLine>Official registry</AnnotLine>
       <AnnotLine key="Jurisdiction">United States of America</AnnotLine>
-      <AnnotLine key="You are reading"><span id="local-time" class="mono">—</span></AnnotLine>
+      <li id="reading-line" style="display:none">{'— You are reading: '}<span id="local-time" class="mono"></span></li>
     </Annot>
   </section>
 
@@ -64,7 +64,6 @@ const rate = `~$${grouped(Math.round(COUNTER_RATE))} / sec`; // ~$3,206 / sec
     <div class="stack" style="margin-top:24px">
       <p class="body">An open audit of the classified expenditure of the United States for <G t="fiscal-year">fiscal year</G> 2025 — compiled entirely from official disclosures, authenticated leaked documents, records released under the Freedom of Information Act, and published audits, designed for any reader.</p>
       <p class="body">The United States publishes exactly two classified spending figures each year. The first, the National Intelligence Program <G t="topline">topline</G>, is required by statute — 50 U.S.C. §3306. The second, the Military Intelligence Program topline, has been disclosed voluntarily by the Department of Defense every year since 2007. For fiscal year 2025 the two figures total $101.1 billion. Below these toplines, disclosure ends. The department responsible for the majority of this spending has failed its financial audit eight consecutive times and is the only major federal agency never to have passed one.</p>
-      <p class="body">This document brings the available numbers into one place. It makes no accusations; it documents what is published, what is admitted, and what can be bounded. Every figure links to its source and carries a stated evidence tier. Nothing modeled is ever combined with anything official.</p>
     </div>
   </section>
 
@@ -103,12 +102,6 @@ const rate = `~$${grouped(Math.round(COUNTER_RATE))} / sec`; // ~$3,206 / sec
       <AnnotLine>Acknowledged: <CId id="C-0013" /> · Unreported: <CId id="C-0009" /></AnnotLine>
     </Annot>
     <p class="linkline"><a href="/chapters/reconciliation">→ See Chapter 02 — The Reconciliation</a></p>
-  </section>
-
-  <!-- Methodology note -->
-  <section class="section">
-    <div class="label">Methodology:</div>
-    <p class="body" style="margin-top:20px">All figures are drawn from official sources — the Treasury Monthly Statement, USAspending.gov, the Office of the Director of National Intelligence, the Department of Defense Comptroller and Inspector General — or from authenticated documents and released records, each labeled with its evidence tier. The project makes no accusations. It documents how public money is accounted for, and where the accounting ends.</p>
     <p class="linkline"><a href="/chapters/record">Full registry of sources → Chapter 05</a></p>
   </section>
 
@@ -123,14 +116,25 @@ const rate = `~$${grouped(Math.round(COUNTER_RATE))} / sec`; // ~$3,206 / sec
   </section>
 
   <script>
-    // "You are reading" — visitor local time, updates each minute (spec §5 cover).
+    // "You are reading" — visitor local time as HH:MM, DD Mon YYYY, updating each minute
+    // (v3.3 §8). The line is hidden by default; JS reveals it only when it has a real value,
+    // so no dangling "—" is ever rendered when JS is unavailable or the value is empty.
     const el = document.getElementById('local-time');
-    if (el) {
+    const line = document.getElementById('reading-line');
+    if (el && line) {
+      const MONTHS = ['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec'];
       const render = () => {
         const now = new Date();
-        const t = now.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit', hour12: false });
-        const tz = Intl.DateTimeFormat().resolvedOptions().timeZone || 'local';
-        el.textContent = `${t} · ${tz}`;
+        const hh = String(now.getHours()).padStart(2, '0');
+        const mm = String(now.getMinutes()).padStart(2, '0');
+        const dd = String(now.getDate()).padStart(2, '0');
+        const val = `${hh}:${mm}, ${dd} ${MONTHS[now.getMonth()]} ${now.getFullYear()}`;
+        if (val && val.trim()) {
+          el.textContent = val;
+          line.style.display = '';
+        } else {
+          line.style.display = 'none';
+        }
       };
       render();
       setInterval(render, 60000);
