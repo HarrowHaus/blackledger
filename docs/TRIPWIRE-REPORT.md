@@ -343,4 +343,103 @@ per §4). No page scrolls horizontally at 360px.
     registry code (e.g. S-03) in the summary; the human-readable source link and its `— API:`
     endpoint live in the 05.3 registry, which the code cross-references.
 
+---
+
+# Edition I — FINAL PASS: VOICE & SURGERY (amendment v3.4)
+
+Applied on top of Edition I.3. Voice purge (Part One), surgery (Part Two), then tripwires
+25–30 run against the LIVE site (`blackledger.donald-dcd.workers.dev`) — every check below
+was executed against fetched production HTML, not the local build. All 12 live pages were
+downloaded (`curl` of `/`, the four chapters, the subjects index, and the six dossiers) and
+the greps below ran across that full set.
+
+## Tripwire 25 — banned strings, sitewide, live: all zero
+
+Command (over all 12 fetched live pages):
+```
+for s in "In plain words" "What this chapter established" "Ten minutes reads" \
+         "How to read this" "to be registered as a Tier 1 claim" "The denominator of this audit"; do
+  cat live-*.html | grep -o "$s" | wc -l; done
+```
+Results: `In plain words` 0 · `What this chapter established` 0 · `Ten minutes reads` 0 ·
+`How to read this` 0 · `to be registered as a Tier 1 claim` 0 · `The denominator of this audit` 0.
+The prior internal-language set also re-ran clean on the same live pages: `mts_total_outlays`,
+`gap_a_residual`, `FLAGSHIP`, `THE DENOMINATOR`, `Never sum`, `the build must`,
+`No note registered` — all 0. **PASS.**
+
+## Tripwire 26 — live cover: no "What this is", no "→ See Chapter", counter ≤ 4 lines
+
+On fetched live `/`: `grep -o "What this is" | wc -l` → 0; `grep -o "→ See Chapter" | wc -l`
+→ 0; counting `<li>` inside the counter section (from `BEING SPENT AS YOU READ` to its
+`</section>`) → exactly **4** annotation lines, verbatim per §2.1. **PASS.**
+
+## Tripwire 27 — collapsed register rows on the live Record
+
+`grep -o '<details' live-record.html | wc -l` → **28** (one per claim, C-0001…C-0028; the
+spec's literal `grep -c` returns 1 only because the production HTML is minified to one line —
+the occurrence count is the meaningful figure). Zero rows carry an `open` attribute:
+`grep -o '<details[^>]*open' | wc -l` → 0 — all notes collapsed on load. **PASS.**
+
+## Tripwire 28 — every glossary link resolves, verified programmatically on live HTML
+
+Extracted every `id="gloss-…"` anchor on the live Record and every `/chapters/record#gloss-…`
+href across all 12 live pages, then diffed the sets:
+anchors = links = { gloss-appropriated, gloss-disclaimer-of-opinion, gloss-fiscal-year,
+gloss-obligations, gloss-outlays, gloss-requested, gloss-topline }; dangling links: **none**.
+**PASS.**
+
+## Tripwire 29 — no "You are reading" outside a script tag in the served cover
+
+On the fetched live `/`: total occurrences of `You are reading` in the HTML = **0** (after
+stripping `<script>` blocks, also 0). The line exists only in the bundled script
+(`/_astro/hoisted.*.js` contains the string once) and is created entirely by JavaScript
+(v3.4 §2.6); with JavaScript unavailable the line does not exist in any form. **PASS.**
+
+## Tripwire 30 — Contents verbatim; no `Tier` table header on any dossier page
+
+All six §1.2 lines matched the live cover **verbatim** by exact substring check (the five
+chapter lines and their descriptors, under the mono label `— Contents`, with no sentence after
+the list). `grep -l "<th[^>]*>Tier</th>"` across the six fetched live dossier pages → 0 files.
+The leaked-interior table header now reads `Confidence` and its cells `2 — Authenticated leak`.
+**PASS.**
+
+## The voice purge — every sentence deleted (Part One)
+
+1. `Ten minutes reads the whole document. Chapter 02 is the heart of it.` (cover)
+2. `— What this chapter established: the acknowledged secret budget spends about $3,206 every second.` (01)
+3. `— What this chapter established: the money the government cannot or does not account for publicly is larger than the money it admits is secret.` (02)
+4. `— What this chapter established: below two published totals, everything known comes from one leak, a handful of released records, and labeled estimates.` (03)
+5. `— What this chapter established: the acknowledged secret budget costs your household about $754 this year.` (04)
+6. `— In plain words: This is the case file's cover — what we're auditing, how big it is, and when the file opened.` (cover registry strip)
+7. The label prefix `In plain words: ` removed from all 21 annotations sitewide (sentences kept, now unlabeled first lines).
+8. `— The denominator of this audit` (Meter 3).
+9. The instructional Your-Share line (`Divide the admitted secret budget…`) → replaced per §1.3.
+10. The Reconciliation row-1 plain line (`Start with everything the government paid out…`) →
+    moved to the top of the block and replaced per §1.3.
+11. "How to read this" (six lines) → replaced wholesale by the §1.2 `— Contents` index.
+12. The entire "What this is" section (label + both paragraphs), per §2.1 — its two
+    non-duplicate facts now live as Subject-block annotations.
+13. Both cover cross-links `→ See Chapter 01 — The Meter` and `→ See Chapter 02 — The Reconciliation`.
+14. The Your-Share build-note sentence (`household count: to be registered as a Tier 1 claim at
+    build…`) → replaced by `— Ledger: C-0013 · households: C-0028 (approximate)` with the new
+    Tier-1 claim C-0028 (134,000,000 households, IRS SOI, source S-21) registered in the data.
+
+## Vocabulary + numbering (Part Two, §2.3)
+
+FILE numbering: the subjects-index next-link reads `↓ FILE 03/01 — THE NATIONAL INTELLIGENCE
+PROGRAM`; dossier prev/next links read `← FILE 03/0N — NAME` / `FILE 03/0N — NAME →`. Every
+remaining visible `Tier N` on dossier pages converted to Confidence vocabulary (annotation
+lines and two body-prose mentions); the register and dossier tables share one vocabulary. The
+`— Registry entries` em-dash is glued to its entry with a no-break space so it can never wrap
+onto its own line. The running-foot colophon counts are now data-bound
+(`21 REGISTERED SOURCES · 28 CLAIMS`).
+
+## One branch (v3.3 tripwire 19, carried forward)
+
+The merged `claude/spec-amendment-phase-0-x7u97i` branch was deleted locally; deleting it on
+the remote is still refused by this environment's git proxy (HTTP 403 on
+`git push origin --delete`) — a platform guardrail, not a repository setting. Every commit in
+it is contained in `main` (merged via PR #1), so removing it on GitHub
+(Branches → delete) loses nothing. Until then, `main` is the only branch that receives work.
+
 *End of report.*
