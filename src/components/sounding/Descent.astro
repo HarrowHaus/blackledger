@@ -1,0 +1,114 @@
+---
+// One descent column (SPEC v4 §4): SURFACE → CONTEXT → METHOD → RECORD,
+// then Below the Record (v4.1 §3.4). Hidden until its monument is sounded.
+import type { DescentData } from '../../lib/sounding/descents';
+
+interface Props {
+  d: DescentData;
+}
+const { d } = Astro.props;
+---
+
+<article class="descent" id={`descent-${d.slug}`} hidden>
+  <section class="stratum" data-stratum="surface">
+    <div class="stratum__pin">
+      <p class="descent__caption">{d.caption}</p>
+    </div>
+  </section>
+
+  <section class="stratum" data-stratum="context">
+    <div class="stratum__pin">
+      <div class="stratum__body">
+        {d.context.map((s) => <p class="context-prose descent__context">{s}</p>)}
+        {
+          d.bar && (
+            <div class="prop">
+              <div class="prop__track">
+                <span class="prop__fill" data-fill={String(d.bar.pct / 100)}></span>
+              </div>
+              <p class="prop__caption caps num">{d.bar.caption}</p>
+            </div>
+          )
+        }
+      </div>
+    </div>
+  </section>
+
+  <section class="stratum" data-stratum="method">
+    <div class="stratum__pin">
+      <div class="stratum__body">
+        <div class="equation mono num">
+          {d.equation.map((line) => <p>{line}</p>)}
+        </div>
+        <p class="stamp caps num" data-stamp>{d.stamp}</p>
+        {
+          d.assumptions.length > 0 && (
+            <ul class="assumptions mono">
+              {d.assumptions.map((a) => (
+                <li>{a}</li>
+              ))}
+            </ul>
+          )
+        }
+      </div>
+    </div>
+  </section>
+
+  <section class="stratum stratum--record" data-stratum="record">
+    <div class="stratum__pin">
+      <div class="stratum__body">
+        {
+          d.record.map((r) => (
+            <dl class="ledgerrow mono num">
+              <div>
+                <dt class="caps">ID</dt>
+                <dd>{r.id}</dd>
+              </div>
+              <div>
+                <dt class="caps">METRIC</dt>
+                <dd>{r.metric}</dd>
+              </div>
+              <div>
+                <dt class="caps">AMOUNT</dt>
+                <dd>{r.amount}</dd>
+              </div>
+              <div>
+                <dt class="caps">YEAR</dt>
+                <dd>{r.year}</dd>
+              </div>
+              <div>
+                <dt class="caps">SOURCE</dt>
+                <dd>
+                  <a href={r.sourceUrl} rel="noopener" target="_blank">
+                    {r.sourceName}
+                  </a>
+                </dd>
+              </div>
+              <div>
+                <dt class="caps">RETRIEVED</dt>
+                <dd>{r.retrieved}</dd>
+              </div>
+            </dl>
+          ))
+        }
+        <p class="descent__recordlink mono">
+          <a href="/record">→ the full record</a>
+        </p>
+        {
+          d.file && (
+            <p class="descent__file mono">
+              <a class="caps" href={`/files/${d.file.slug}`}>
+                {d.file.name}
+              </a>
+              <span class="descent__stake">{d.file.stake}</span>
+            </p>
+          )
+        }
+      </div>
+    </div>
+  </section>
+
+  <section class="below" data-stratum="record">
+    <pre class="below__json mono">{d.provenance}</pre>
+  </section>
+</article>

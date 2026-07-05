@@ -45,3 +45,24 @@
 | 404 shipped in Phase 2 | designed artifact with §2's verbatim copy + broken-line stub mark; `not_found_handling: "404-page"` in wrangler | the Face's FILES/RECORD links precede their pages by two phases; the net under them is specified, so it went up with them |
 | Visually-hidden h1 "THE BLACK LEDGER" | | headings must be hierarchical (v4.1 §5) on a page whose only visible text is evidence |
 | WONK K in the top-left wordmark | the K of BLACK set in Fraunces WONK 1 inside the mono wordmark | v4.1 §1 verbatim — the single controlled quirk, placed exactly where it names itself |
+
+## Phase 3 — The Descent
+
+| element | decision | derivation (one line) |
+|---|---|---|
+| CSS `position: sticky` as the pin mechanism | each stratum is 150svh tall with a 100svh sticky face; GSAP handles the scrub (0.6) on top | the pin must be unbreakable inside a nested scrolled overlay — sticky is the native pin, and the borehole cannot afford a jammed drill |
+| Second Lenis instance per descent | created on open with the overlay as wrapper, destroyed on ascend; never created under reduced motion | v4 §4 verbatim: "one Lenis-scrolled column"; the borehole has its own momentum |
+| Strata attribute drives background | `data-stratum` on the overlay, CSS transition 500ms between the four v4.1 §1 hexes | depth is continuous; the ground darkens as you sink and warms at bedrock |
+| Content resolve on scrub | each stratum's body rises from 15% opacity over scrub 0.6 as it pins | v4 §4: content "resolves" as the stratum pins — resolution is the reward for depth |
+| Proportion fill in bone, track in hairline | the bar's fill is data, not signal | ember is reserved (v4 §2): live digits, stamps, gauge tick — a static proportion is evidence, so it speaks in bone |
+| Percentages floored, not rounded | 2.952% renders "2.9%" | the ledger never overstates — and §4's verbatim monument-2 caption confirms truncation |
+| Monument 6 has no proportion bar | the audit is a status claim with no dollar figure | a bar against outlays requires a dollar numerator; drawing one would invent data (DEVIATION, reported) |
+| CONTEXT copy for monuments 1, 3–8 | authored from each claim's public_note + one comparison, §7 voice law | v4 §4 prescribes the recipe and gives only monument 2 verbatim; the rest are flagged to the owner in the phase report |
+| Stamp entry once, 200ms scale-settle | scale 1.35→1 with opacity, fired on first entry only | v4 §4 verbatim: a stamp is pressed once; re-stamping on every pass would make it a decoration |
+| FLIP ghost element | a fixed clone of the tapped number animates monument→header in 500ms, then the real header figure appears | v4 §4 verbatim: the number shrinks from monument scale to the header — the fact survives the descent |
+| History: pushState on open, back() on ascend | deep links `#/sounding/{slug}` open directly; popstate always closes/opens to match | v4 §4: browser Back always works; a URL per descent makes every sounding addressable |
+| Rubber-band exit needs 250ms at bottom | bottom intent within the settle window is ignored | the release must be deliberate; accidental overscroll must not eject the reader from bedrock |
+| Ledger rows for every claim the figure uses | monuments derived from two claims show both rows at bedrock | the record stratum is the claim's actual row (v4 §4); a derived figure owes the reader both parents |
+| Provenance fragments (v4.1 §3.4) | C-0009 descents show the actual USAspending JSON entry; others show their claims.csv rows as JSON | bedrock under bedrock is the raw data we actually hold — nothing staged |
+| File stake at bedrock only where a file cites the claim | C-0009 → THE UNREPORTED LINE, C-0017 → THE BOOKS | §5.2: files are "reachable from relevant RECORD strata" — relevance is citation, not decoration |
+| Grain shader not built | the §1 option stays unexercised | v4 §1/§6: optional and budget-gated; the quietest thing that serves depth is ground, not texture (recorded, not silent) |

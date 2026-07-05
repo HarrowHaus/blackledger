@@ -1,18 +1,13 @@
 ---
-// THE BLACK LEDGER · EDITION II — THE FACE (SPEC v4 §3, §9; v4.1 integrated).
-// The homepage is eight monuments and a footer. Nothing else.
+// THE BLACK LEDGER · EDITION II — THE FACE (SPEC v4 §3, §9) + THE DESCENT (v4 §4).
+// The homepage is eight monuments and a footer; each monument can be sounded.
 import Sounding from '../layouts/Sounding.astro';
 import MarkStub from '../components/sounding/MarkStub.astro';
-import { MONUMENTS, COUNTER_RATE } from '../lib/sounding/monuments';
-
-const FILES = [
-  { slug: 'langley', name: 'LANGLEY', stake: 'the CIA: 28% of the budget in the only year we ever saw inside.' },
-  { slug: 'fort-meade', name: 'FORT MEADE', stake: 'the NSA: a fifth of the black budget, and the reason we know any of this — its contractor walked out with the document.' },
-  { slug: 'the-document', name: 'THE DOCUMENT', stake: 'the 2013 leak: Edward Snowden’s disclosure, the Washington Post’s decision to publish, the only map that exists.' },
-  { slug: 'the-books', name: 'THE BOOKS', stake: 'the Pentagon’s audit: eight failures, twenty-six weaknesses, and the inspectors who keep writing it down.' },
-  { slug: 'the-six-point-five-trillion', name: 'THE SIX-POINT-FIVE TRILLION', stake: 'the misused number: what the Army’s unsupported entries actually prove, and what they don’t.' },
-  { slug: 'the-unreported-line', name: 'THE UNREPORTED LINE', stake: 'the confession in the machine: the government’s own site admitting what it isn’t told.' },
-];
+import Descent from '../components/sounding/Descent.astro';
+import { MONUMENTS } from '../lib/sounding/monuments';
+import { DESCENTS } from '../lib/sounding/descents';
+import { FILES } from '../lib/sounding/files';
+import '../styles/descent.css';
 
 const THESIS =
   'The United States admits $101.1 billion of classified spending a year — and fails to account for twice that. Every figure on this site is traceable to its source.';
@@ -42,21 +37,29 @@ const THESIS =
           data-citation={m.citation}
           aria-label={`Monument ${m.n}`}
         >
-          <figure class="monument__fig">
-            <MarkStub kind={i + 1} />
-            <div
-              class={`monument__num display num hang${m.long ? ' monument__num--long' : ''}${m.live ? ' monument__num--live' : ''}`}
-              data-figure={m.figure}
-              data-live={m.live ? 'true' : undefined}
-            >
-              {m.figure}
-            </div>
-            <figcaption class="monument__caption">
-              {m.caption}
-              {m.live && <span class="monument__away caps num" data-away aria-live="polite"></span>}
-            </figcaption>
-            <span class="monument__ledger caps">{m.ledger}</span>
-          </figure>
+          <a
+            class="monument__link"
+            href={`#/sounding/${m.slug}`}
+            data-sound={m.slug}
+            aria-label={`Sound this number: ${m.figure} ${m.caption}`}
+          >
+            <figure class="monument__fig">
+              <MarkStub kind={i + 1} />
+              <div
+                class={`monument__num display num hang${m.long ? ' monument__num--long' : ''}${m.live ? ' monument__num--live' : ''}`}
+                data-figure={m.figure}
+                data-live={m.live ? 'true' : undefined}
+              >
+                {m.figure}
+              </div>
+              <figcaption class="monument__caption">
+                {m.caption}
+                {m.live && <span class="monument__away caps num" data-away aria-live="polite"></span>}
+              </figcaption>
+              <span class="monument__ledger caps">{m.ledger}</span>
+              <span class="monument__sound caps">SOUND THIS NUMBER ↓</span>
+            </figure>
+          </a>
         </section>
       ))
     }
@@ -82,6 +85,24 @@ const THESIS =
       <p class="foot__colophon caps">PUBLISHED AS AN OPEN AUDIT · EDITION II · MMXXVI</p>
     </footer>
   </main>
+
+  <!-- THE DESCENT (v4 §4): overlay, one scrolled column per sounded monument -->
+  <div class="sounding" id="sounding" hidden data-stratum="surface" role="dialog" aria-modal="true" aria-label="Sounding">
+    <div class="sounding__col" id="sounding-col">
+      {DESCENTS.map((d) => <Descent d={d} />)}
+    </div>
+  </div>
+  <div class="sounding__head" id="sounding-head" hidden>
+    <p class="sounding__fig display num" id="sounding-fig"></p>
+    <button class="sounding__ascend" type="button" id="ascend">× ASCEND</button>
+  </div>
+  <nav class="gauge" id="gauge" aria-hidden="true" data-stratum="surface" hidden>
+    <span class="gauge__tick caps" data-tick="surface">SURFACE</span>
+    <span class="gauge__tick caps" data-tick="context">CONTEXT</span>
+    <span class="gauge__tick caps" data-tick="method">METHOD</span>
+    <span class="gauge__tick caps" data-tick="record">RECORD</span>
+  </nav>
+  <p class="visually-hidden" aria-live="polite" id="stratum-announce"></p>
 </Sounding>
 
 <style>
@@ -100,7 +121,7 @@ const THESIS =
     pointer-events: auto;
     font-size: 0.625rem;
     color: var(--bone-dim);
-    padding: 12px; /* ≥44px hit target (v4.1 §2) */
+    padding: 12px;
     margin: -12px;
   }
   .chrome a:hover,
@@ -125,7 +146,7 @@ const THESIS =
     white-space: nowrap;
   }
 
-  /* ---- the rail: desktop only; thin ember tick marks the monument in view (v4 §3) ---- */
+  /* ---- the rail: desktop only (v4 §3) ---- */
   .rail {
     display: none;
   }
@@ -152,10 +173,7 @@ const THESIS =
     }
   }
 
-  /* ---- the feed: one monument per viewport, snap on touch (v4 §1/§3) ---- */
-  .face {
-    width: 100%;
-  }
+  /* ---- the feed (v4 §1/§3) ---- */
   @media (pointer: coarse) {
     :global(html) {
       scroll-snap-type: y mandatory;
@@ -183,7 +201,7 @@ const THESIS =
     max-width: 100%;
   }
   .monument :global(.mark) {
-    width: clamp(40px, 9vh, 64px); /* max ~15% viewport (v4 §5.1) */
+    width: clamp(40px, 9vh, 64px);
     height: auto;
     color: var(--bone);
   }
@@ -193,15 +211,15 @@ const THESIS =
     max-width: 100%;
   }
   .monument__num--long {
-    font-size: clamp(2.25rem, 10.5vw, 8.5rem); /* 12-digit figure must hold one line */
+    font-size: clamp(2.25rem, 10.5vw, 8.5rem);
   }
   .monument__num--live {
-    color: var(--ember); /* live counter, ember digits (v4 §3) */
+    color: var(--ember);
   }
   .monument__caption {
     font-family: var(--font-display);
     font-style: italic;
-    font-size: 1.125rem; /* captions Fraunces italic (v4 §2) */
+    font-size: 1.125rem;
     line-height: var(--leading-context);
     color: var(--bone);
     max-width: 34ch;
@@ -217,7 +235,7 @@ const THESIS =
     font-size: 0.6875rem;
     font-style: normal;
     color: var(--bone-dim);
-    min-height: 1.2em; /* reserved: its arrival must not shift layout (CLS 0) */
+    min-height: 1.2em;
   }
   .monument__ledger {
     font-size: 0.5625rem;
@@ -279,39 +297,41 @@ const THESIS =
 </style>
 
 <script>
-  import { gsap, ScrollTrigger, SplitText, DrawSVGPlugin, reducedMotion } from '../lib/sounding/motion';
+  import { gsap, ScrollTrigger, SplitText, reducedMotion } from '../lib/sounding/motion';
+  import { getLenis } from '../lib/sounding/motion';
   import { COUNTER_RATE } from '../lib/sounding/monuments';
+  import Lenis from 'lenis';
 
   const reduced = reducedMotion();
   const grouper = new Intl.NumberFormat('en-US', { maximumFractionDigits: 0 });
   const usd = (n: number) => '$' + grouper.format(Math.round(n));
 
-  // ---- arrivals: SplitText materialization + per-digit count-up, once (v4 §3) ----
+  /* ================= THE FACE ================= */
+
   const monuments = Array.from(document.querySelectorAll<HTMLElement>('.monument'));
   if (!reduced) {
     for (const el of monuments) {
       const num = el.querySelector<HTMLElement>('.monument__num');
       const caption = el.querySelector<HTMLElement>('.monument__caption');
       const mark = el.querySelector<SVGElement>('[data-mark]');
+      const sound = el.querySelector<HTMLElement>('.monument__sound');
       if (!num) continue;
       const isLive = num.dataset.live === 'true';
       gsap.set(caption, { opacity: 0 });
+      if (sound) gsap.set(sound, { opacity: 0 });
       if (mark) gsap.set(mark.querySelectorAll('path'), { drawSVG: '0%' });
 
       let arrive: () => void;
       if (isLive) {
-        // the live counter cannot be split (its text changes every second) — the block materializes whole
         gsap.set(num, { y: '0.6em', opacity: 0 });
         arrive = () => {
           gsap.to(num, { y: 0, opacity: 1, duration: 0.9, ease: 'expo.out' });
         };
       } else {
-        // words wrap as units (a figure like “$115.5 billion” must never break mid-word)
         const split = new SplitText(num, { type: 'words,chars' });
         gsap.set(split.chars, { y: '0.6em', opacity: 0 });
         arrive = () => {
           gsap.to(split.chars, { y: 0, opacity: 1, duration: 0.9, ease: 'expo.out', stagger: 0.02 });
-          // count-up over the same beat: each digit rolls to its final value (tabular-nums: no shift)
           for (const ch of split.chars) {
             const target = Number(ch.textContent);
             if (!Number.isInteger(target)) continue;
@@ -336,6 +356,7 @@ const THESIS =
         onEnter: () => {
           arrive();
           if (caption) gsap.to(caption, { opacity: 1, duration: 0.5, delay: 0.15 });
+          if (sound) gsap.to(sound, { opacity: 1, duration: 0.5, delay: 0.3 });
           if (mark)
             gsap.to(mark.querySelectorAll('path'), {
               drawSVG: '100%',
@@ -348,7 +369,7 @@ const THESIS =
     }
   }
 
-  // ---- the rail: ember tick tracks the monument in view (v4 §3) ----
+  // the rail
   const ticks = new Map<string, HTMLElement>();
   document.querySelectorAll<HTMLElement>('[data-rail]').forEach((t) => ticks.set(t.dataset.rail!, t));
   let currentTick: HTMLElement | null = null;
@@ -367,7 +388,7 @@ const THESIS =
   );
   monuments.forEach((m) => io.observe(m));
 
-  // ---- the live counter: wall-clock accumulation, rAF-batched 1/sec, ember (v4 §3/§6) ----
+  // the live counter
   const liveEl = document.querySelector<HTMLElement>('[data-live]');
   const awayEl = document.querySelector<HTMLElement>('[data-away]');
   const arrivedAt = Date.now();
@@ -384,19 +405,7 @@ const THESIS =
     }
   });
 
-  // ---- the Pulse: the ember tick beats once per second (v4.1 §3.2) ----
-  if (!reduced) {
-    setInterval(() => {
-      if (document.hidden || !currentTick) return;
-      gsap.fromTo(
-        currentTick,
-        { scale: 1 },
-        { scale: 1.15, duration: 0.15, yoyo: true, repeat: 1, ease: 'power1.inOut' }
-      );
-    }, 1000);
-  }
-
-  // ---- the blurred-tab title + the away line (v4.1 §3.6) ----
+  // the blurred-tab title (v4.1 §3.6)
   const HOME_TITLE = document.title;
   let hiddenAt: number | null = null;
   document.addEventListener('visibilitychange', () => {
@@ -414,7 +423,7 @@ const THESIS =
     }
   });
 
-  // ---- citation on copy (v4.1 §3.3) ----
+  // citation on copy (v4.1 §3.3)
   document.addEventListener('copy', (e) => {
     try {
       const sel = window.getSelection();
@@ -427,7 +436,309 @@ const THESIS =
       e.clipboardData?.setData('text/plain', monument.dataset.citation ?? sel.toString());
       e.preventDefault();
     } catch {
-      /* graceful no-op (v4.1 §3.3) */
+      /* graceful no-op */
     }
   });
+
+  /* ================= THE DESCENT (v4 §4) ================= */
+
+  const sounding = document.getElementById('sounding')!;
+  const soundingCol = document.getElementById('sounding-col')!;
+  const soundingHead = document.getElementById('sounding-head')!;
+  const soundingFig = document.getElementById('sounding-fig')!;
+  const gauge = document.getElementById('gauge')!;
+  const announce = document.getElementById('stratum-announce')!;
+  const ascendBtn = document.getElementById('ascend')!;
+  const gaugeTicks = new Map<string, HTMLElement>();
+  gauge.querySelectorAll<HTMLElement>('[data-tick]').forEach((t) => gaugeTicks.set(t.dataset.tick!, t));
+
+  let openSlug: string | null = null;
+  let pushedByUs = false;
+  let lastFocus: HTMLElement | null = null;
+  let overlayLenis: Lenis | null = null;
+  let overlayRaf: ((t: number) => void) | null = null;
+  let triggers: ScrollTrigger[] = [];
+  let tweens: gsap.core.Tween[] = [];
+  let currentGaugeTick: HTMLElement | null = null;
+  let atBottomSince = 0;
+  let exiting = false;
+
+  function setStratum(name: string) {
+    sounding.dataset.stratum = name;
+    gauge.dataset.stratum = name;
+    currentGaugeTick?.classList.remove('is-current');
+    currentGaugeTick = gaugeTicks.get(name) ?? null;
+    currentGaugeTick?.classList.add('is-current');
+    announce.textContent = `Stratum: ${name.toUpperCase()}`;
+  }
+
+  function buildTriggers(article: HTMLElement) {
+    const sections = Array.from(article.querySelectorAll<HTMLElement>('[data-stratum]'));
+    for (const sec of sections) {
+      triggers.push(
+        ScrollTrigger.create({
+          scroller: sounding,
+          trigger: sec,
+          start: 'top 55%',
+          end: 'bottom 55%',
+          onToggle: (self) => {
+            if (self.isActive) setStratum(sec.dataset.stratum!);
+          },
+        })
+      );
+      const body = sec.querySelector<HTMLElement>('.stratum__body, .descent__caption');
+      if (body) {
+        const tw = gsap.fromTo(
+          body,
+          { opacity: 0.15, y: 28 },
+          {
+            opacity: 1,
+            y: 0,
+            ease: 'none',
+            scrollTrigger: { scroller: sounding, trigger: sec, start: 'top 85%', end: 'top 30%', scrub: 0.6 },
+          }
+        );
+        tweens.push(tw);
+        if (tw.scrollTrigger) triggers.push(tw.scrollTrigger);
+      }
+    }
+    const fill = article.querySelector<HTMLElement>('.prop__fill');
+    if (fill) {
+      const tw = gsap.fromTo(
+        fill,
+        { scaleX: 0 },
+        {
+          scaleX: Number(fill.dataset.fill),
+          ease: 'none',
+          scrollTrigger: {
+            scroller: sounding,
+            trigger: fill.closest('.stratum'),
+            start: 'top 70%',
+            end: 'center 45%',
+            scrub: 0.6,
+          },
+        }
+      );
+      tweens.push(tw);
+      if (tw.scrollTrigger) triggers.push(tw.scrollTrigger);
+    }
+    const stamp = article.querySelector<HTMLElement>('[data-stamp]');
+    if (stamp) {
+      gsap.set(stamp, { opacity: 0 });
+      triggers.push(
+        ScrollTrigger.create({
+          scroller: sounding,
+          trigger: stamp,
+          start: 'top 80%',
+          once: true,
+          onEnter: () =>
+            gsap.fromTo(
+              stamp,
+              { scale: 1.35, opacity: 0 },
+              { scale: 1, opacity: 1, duration: 0.2, ease: 'power2.out' }
+            ),
+        })
+      );
+    }
+  }
+
+  function open(slug: string, push: boolean) {
+    if (openSlug === slug) return;
+    if (openSlug) close(false);
+    const article = document.getElementById(`descent-${slug}`);
+    const monument = document.querySelector<HTMLElement>(`[data-sound="${slug}"]`);
+    if (!article) return;
+    openSlug = slug;
+    lastFocus = (document.activeElement as HTMLElement) ?? null;
+    article.hidden = false;
+
+    const num = monument?.querySelector<HTMLElement>('.monument__num');
+    soundingFig.textContent = num?.dataset.figure ?? '';
+
+    document.documentElement.classList.add('descending');
+    document.body.style.overflow = 'hidden';
+    getLenis()?.stop();
+
+    sounding.hidden = false;
+    soundingHead.hidden = false;
+    gauge.hidden = false;
+    sounding.scrollTop = 0;
+    setStratum('surface');
+
+    if (!reduced) {
+      // the takeover: FLIP-style shrink of the tapped number into the fixed header (500ms)
+      gsap.fromTo(sounding, { opacity: 0 }, { opacity: 1, duration: 0.5, ease: 'power2.out' });
+      if (num) {
+        const from = num.getBoundingClientRect();
+        gsap.set(soundingFig, { visibility: 'hidden' });
+        const to = soundingFig.getBoundingClientRect();
+        const ghost = num.cloneNode(true) as HTMLElement;
+        ghost.className = 'sounding__ghost display num';
+        ghost.style.fontSize = getComputedStyle(num).fontSize;
+        document.body.appendChild(ghost);
+        const gw = ghost.getBoundingClientRect();
+        const scaleEnd = to.height / gw.height;
+        gsap.fromTo(
+          ghost,
+          { x: from.left, y: from.top, scale: from.height / gw.height },
+          {
+            x: to.left,
+            y: to.top,
+            scale: scaleEnd,
+            duration: 0.5,
+            ease: 'expo.inOut',
+            onComplete: () => {
+              gsap.set(soundingFig, { visibility: 'visible' });
+              ghost.remove();
+            },
+          }
+        );
+      }
+      overlayLenis = new Lenis({ wrapper: sounding, content: soundingCol, autoRaf: false });
+      overlayLenis.on('scroll', ScrollTrigger.update);
+      overlayRaf = (time: number) => overlayLenis?.raf(time * 1000);
+      gsap.ticker.add(overlayRaf);
+      buildTriggers(article);
+      requestAnimationFrame(() => ScrollTrigger.refresh());
+    } else {
+      // reduced motion: instant cut, final states only
+      article.querySelectorAll<HTMLElement>('.prop__fill').forEach((f) => {
+        f.style.setProperty('--fill', f.dataset.fill ?? '0');
+      });
+    }
+
+    if (push) {
+      history.pushState({ sounding: slug }, '', `#/sounding/${slug}`);
+      pushedByUs = true;
+    }
+    (ascendBtn as HTMLElement).focus();
+  }
+
+  function close(_fromHistory: boolean) {
+    if (!openSlug) return;
+    const article = document.getElementById(`descent-${openSlug}`);
+    openSlug = null;
+    exiting = false;
+    triggers.forEach((t) => t.kill());
+    triggers = [];
+    tweens.forEach((t) => t.kill());
+    tweens = [];
+    if (overlayRaf) gsap.ticker.remove(overlayRaf);
+    overlayRaf = null;
+    overlayLenis?.destroy();
+    overlayLenis = null;
+    sounding.hidden = true;
+    soundingHead.hidden = true;
+    gauge.hidden = true;
+    if (article) article.hidden = true;
+    document.documentElement.classList.remove('descending');
+    document.body.style.overflow = '';
+    getLenis()?.start();
+    lastFocus?.focus?.();
+  }
+
+  function exitDescent() {
+    if (!openSlug || exiting) return;
+    exiting = true;
+    const finish = () => {
+      if (pushedByUs) {
+        pushedByUs = false;
+        history.back(); // popstate closes
+      } else {
+        close(false);
+        history.replaceState(null, '', window.location.pathname);
+      }
+    };
+    if (reduced) {
+      finish();
+    } else {
+      gsap.to(sounding, { opacity: 0, duration: 0.25, ease: 'power1.in', onComplete: () => {
+        finish();
+        gsap.set(sounding, { opacity: 1 });
+      } });
+    }
+  }
+
+  // triggers: tap/click a monument or its affordance
+  document.querySelectorAll<HTMLAnchorElement>('[data-sound]').forEach((a) => {
+    a.addEventListener('click', (e) => {
+      e.preventDefault();
+      open(a.dataset.sound!, true);
+    });
+  });
+
+  ascendBtn.addEventListener('click', exitDescent);
+  document.addEventListener('keydown', (e) => {
+    if (e.key === 'Escape' && openSlug) exitDescent();
+  });
+
+  // browser Back always works (history state per descent)
+  window.addEventListener('popstate', () => {
+    const m = window.location.hash.match(/^#\/sounding\/(.+)$/);
+    if (m) {
+      pushedByUs = false;
+      open(decodeURIComponent(m[1]), false);
+    } else if (openSlug) {
+      close(true);
+    }
+  });
+  // deep link: arriving on a sounding URL
+  {
+    const m = window.location.hash.match(/^#\/sounding\/(.+)$/);
+    if (m) open(decodeURIComponent(m[1]), false);
+  }
+
+  // scroll-past-bedrock exits (rubber-band + release)
+  const atBottom = () => sounding.scrollTop + sounding.clientHeight >= sounding.scrollHeight - 4;
+  sounding.addEventListener(
+    'scroll',
+    () => {
+      if (atBottom()) {
+        if (!atBottomSince) atBottomSince = Date.now();
+      } else {
+        atBottomSince = 0;
+      }
+    },
+    { passive: true }
+  );
+  const bottomIntent = () => {
+    if (!openSlug || exiting) return;
+    if (atBottom() && atBottomSince && Date.now() - atBottomSince > 250) {
+      if (reduced) {
+        exitDescent();
+      } else {
+        gsap.to(soundingCol, {
+          y: -16,
+          duration: 0.14,
+          yoyo: true,
+          repeat: 1,
+          ease: 'power1.inOut',
+          onComplete: () => {
+            gsap.set(soundingCol, { y: 0 });
+            exitDescent();
+          },
+        });
+      }
+    }
+  };
+  sounding.addEventListener('wheel', (e) => {
+    if (e.deltaY > 0) bottomIntent();
+  }, { passive: true });
+  let touchY = 0;
+  sounding.addEventListener('touchstart', (e) => {
+    touchY = e.touches[0].clientY;
+  }, { passive: true });
+  sounding.addEventListener('touchmove', (e) => {
+    if (touchY - e.touches[0].clientY > 24) bottomIntent();
+  }, { passive: true });
+
+  // the Pulse (v4.1 §3.2): beats in the rail on the Face, in the gauge inside a descent
+  if (!reduced) {
+    setInterval(() => {
+      if (document.hidden) return;
+      const target = openSlug ? currentGaugeTick : currentTick;
+      if (!target) return;
+      gsap.fromTo(target, { scale: 1 }, { scale: 1.15, duration: 0.15, yoyo: true, repeat: 1, ease: 'power1.inOut' });
+    }, 1000);
+  }
 </script>

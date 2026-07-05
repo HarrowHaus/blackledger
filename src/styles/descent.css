@@ -1,0 +1,298 @@
+/* THE BLACK LEDGER · EDITION II — the Descent (SPEC v4 §4; v4.1 §1 strata, §3.4).
+   The overlay is the borehole: one scrolled column, four strata, gauge on the
+   right (bottom bar on mobile), bedrock 4% lighter, provenance below bedrock. */
+
+.sounding {
+  position: fixed;
+  inset: 0;
+  z-index: 40;
+  overflow-y: auto;
+  overscroll-behavior: contain;
+  -webkit-overflow-scrolling: touch;
+  background: var(--stratum-surface);
+  transition: background-color 500ms linear;
+}
+.sounding[hidden] {
+  display: none;
+}
+.sounding[data-stratum='context'] { background: var(--stratum-context); }
+.sounding[data-stratum='method'] { background: var(--stratum-method); }
+.sounding[data-stratum='record'] { background: var(--stratum-record); } /* bedrock: you can feel bottom */
+
+/* fixed head: the FLIP target + × ASCEND */
+.sounding__head {
+  position: fixed;
+  inset: 0 0 auto 0;
+  z-index: 44;
+  display: flex;
+  justify-content: space-between;
+  align-items: baseline;
+  padding: calc(14px + env(safe-area-inset-top)) calc(20px + env(safe-area-inset-right)) 10px
+    calc(20px + env(safe-area-inset-left));
+  pointer-events: none;
+}
+.sounding__fig {
+  font-size: clamp(1.25rem, 4vw, 1.75rem);
+  color: var(--bone);
+  line-height: 1;
+}
+.sounding__ascend {
+  pointer-events: auto;
+  background: none;
+  border: 0;
+  color: var(--bone);
+  font-family: var(--font-mono);
+  font-size: 0.6875rem;
+  letter-spacing: 0.14em;
+  cursor: pointer;
+  padding: 12px;
+  margin: -12px;
+}
+.sounding__ascend:hover {
+  text-decoration: underline;
+  text-decoration-thickness: 1px;
+  text-underline-offset: 3px;
+}
+
+/* the FLIP ghost: the tapped number in transit */
+.sounding__ghost {
+  position: fixed;
+  z-index: 46;
+  top: 0;
+  left: 0;
+  margin: 0;
+  color: var(--bone);
+  pointer-events: none;
+  transform-origin: top left;
+  white-space: nowrap;
+}
+
+/* ---- the depth gauge (v4 §4): right edge; bottom bar on mobile ---- */
+.gauge {
+  position: fixed;
+  z-index: 44;
+  display: flex;
+  pointer-events: none;
+}
+@media (min-width: 720px) {
+  .gauge {
+    right: calc(18px + env(safe-area-inset-right));
+    top: 50%;
+    transform: translateY(-50%);
+    flex-direction: column;
+    gap: 26px;
+    border-right: 1px solid var(--hairline);
+    padding-right: 10px;
+  }
+}
+@media (max-width: 719px) {
+  .gauge {
+    left: 0;
+    right: 0;
+    bottom: 0;
+    justify-content: center;
+    gap: 22px;
+    padding: 10px 12px calc(10px + env(safe-area-inset-bottom)); /* never collides with the home indicator */
+    border-top: 1px solid var(--hairline);
+    background: inherit;
+  }
+}
+.gauge__tick {
+  font-size: 0.5625rem;
+  color: var(--bone-dim);
+  display: inline-block;
+}
+.gauge__tick.is-current {
+  color: var(--ember);
+}
+
+/* ---- strata ---- */
+.stratum {
+  min-height: 150svh; /* room for the brief pin */
+}
+.stratum__pin {
+  position: sticky; /* the pin (v4 §4), native and unbreakable inside the borehole */
+  top: 0;
+  min-height: 100svh;
+  display: grid;
+  place-items: center;
+  padding: 96px calc(24px + env(safe-area-inset-right)) 96px calc(24px + env(safe-area-inset-left));
+}
+@media (max-width: 719px) {
+  .stratum__pin {
+    padding-bottom: 140px; /* clear the bottom gauge bar */
+  }
+}
+.stratum__body {
+  display: grid;
+  gap: 28px;
+  justify-items: start;
+  max-width: 640px;
+  width: 100%;
+}
+
+.descent__caption {
+  font-family: var(--font-display);
+  font-style: italic;
+  font-size: 1.375rem;
+  line-height: var(--leading-context);
+  color: var(--bone);
+  max-width: 34ch;
+  text-align: center;
+}
+@media (min-width: 720px) {
+  .descent__caption { max-width: 58ch; }
+}
+
+.descent__context {
+  font-size: 1.1875rem;
+}
+
+/* the proportion mark: a single hairline bar, fill drawn on scrub */
+.prop {
+  width: 100%;
+  display: grid;
+  gap: 10px;
+}
+.prop__track {
+  height: 1px;
+  width: 100%;
+  background: var(--hairline);
+  position: relative;
+}
+.prop__fill {
+  position: absolute;
+  inset: 0;
+  background: var(--bone);
+  transform-origin: left center;
+  transform: scaleX(0);
+}
+.prop__caption {
+  font-size: 0.625rem;
+  color: var(--bone-dim);
+}
+
+/* METHOD: the voice has shifted to mono */
+.equation {
+  font-size: 0.9375rem;
+  display: grid;
+  gap: 6px;
+  max-width: 46ch;
+}
+.equation p { margin: 0; }
+
+/* the ember stamp: bordered, rotated −3°, stamped-in on entry */
+.stamp {
+  display: inline-block;
+  border: 1px solid var(--ember);
+  color: var(--ember);
+  font-size: 0.8125rem;
+  font-weight: 500;
+  padding: 10px 16px;
+  transform: rotate(-3deg);
+}
+
+.assumptions {
+  list-style: none;
+  font-size: 0.8125rem;
+  color: var(--bone-dim);
+  max-width: 46ch;
+  display: grid;
+  gap: 6px;
+}
+
+/* RECORD: bedrock speaks in monospace */
+.ledgerrow {
+  width: 100%;
+  border-top: 1px solid var(--hairline);
+  padding-top: 14px;
+  display: grid;
+  gap: 8px;
+  font-size: 0.8125rem;
+}
+.ledgerrow > div {
+  display: grid;
+  grid-template-columns: 96px 1fr;
+  gap: 12px;
+  align-items: baseline;
+}
+.ledgerrow dt {
+  font-size: 0.5625rem;
+  color: var(--bone-dim);
+}
+.ledgerrow dd {
+  color: var(--bone);
+  overflow-wrap: anywhere;
+}
+.descent__recordlink {
+  font-size: 0.8125rem;
+}
+.descent__file {
+  display: grid;
+  gap: 4px;
+  font-size: 0.8125rem;
+}
+.descent__file a {
+  width: fit-content;
+  color: var(--bone);
+}
+.descent__stake {
+  font-family: var(--font-display);
+  font-size: 1rem;
+  color: var(--bone-dim);
+  max-width: 58ch;
+}
+
+/* Below the record (v4.1 §3.4): bedrock under bedrock */
+.below {
+  display: grid;
+  justify-items: start;
+  padding: 8vh calc(24px + env(safe-area-inset-right)) 30vh calc(24px + env(safe-area-inset-left));
+}
+.below__json {
+  font-size: 0.6875rem;
+  color: var(--bone-dim);
+  max-width: 100%;
+  overflow-x: auto;
+  white-space: pre;
+}
+
+/* the monument affordance (v4 §4 trigger) */
+.monument__sound {
+  font-family: var(--font-mono);
+  font-size: 0.6875rem;
+  letter-spacing: 0.14em;
+  color: var(--bone-dim);
+}
+.monument__link {
+  display: block;
+  cursor: pointer;
+}
+.monument__link:hover {
+  text-decoration: none;
+}
+.monument__link:hover .monument__sound {
+  color: var(--bone);
+  text-decoration: underline;
+  text-decoration-thickness: 1px;
+  text-underline-offset: 3px;
+}
+
+/* reduced motion: final states only (v4 §4) */
+@media (prefers-reduced-motion: reduce) {
+  .sounding {
+    transition: none;
+  }
+  .stratum {
+    min-height: 0;
+  }
+  .stratum__pin {
+    position: static;
+    min-height: 0;
+    padding-top: 48px;
+    padding-bottom: 48px;
+  }
+  .prop__fill {
+    transform: scaleX(var(--fill, 0));
+  }
+}
