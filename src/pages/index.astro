@@ -38,23 +38,21 @@ const rate = `~$${grouped(Math.round(COUNTER_RATE))} / sec`; // ~$3,206 / sec
       <dt>Opened</dt><dd>02 Jul 2026</dd>
     </dl>
     <Annot>
-      <AnnotLine key="In plain words">This is the case file's cover — what we're auditing, how big it is, and when the file opened.</AnnotLine>
       <AnnotLine>Official registry</AnnotLine>
       <AnnotLine key="Jurisdiction">United States of America</AnnotLine>
       <li id="reading-line" style="display:none">{'— You are reading: '}<span id="local-time" class="mono"></span></li>
     </Annot>
   </section>
 
-  <!-- How to read this (amendment v3.2 §2) — directly after the registry strip -->
+  <!-- Contents (amendment v3.4 §1.2) — a flat index, directly after the registry strip -->
   <section class="section">
-    <div class="plabel">— How to read this</div>
+    <div class="plabel">— Contents</div>
     <div class="stack" style="margin-top:24px">
-      <p class="body"><a href="/chapters/meter"><b>01 — The Meter.</b></a> The secret budget as a clock: what it spends per second, per day, and where those rates come from.</p>
-      <p class="body"><a href="/chapters/reconciliation"><b>02 — The Reconciliation.</b></a> One subtraction no other website performs: total spending, minus everything traceable, equals the space the secret budget lives in.</p>
-      <p class="body"><a href="/chapters/subjects"><b>03 — Subjects.</b></a> Six case files — the published totals, the one great leak, one careful estimate, the failed audits, a famous number that gets misused, and the government's own "unreported" line.</p>
-      <p class="body"><a href="/chapters/share"><b>04 — Your Share.</b></a> One division problem: what the acknowledged secret budget costs your household this year.</p>
-      <p class="body"><a href="/chapters/record"><b>05 — The Record.</b></a> Every number on this site in one table, each with a source, a date, and an honesty grade.</p>
-      <p class="body">Ten minutes reads the whole document. Chapter 02 is the heart of it.</p>
+      <p class="body"><a href="/chapters/meter"><b>01 — The Meter</b></a> — the acknowledged budget, per second and per day.</p>
+      <p class="body"><a href="/chapters/reconciliation"><b>02 — The Reconciliation</b></a> — total spending, minus traceable spending; what remains.</p>
+      <p class="body"><a href="/chapters/subjects"><b>03 — Subjects</b></a> — six files: the totals, the leak, one estimate, the audits, a misused number, the unreported line.</p>
+      <p class="body"><a href="/chapters/share"><b>04 — Your Share</b></a> — the acknowledged budget, per household.</p>
+      <p class="body"><a href="/chapters/record"><b>05 — The Record</b></a> — every figure, its source, its confidence grade.</p>
     </div>
   </section>
 
@@ -79,7 +77,7 @@ const rate = `~$${grouped(Math.round(COUNTER_RATE))} / sec`; // ~$3,206 / sec
   <section class="section">
     <Counter label="BEING SPENT AS YOU READ:" />
     <Annot>
-      <AnnotLine key="In plain words">This ticks up by about $3,206 every second — the classified spending the government admits to.</AnnotLine>
+      <AnnotLine>This ticks up by about $3,206 every second — the classified spending the government admits to.</AnnotLine>
       <AnnotLine key="Rate">{rate}</AnnotLine>
       <AnnotLine>{acknowledged} — annual acknowledged classified expenditure</AnnotLine>
       <AnnotLine>Updated every second</AnnotLine>
