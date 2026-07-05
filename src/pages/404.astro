@@ -1,0 +1,47 @@
+---
+// The 404 is a designed artifact (SPEC v4.1 §2, copy verbatim).
+// Mono voice, one mark: the broken sounding line.
+import Sounding from '../layouts/Sounding.astro';
+import MarkStub from '../components/sounding/MarkStub.astro';
+---
+
+<Sounding title="Unrecorded. — THE BLACK LEDGER">
+  <main class="lost" id="main">
+    <MarkStub kind={1} broken={true} />
+    <h1 class="lost__head mono">Unrecorded.</h1>
+    <p class="lost__body mono">
+      This page does not exist. Unlike $206.9 billion last year, we can say so with confidence.
+    </p>
+    <a class="lost__link caps" href="/">→ return to the surface</a>
+  </main>
+</Sounding>
+
+<style>
+  .lost {
+    min-height: 100svh;
+    display: grid;
+    place-content: center;
+    justify-items: start;
+    gap: 20px;
+    padding: 24px;
+  }
+  .lost :global(.mark) {
+    width: 48px;
+    height: auto;
+    color: var(--bone-dim);
+  }
+  .lost__head {
+    font-size: 1.25rem;
+    font-weight: 500;
+    color: var(--bone);
+  }
+  .lost__body {
+    max-width: 46ch;
+    color: var(--bone-dim);
+  }
+  .lost__link {
+    font-size: 0.6875rem;
+    color: var(--bone);
+    padding: 12px 0;
+  }
+</style>

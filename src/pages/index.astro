@@ -1,128 +1,433 @@
 ---
-import Document from '../layouts/Document.astro';
-import Counter from '../components/Counter.astro';
-import Annot from '../components/Annot.astro';
-import AnnotLine from '../components/AnnotLine.astro';
-import CId from '../components/CId.astro';
-import { getClaim, claims, sources } from '../lib/data';
-import { abbrev } from '../lib/format';
+// THE BLACK LEDGER · EDITION II — THE FACE (SPEC v4 §3, §9; v4.1 integrated).
+// The homepage is eight monuments and a footer. Nothing else.
+import Sounding from '../layouts/Sounding.astro';
+import MarkStub from '../components/sounding/MarkStub.astro';
+import { MONUMENTS, COUNTER_RATE } from '../lib/sounding/monuments';
 
-const acknowledged = abbrev(getClaim('C-0013').amount!); // $101.1 bn
-const audited = abbrev(getClaim('C-0001').amount!);      // $7.010 tn
-const nip = abbrev(getClaim('C-0011').amount!);          // $73.3 bn
-const mip = abbrev(getClaim('C-0012').amount!);          // $27.8 bn
-const unreported = abbrev(getClaim('C-0009').amount!);   // $206.9 bn
+const FILES = [
+  { slug: 'langley', name: 'LANGLEY', stake: 'the CIA: 28% of the budget in the only year we ever saw inside.' },
+  { slug: 'fort-meade', name: 'FORT MEADE', stake: 'the NSA: a fifth of the black budget, and the reason we know any of this — its contractor walked out with the document.' },
+  { slug: 'the-document', name: 'THE DOCUMENT', stake: 'the 2013 leak: Edward Snowden’s disclosure, the Washington Post’s decision to publish, the only map that exists.' },
+  { slug: 'the-books', name: 'THE BOOKS', stake: 'the Pentagon’s audit: eight failures, twenty-six weaknesses, and the inspectors who keep writing it down.' },
+  { slug: 'the-six-point-five-trillion', name: 'THE SIX-POINT-FIVE TRILLION', stake: 'the misused number: what the Army’s unsupported entries actually prove, and what they don’t.' },
+  { slug: 'the-unreported-line', name: 'THE UNREPORTED LINE', stake: 'the confession in the machine: the government’s own site admitting what it isn’t told.' },
+];
+
+const THESIS =
+  'The United States admits $101.1 billion of classified spending a year — and fails to account for twice that. Every figure on this site is traceable to its source.';
 ---
 
-<Document title="THE BLACK LEDGER — Edition I" footColophon={false}>
-  <!-- Cover opening (amendment v3.2 §1) — the first content on the page, above the registry strip -->
-  <section class="section section--first">
-    <div class="plabel">— Before the file opens</div>
-    <div class="stack" style="margin-top:24px">
-      <p class="body">Every year, the United States government publishes two numbers about its secret spending and asks you to be satisfied.</p>
-      <p class="body">The first is the cost of its civilian intelligence agencies — the CIA, the NSA, and fifteen others. The second is the cost of military intelligence. For fiscal year 2025 the two add up to $101.1 billion, which works out to about $3,206 every second, including this one. What the money does, which programs it funds, whether any of it works — none of that is published, and by law none of it has to be.</p>
-      <p class="body">This is not a scandal. It is a system, now in its eighth decade, functioning mostly as designed. But the Constitution that created this government contains a sentence, written in 1787, requiring that "a regular Statement and Account" of all public money "shall be published from time to time." This website takes that sentence literally.</p>
-      <p class="body">What follows is an audit, assembled from the government's own publications, one authenticated leaked document, records pried loose under the Freedom of Information Act, and estimates that are always labeled as estimates. It is arranged as a case file, because that is what it is. Every number on every page can be traced to its source. Start anywhere.</p>
-    </div>
-  </section>
+<Sounding title="THE BLACK LEDGER">
+  <header class="chrome">
+    <a class="chrome__mark caps" href="/" aria-label="The Black Ledger — home"
+      >THE BLAC<span class="wonk">K</span> LEDGER</a
+    >
+    <a class="chrome__record caps" href="/record">RECORD</a>
+  </header>
 
-  <!-- Registry strip (spec §7.1) -->
-  <section class="section">
-    <dl class="registry">
-      <dt>Case №</dt><dd>2026 / 001</dd>
-      <dt>Scope</dt><dd>{acknowledged} acknowledged · {audited} audited</dd>
-      <dt>Subject</dt><dd>Classified expenditure of the United States · FY2025</dd>
-      <dt>Sources</dt><dd>{sources.length} registered · {claims.length} claims</dd>
-      <dt>Opened</dt><dd>02 Jul 2026</dd>
-    </dl>
-    <ul class="annot" id="registry-annot">
-      <li>— Official registry</li>
-      <li>— Jurisdiction: United States of America</li>
-    </ul>
-  </section>
+  <h1 class="visually-hidden">THE BLACK LEDGER</h1>
 
-  <!-- Contents (amendment v3.4 §1.2) — a flat index, directly after the registry strip -->
-  <section class="section">
-    <div class="plabel">— Contents</div>
-    <div class="stack" style="margin-top:24px">
-      <p class="body"><a href="/chapters/meter"><b>01 — The Meter</b></a> — the acknowledged budget, per second and per day.</p>
-      <p class="body"><a href="/chapters/reconciliation"><b>02 — The Reconciliation</b></a> — total spending, minus traceable spending; what remains.</p>
-      <p class="body"><a href="/chapters/subjects"><b>03 — Subjects</b></a> — six files: the totals, the leak, one estimate, the audits, a misused number, the unreported line.</p>
-      <p class="body"><a href="/chapters/share"><b>04 — Your Share</b></a> — the acknowledged budget, per household.</p>
-      <p class="body"><a href="/chapters/record"><b>05 — The Record</b></a> — every figure, its source, its confidence grade.</p>
-    </div>
-  </section>
+  <nav class="rail" aria-hidden="true">
+    {MONUMENTS.map((m) => <span class="rail__tick" data-rail={m.n}></span>)}
+  </nav>
 
-  <!-- Epigraph (spec §7.4) -->
-  <section class="section">
-    <div class="epigraph">
-      <p class="epigraph__text">a regular Statement and Account of the Receipts and Expenditures of all public Money shall be published from time to time.</p>
-      <p class="epigraph__attr">— Constitution of the United States · Article I, Section 9, Clause 7 · 1787</p>
-    </div>
-  </section>
-
-  <!-- The counter (spec §7.5) -->
-  <section class="section">
-    <Counter label="BEING SPENT AS YOU READ:" />
-    <Annot>
-      <AnnotLine>About $3,206 of acknowledged classified spending accrues every second.</AnnotLine>
-      <AnnotLine key="Computation">{acknowledged} ÷ 31,536,000 sec / year</AnnotLine>
-      <AnnotLine>NIP: {nip} (<CId id="C-0011" />) · MIP: {mip} (<CId id="C-0012" />)</AnnotLine>
-      <AnnotLine key="Source">ODNI PR 39-25 · DoD MIP release · FY2025</AnnotLine>
-    </Annot>
-  </section>
-
-  <!-- Subject of audit -->
-  <section class="section">
-    <div class="label">Subject of audit:</div>
-    <div style="margin-top:20px">
-      <p class="statement"><b>{acknowledged}</b> acknowledged and undisclosed in detail — by statute.</p>
-      <p class="statement"><b>{unreported}</b> unreported to the government's own tracking system — by practice.</p>
-    </div>
-    <Annot>
-      <AnnotLine key="Ratio, unreported to acknowledged">2.05 : 1</AnnotLine>
-      <AnnotLine>Acknowledged: <CId id="C-0013" /> · Unreported: <CId id="C-0009" /></AnnotLine>
-      <AnnotLine>Disclosure of the first figure is required by 50 U.S.C. §3306; the second is volunteered.</AnnotLine>
-      <AnnotLine>The department responsible for most of it has failed eight consecutive audits — the only major agency never to pass one.</AnnotLine>
-    </Annot>
-    <p class="linkline"><a href="/chapters/record">Full registry of sources → Chapter 05</a></p>
-  </section>
-
-  <!-- Cover colophon (spec §5 chapter 00) -->
-  <section class="section">
-    <div class="foot__colophon" style="margin-bottom:0">
-      PUBLISHED AS AN OPEN AUDIT<br />
-      FIRST EDITION · MMXXVI<br />
-      SET IN NEWSREADER AND IBM PLEX MONO<br />
-      EVERY FIGURE CARRIES ITS LEDGER NUMBER
-    </div>
-  </section>
-
-  <script>
-    // The clock (v3.4 §2.6): the visitor's local time as HH:MM, DD Mon YYYY, updating each
-    // minute. The entire line is created here — the static HTML contains no version of it,
-    // so without JavaScript the line simply does not exist.
-    const annot = document.getElementById('registry-annot');
-    if (annot) {
-      const MONTHS = ['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec'];
-      const value = () => {
-        const now = new Date();
-        const hh = String(now.getHours()).padStart(2, '0');
-        const mm = String(now.getMinutes()).padStart(2, '0');
-        const dd = String(now.getDate()).padStart(2, '0');
-        return `${hh}:${mm}, ${dd} ${MONTHS[now.getMonth()]} ${now.getFullYear()}`;
-      };
-      const first = value();
-      if (first && first.trim()) {
-        const li = document.createElement('li');
-        li.append('— You are reading: ');
-        const span = document.createElement('span');
-        span.className = 'mono';
-        span.textContent = first;
-        li.append(span);
-        annot.append(li);
-        setInterval(() => { span.textContent = value(); }, 60000);
-      }
+  <main class="face" id="main">
+    {
+      MONUMENTS.map((m, i) => (
+        <section
+          class="monument"
+          id={m.slug}
+          data-monument={m.n}
+          data-citation={m.citation}
+          aria-label={`Monument ${m.n}`}
+        >
+          <figure class="monument__fig">
+            <MarkStub kind={i + 1} />
+            <div
+              class={`monument__num display num hang${m.long ? ' monument__num--long' : ''}${m.live ? ' monument__num--live' : ''}`}
+              data-figure={m.figure}
+              data-live={m.live ? 'true' : undefined}
+            >
+              {m.figure}
+            </div>
+            <figcaption class="monument__caption">
+              {m.caption}
+              {m.live && <span class="monument__away caps num" data-away aria-live="polite"></span>}
+            </figcaption>
+            <span class="monument__ledger caps">{m.ledger}</span>
+          </figure>
+        </section>
+      ))
     }
-  </script>
-</Document>
+
+    <footer class="foot">
+      <section class="foot__files" aria-label="Files">
+        <h2 class="caps foot__label">FILES</h2>
+        <ul class="foot__list">
+          {
+            FILES.map((f) => (
+              <li class="foot__file">
+                <a class="caps" href={`/files/${f.slug}`}>
+                  {f.name}
+                </a>
+                <span class="foot__stake">{f.stake}</span>
+              </li>
+            ))
+          }
+        </ul>
+      </section>
+      <p class="foot__record"><a class="caps" href="/record">RECORD</a></p>
+      <p class="foot__thesis">{THESIS}</p>
+      <p class="foot__colophon caps">PUBLISHED AS AN OPEN AUDIT · EDITION II · MMXXVI</p>
+    </footer>
+  </main>
+</Sounding>
+
+<style>
+  /* ---- chrome: no header menu; wordmark + RECORD only (v4 §3) ---- */
+  .chrome {
+    position: fixed;
+    inset: 0 0 auto 0;
+    z-index: 10;
+    display: flex;
+    justify-content: space-between;
+    padding: calc(16px + env(safe-area-inset-top)) calc(20px + env(safe-area-inset-right)) 0
+      calc(20px + env(safe-area-inset-left));
+    pointer-events: none;
+  }
+  .chrome a {
+    pointer-events: auto;
+    font-size: 0.625rem;
+    color: var(--bone-dim);
+    padding: 12px; /* ≥44px hit target (v4.1 §2) */
+    margin: -12px;
+  }
+  .chrome a:hover,
+  .chrome a:focus-visible {
+    color: var(--bone);
+  }
+  /* the single controlled quirk: the K of BLACK, Fraunces WONK 1 (v4.1 §1) */
+  .wonk {
+    font-family: var(--font-display);
+    font-variation-settings: 'opsz' 9, 'WONK' 1;
+    font-weight: 500;
+    font-size: 1.15em;
+    letter-spacing: 0;
+  }
+
+  .visually-hidden {
+    position: absolute;
+    width: 1px;
+    height: 1px;
+    overflow: hidden;
+    clip-path: inset(50%);
+    white-space: nowrap;
+  }
+
+  /* ---- the rail: desktop only; thin ember tick marks the monument in view (v4 §3) ---- */
+  .rail {
+    display: none;
+  }
+  @media (min-width: 720px) {
+    .rail {
+      position: fixed;
+      left: calc(20px + env(safe-area-inset-left));
+      top: 50%;
+      transform: translateY(-50%);
+      z-index: 10;
+      display: flex;
+      flex-direction: column;
+      gap: 14px;
+    }
+    .rail__tick {
+      display: block;
+      width: 14px;
+      height: 1px;
+      background: var(--hairline);
+      transition: background 300ms;
+    }
+    .rail__tick.is-current {
+      background: var(--ember);
+    }
+  }
+
+  /* ---- the feed: one monument per viewport, snap on touch (v4 §1/§3) ---- */
+  .face {
+    width: 100%;
+  }
+  @media (pointer: coarse) {
+    :global(html) {
+      scroll-snap-type: y mandatory;
+    }
+    .monument {
+      scroll-snap-align: start;
+      scroll-snap-stop: always;
+    }
+    .foot {
+      scroll-snap-align: end;
+    }
+  }
+
+  .monument {
+    min-height: 100svh;
+    display: grid;
+    place-items: center;
+    padding: 24px calc(20px + env(safe-area-inset-right)) 24px calc(20px + env(safe-area-inset-left));
+  }
+  .monument__fig {
+    display: grid;
+    justify-items: center;
+    text-align: center;
+    gap: 18px;
+    max-width: 100%;
+  }
+  .monument :global(.mark) {
+    width: clamp(40px, 9vh, 64px); /* max ~15% viewport (v4 §5.1) */
+    height: auto;
+    color: var(--bone);
+  }
+  .monument__num {
+    font-size: clamp(4.5rem, 22vw, 15rem); /* v4 §2 */
+    letter-spacing: -0.01em;
+    max-width: 100%;
+  }
+  .monument__num--long {
+    font-size: clamp(2.25rem, 10.5vw, 8.5rem); /* 12-digit figure must hold one line */
+  }
+  .monument__num--live {
+    color: var(--ember); /* live counter, ember digits (v4 §3) */
+  }
+  .monument__caption {
+    font-family: var(--font-display);
+    font-style: italic;
+    font-size: 1.125rem; /* captions Fraunces italic (v4 §2) */
+    line-height: var(--leading-context);
+    color: var(--bone);
+    max-width: 34ch;
+  }
+  @media (min-width: 720px) {
+    .monument__caption {
+      max-width: 58ch;
+    }
+  }
+  .monument__away {
+    display: block;
+    margin-top: 10px;
+    font-size: 0.6875rem;
+    font-style: normal;
+    color: var(--bone-dim);
+    min-height: 1.2em; /* reserved: its arrival must not shift layout (CLS 0) */
+  }
+  .monument__ledger {
+    font-size: 0.5625rem;
+    color: var(--bone-dim);
+  }
+
+  /* ---- footer (v4 §9) ---- */
+  .foot {
+    min-height: 60svh;
+    display: grid;
+    align-content: end;
+    gap: 40px;
+    padding: 64px calc(20px + env(safe-area-inset-right))
+      calc(40px + env(safe-area-inset-bottom)) calc(20px + env(safe-area-inset-left));
+    border-top: 1px solid var(--hairline);
+  }
+  .foot__label {
+    font-size: 0.625rem;
+    color: var(--bone-dim);
+    margin-bottom: 18px;
+  }
+  .foot__list {
+    list-style: none;
+    display: grid;
+    gap: 14px;
+    max-width: 640px;
+  }
+  .foot__file {
+    display: grid;
+    gap: 2px;
+  }
+  .foot__file a {
+    font-size: 0.8125rem;
+    color: var(--bone);
+    width: fit-content;
+    padding: 6px 0;
+  }
+  .foot__stake {
+    font-family: var(--font-display);
+    font-size: 1rem;
+    color: var(--bone-dim);
+    max-width: 58ch;
+  }
+  .foot__record a {
+    font-size: 0.8125rem;
+    color: var(--bone);
+    padding: 6px 0;
+  }
+  .foot__thesis {
+    font-family: var(--font-display);
+    font-size: 1.0625rem;
+    color: var(--bone-dim);
+    max-width: 58ch;
+  }
+  .foot__colophon {
+    font-size: 0.5625rem;
+    color: var(--bone-dim);
+  }
+</style>
+
+<script>
+  import { gsap, ScrollTrigger, SplitText, DrawSVGPlugin, reducedMotion } from '../lib/sounding/motion';
+  import { COUNTER_RATE } from '../lib/sounding/monuments';
+
+  const reduced = reducedMotion();
+  const grouper = new Intl.NumberFormat('en-US', { maximumFractionDigits: 0 });
+  const usd = (n: number) => '$' + grouper.format(Math.round(n));
+
+  // ---- arrivals: SplitText materialization + per-digit count-up, once (v4 §3) ----
+  const monuments = Array.from(document.querySelectorAll<HTMLElement>('.monument'));
+  if (!reduced) {
+    for (const el of monuments) {
+      const num = el.querySelector<HTMLElement>('.monument__num');
+      const caption = el.querySelector<HTMLElement>('.monument__caption');
+      const mark = el.querySelector<SVGElement>('[data-mark]');
+      if (!num) continue;
+      const isLive = num.dataset.live === 'true';
+      gsap.set(caption, { opacity: 0 });
+      if (mark) gsap.set(mark.querySelectorAll('path'), { drawSVG: '0%' });
+
+      let arrive: () => void;
+      if (isLive) {
+        // the live counter cannot be split (its text changes every second) — the block materializes whole
+        gsap.set(num, { y: '0.6em', opacity: 0 });
+        arrive = () => {
+          gsap.to(num, { y: 0, opacity: 1, duration: 0.9, ease: 'expo.out' });
+        };
+      } else {
+        // words wrap as units (a figure like “$115.5 billion” must never break mid-word)
+        const split = new SplitText(num, { type: 'words,chars' });
+        gsap.set(split.chars, { y: '0.6em', opacity: 0 });
+        arrive = () => {
+          gsap.to(split.chars, { y: 0, opacity: 1, duration: 0.9, ease: 'expo.out', stagger: 0.02 });
+          // count-up over the same beat: each digit rolls to its final value (tabular-nums: no shift)
+          for (const ch of split.chars) {
+            const target = Number(ch.textContent);
+            if (!Number.isInteger(target)) continue;
+            const o = { v: 0 };
+            gsap.to(o, {
+              v: target,
+              duration: 0.9,
+              ease: 'expo.out',
+              snap: { v: 1 },
+              onUpdate: () => {
+                ch.textContent = String(Math.round(o.v));
+              },
+            });
+          }
+        };
+      }
+
+      ScrollTrigger.create({
+        trigger: el,
+        start: 'top 60%',
+        once: true,
+        onEnter: () => {
+          arrive();
+          if (caption) gsap.to(caption, { opacity: 1, duration: 0.5, delay: 0.15 });
+          if (mark)
+            gsap.to(mark.querySelectorAll('path'), {
+              drawSVG: '100%',
+              duration: 1.2,
+              ease: 'power1.inOut',
+              stagger: 0.1,
+            });
+        },
+      });
+    }
+  }
+
+  // ---- the rail: ember tick tracks the monument in view (v4 §3) ----
+  const ticks = new Map<string, HTMLElement>();
+  document.querySelectorAll<HTMLElement>('[data-rail]').forEach((t) => ticks.set(t.dataset.rail!, t));
+  let currentTick: HTMLElement | null = null;
+  const io = new IntersectionObserver(
+    (entries) => {
+      for (const e of entries) {
+        if (e.isIntersecting) {
+          const n = (e.target as HTMLElement).dataset.monument!;
+          currentTick?.classList.remove('is-current');
+          currentTick = ticks.get(n) ?? null;
+          currentTick?.classList.add('is-current');
+        }
+      }
+    },
+    { threshold: 0.6 }
+  );
+  monuments.forEach((m) => io.observe(m));
+
+  // ---- the live counter: wall-clock accumulation, rAF-batched 1/sec, ember (v4 §3/§6) ----
+  const liveEl = document.querySelector<HTMLElement>('[data-live]');
+  const awayEl = document.querySelector<HTMLElement>('[data-away]');
+  const arrivedAt = Date.now();
+  let lastShown = 0;
+  const counterValue = () => COUNTER_RATE * Math.max(1, (Date.now() - arrivedAt) / 1000);
+  const renderCounter = () => {
+    if (liveEl) liveEl.textContent = usd(counterValue());
+  };
+  gsap.ticker.add(() => {
+    const now = Date.now();
+    if (now - lastShown >= 1000 && !document.hidden) {
+      lastShown = now;
+      renderCounter();
+    }
+  });
+
+  // ---- the Pulse: the ember tick beats once per second (v4.1 §3.2) ----
+  if (!reduced) {
+    setInterval(() => {
+      if (document.hidden || !currentTick) return;
+      gsap.fromTo(
+        currentTick,
+        { scale: 1 },
+        { scale: 1.15, duration: 0.15, yoyo: true, repeat: 1, ease: 'power1.inOut' }
+      );
+    }, 1000);
+  }
+
+  // ---- the blurred-tab title + the away line (v4.1 §3.6) ----
+  const HOME_TITLE = document.title;
+  let hiddenAt: number | null = null;
+  document.addEventListener('visibilitychange', () => {
+    if (document.hidden) {
+      hiddenAt = Date.now();
+      document.title = 'Still counting — THE BLACK LEDGER';
+    } else {
+      document.title = HOME_TITLE;
+      if (hiddenAt && awayEl) {
+        const missed = COUNTER_RATE * ((Date.now() - hiddenAt) / 1000);
+        if (missed >= 1) awayEl.textContent = `+${usd(missed)} while you were away`;
+      }
+      hiddenAt = null;
+      renderCounter();
+    }
+  });
+
+  // ---- citation on copy (v4.1 §3.3) ----
+  document.addEventListener('copy', (e) => {
+    try {
+      const sel = window.getSelection();
+      if (!sel || sel.isCollapsed) return;
+      const node = sel.anchorNode instanceof Element ? sel.anchorNode : sel.anchorNode?.parentElement;
+      const monument = node?.closest<HTMLElement>('.monument');
+      if (!monument) return;
+      const num = monument.querySelector<HTMLElement>('.monument__num');
+      if (!num || !sel.containsNode(num, true)) return;
+      e.clipboardData?.setData('text/plain', monument.dataset.citation ?? sel.toString());
+      e.preventDefault();
+    } catch {
+      /* graceful no-op (v4.1 §3.3) */
+    }
+  });
+</script>

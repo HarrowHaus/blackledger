@@ -209,9 +209,13 @@ html.descending ::-webkit-scrollbar-thumb { background: var(--ember); }
   font-variant-numeric: tabular-nums lining-nums;
 }
 
-/* hanging punctuation on pulled numbers: $ and % hang outside the measure (v4.1 §1) */
+/* hanging punctuation on pulled numbers: $ and % hang outside the measure (v4.1 §1).
+   The indent belongs to the container's first line only — split chars must not inherit it. */
 .hang {
   text-indent: -0.55ch;
+}
+.hang * {
+  text-indent: 0;
 }
 
 /* hairline rules only */

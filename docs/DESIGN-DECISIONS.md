@@ -23,3 +23,25 @@
 | `color-scheme: dark` on html | | the ledger has one ground; form controls and UA surfaces must sit in the same dark (no light theme — v4 §8) |
 | `viewport-fit=cover` + (Phase 2) safe-area insets | | monuments own the whole screen; the gauge must respect the device's own edges (v4.1 §1) |
 | Newsreader font files retained temporarily | Edition I pages still reference them until the Face flips | transitional only — removed when Edition I routes are replaced; will not ship in Edition II's final CSS |
+
+## Phase 2 — The Face
+
+| element | decision | derivation (one line) |
+|---|---|---|
+| Monument figures derived + asserted | every figure computed from claims.csv; the build throws if a derived figure drifts from §3's verbatim value | a hard-coded figure is a build failure (v4 §9); the surface may show only what the record can prove |
+| Monument 6's "8" | carried as a status figure, build-asserted against C-0017's own note ("the eighth year in a row") | a status claim's figure lives in its record, not in a loose constant |
+| Long-figure size (`monument__num--long`) | the 16-character exact figure renders at clamp(2.25rem, 10.5vw, 8.5rem) instead of §2's display clamp | the exact unreported figure must stand on ONE line to be read as a single fact — legibility of evidence outranks scale (DEVIATION, reported) |
+| Worded figures wrap at word boundaries | SplitText type words,chars | "$115.5 billion" breaking mid-word would corrupt the fact; the word is the unit of meaning |
+| `.hang * { text-indent: 0 }` | hanging-punctuation indent stops at the container | the hang belongs to the pulled figure's first line, not to every bored-out character |
+| Per-digit roll count-up | each split digit rolls 0→final over the same 0.9s beat as the materialization | count-up and char materialization occupy one beat (§3); tabular digits roll in place with zero shift |
+| Live counter = wall-clock × rate | value is always rate × seconds since arrival; display updates once per second, paused when hidden | the budget spends in real time whether or not the tab watches — the display pauses, the fact does not (v4 §6 + v4.1 §3.6) |
+| Counter runs under reduced motion | text updates once per second, no animation | the live figure is content, not decoration; reduced motion removes motion, not facts |
+| Away-line reserved height | the "+$X while you were away" line owns its line-height from first paint | its arrival must not shift the monument (CLS 0, v4 §6) |
+| Rail desktop-only | ticks hidden below 720px | v4 §3 verbatim: mobile is the snap feed; the gauge rail is a desktop instrument |
+| Scroll-snap on coarse pointers only | `@media (pointer: coarse)` gates `scroll-snap-type` | v4 §1: snap is the mobile feed's discipline; desktop momentum belongs to Lenis, and the two fight if overlapped |
+| Citation-on-copy source labels | compact per-source labels (e.g. "USAspending FY2025"), falling back to the registered source name | v4.1 §3.3's own example format; provenance must read like a citation, not a database row |
+| Stub marks (8 + broken line) | single-stroke surveyor geometry: plumb bob, core column, borehole rings, benchmark, sounding line, level, weighted line, ring-with-drop | Phase 2 placeholders in the §5.1 family, replaced by the hand-drawn set in Phase 5 |
+| Stub SVG favicon (plumb bob, bone on ground) | shipped now, refined in Phase 5 | v4.1 §1 names the favicon; an empty tab icon is an unauthored element too |
+| 404 shipped in Phase 2 | designed artifact with §2's verbatim copy + broken-line stub mark; `not_found_handling: "404-page"` in wrangler | the Face's FILES/RECORD links precede their pages by two phases; the net under them is specified, so it went up with them |
+| Visually-hidden h1 "THE BLACK LEDGER" | | headings must be hierarchical (v4.1 §5) on a page whose only visible text is evidence |
+| WONK K in the top-left wordmark | the K of BLACK set in Fraunces WONK 1 inside the mono wordmark | v4.1 §1 verbatim — the single controlled quirk, placed exactly where it names itself |

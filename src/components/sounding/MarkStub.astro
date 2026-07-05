@@ -1,0 +1,40 @@
+---
+// Mark stubs (v4 §10 Phase 2: "marks stubbed as simple geometry").
+// One stroke-only SVG per monument, --bone, 1.5px, no fills — placeholder
+// geometry in the surveyor's family until Phase 5 replaces them with the
+// hand-drawn set. Animated via DrawSVG on arrival.
+interface Props {
+  kind: number; // 1..8, monument order
+  broken?: boolean; // the 404's broken sounding line
+}
+const { kind, broken = false } = Astro.props;
+
+// simple surveyor geometry: plumb line, core column, borehole rings, benchmark,
+// sounding line, level, weight, rings-with-drop
+const PATHS: Record<number, string[]> = {
+  1: ['M32 6 V44', 'M32 44 L26 54 L38 54 Z'], // plumb bob
+  2: ['M24 8 H40 V56 H24 Z', 'M24 24 H40', 'M24 40 H40'], // core sample column
+  3: ['M32 32 m-22 0 a22 22 0 1 0 44 0 a22 22 0 1 0 -44 0', 'M32 32 m-12 0 a12 12 0 1 0 24 0 a12 12 0 1 0 -24 0'], // borehole rings
+  4: ['M10 46 H54', 'M32 46 V18', 'M24 26 L32 18 L40 26'], // benchmark arrow
+  5: ['M32 6 V50', 'M22 50 H42', 'M26 58 H38'], // sounding line + weight
+  6: ['M8 32 H56', 'M20 24 V40', 'M44 24 V40'], // level
+  7: ['M32 10 V38', 'M32 38 m-6 0 a6 6 0 1 0 12 0 a6 6 0 1 0 -12 0'], // line + weight ring
+  8: ['M32 30 m-18 0 a18 18 0 1 0 36 0 a18 18 0 1 0 -36 0', 'M32 48 V60'], // ring with drop
+};
+const BROKEN = ['M32 4 V26', 'M32 36 V44', 'M32 44 L26 54 L38 54 Z']; // broken sounding line (404)
+const paths = broken ? BROKEN : PATHS[kind] ?? PATHS[1];
+---
+
+<svg
+  class="mark"
+  viewBox="0 0 64 64"
+  fill="none"
+  stroke="currentColor"
+  stroke-width="1.5"
+  stroke-linecap="round"
+  stroke-linejoin="round"
+  aria-hidden="true"
+  data-mark
+>
+  {paths.map((d) => <path d={d} />)}
+</svg>
