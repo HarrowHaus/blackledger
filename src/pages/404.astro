@@ -2,12 +2,12 @@
 // The 404 is a designed artifact (SPEC v4.1 §2, copy verbatim).
 // Mono voice, one mark: the broken sounding line.
 import Sounding from '../layouts/Sounding.astro';
-import MarkStub from '../components/sounding/MarkStub.astro';
+import Mark from '../components/sounding/Mark.astro';
 ---
 
 <Sounding title="Unrecorded. — THE BLACK LEDGER">
   <main class="lost" id="main">
-    <MarkStub kind={1} broken={true} />
+    <Mark kind="broken" />
     <h1 class="lost__head mono">Unrecorded.</h1>
     <p class="lost__body mono">
       This page does not exist. Unlike $206.9 billion last year, we can say so with confidence.

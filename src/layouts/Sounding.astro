@@ -8,12 +8,15 @@ interface Props {
   title: string;
   /** override only where a page has a more specific description; default is the one-sentence thesis (v4 §0) */
   description?: string;
+  /** OG poster path (v4.1 §3.7); defaults to the admitted-budget monument's card */
+  ogImage?: string;
 }
 
 const THESIS =
   'The United States admits $101.1 billion of classified spending a year — and fails to account for twice that. Every figure on this site is traceable to its source.';
 
-const { title, description = THESIS } = Astro.props;
+const { title, description = THESIS, ogImage = '/og/c-0013.png' } = Astro.props;
+const ogImageAbs = new URL(ogImage, Astro.site ?? Astro.url.origin).href;
 ---
 
 <!doctype html>
@@ -28,6 +31,13 @@ const { title, description = THESIS } = Astro.props;
     <meta property="og:title" content={title} />
     <meta property="og:description" content={THESIS} />
     <meta property="og:type" content="website" />
+    <meta property="og:image" content={ogImageAbs} />
+    <meta property="og:image:width" content="1200" />
+    <meta property="og:image:height" content="630" />
+    <meta name="twitter:card" content="summary_large_image" />
+    <meta name="twitter:image" content={ogImageAbs} />
+    <link rel="manifest" href="/manifest.webmanifest" />
+    <link rel="apple-touch-icon" href="/apple-touch-icon.png" />
     <link rel="preload" as="font" type="font/woff2" href="/fonts/fraunces-var.woff2" crossorigin />
     <link rel="preload" as="font" type="font/woff2" href="/fonts/fraunces-italic.woff2" crossorigin />
     <link rel="preload" as="font" type="font/woff2" href="/fonts/plexmono-400.woff2" crossorigin />

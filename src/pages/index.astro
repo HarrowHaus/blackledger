@@ -2,7 +2,7 @@
 // THE BLACK LEDGER · EDITION II — THE FACE (SPEC v4 §3, §9) + THE DESCENT (v4 §4).
 // The homepage is eight monuments and a footer; each monument can be sounded.
 import Sounding from '../layouts/Sounding.astro';
-import MarkStub from '../components/sounding/MarkStub.astro';
+import Mark from '../components/sounding/Mark.astro';
 import Descent from '../components/sounding/Descent.astro';
 import { MONUMENTS } from '../lib/sounding/monuments';
 import { DESCENTS } from '../lib/sounding/descents';
@@ -13,7 +13,7 @@ const THESIS =
   'The United States admits $101.1 billion of classified spending a year — and fails to account for twice that. Every figure on this site is traceable to its source.';
 ---
 
-<Sounding title="THE BLACK LEDGER">
+<Sounding title="THE BLACK LEDGER" ogImage="/og/c-0013-second.png">
   <header class="chrome">
     <a class="chrome__mark caps" href="/" aria-label="The Black Ledger — home"
       >THE BLAC<span class="wonk">K</span> LEDGER</a
@@ -44,7 +44,7 @@ const THESIS =
             aria-label={`Sound this number: ${m.figure} ${m.caption}`}
           >
             <figure class="monument__fig">
-              <MarkStub kind={i + 1} />
+              <Mark kind={i + 1} />
               <div
                 class={`monument__num display num hang${m.long ? ' monument__num--long' : ''}${m.live ? ' monument__num--live' : ''}`}
                 data-figure={m.figure}
@@ -82,6 +82,7 @@ const THESIS =
       </section>
       <p class="foot__record"><a class="caps" href="/record">RECORD</a></p>
       <p class="foot__thesis">{THESIS}</p>
+      <div class="foot__device"><Mark kind="wordmark" /></div>
       <p class="foot__colophon caps">PUBLISHED AS AN OPEN AUDIT · EDITION II · MMXXVI</p>
     </footer>
   </main>
@@ -293,6 +294,11 @@ const THESIS =
   }
   .foot__colophon {
     font-size: 0.5625rem;
+    color: var(--bone-dim);
+  }
+  .foot__device :global(.mark) {
+    width: 44px;
+    height: auto;
     color: var(--bone-dim);
   }
 

@@ -91,3 +91,16 @@
 | Provenance JSON keeps machine quotes | the below-bedrock `<pre>` fragment is data display, excluded from the curly-quote law | the raw record is quoted as the machine wrote it — curling it would forge the evidence |
 | Gauge ticks are controls | SURFACE/CONTEXT/METHOD/RECORD are buttons: tap bores straight to that stratum; ≥44px targets; aria-current on the active tick; aria-hidden dropped in favor of labeled buttons + the aria-live announcer | the gauge is an instrument, not a sticker — a depth gauge you can grab is still a depth gauge (owner correction) |
 | Stratum tracking from scroll position | active stratum computed directly from scrollTop against section offsets, replacing ScrollTrigger toggles | the gauge must read true on every device; an instrument that sticks is worse than none (owner-reported defect) |
+
+## Phase 5 — The Marks
+
+| element | decision | derivation (one line) |
+|---|---|---|
+| The mark set, hand-authored | nine single-stroke SVGs; every "straight" line is a shallow bézier, no circle closes exactly, tick lengths drift | §5.1 verbatim: the site's handwriting — proof a person made it, kept slightly irregular |
+| Monument→mark mapping | 1 plumb bob (the constant vertical), 2 core sample with an X-ed unlogged section, 3 level with the bubble off true, 4 borehole rings, 5 benchmark (the one fixed published point), 6 leveling rod with eight graduations, 7 sounding lead, 8 deep bore reaching past its depth bars | each mark is the monument's fact drawn in the surveyor's alphabet |
+| Wordmark device | two ledger rules with the plumb line dropped through them; sits in the Face footer above the colophon | §5.1's ninth asset: the ledger and the sounding in one device |
+| Final favicon | the real plumb bob path, bone on ground, 3.5px stroke for tab legibility | v4.1 §1 verbatim; the favicon is the mark at its smallest sounding |
+| OG poster cards | 8 build-time PNGs (1200×630): ground, mono wordmark, the number at monument scale (ember for the live counter), the −3° ember stamp, thesis line; figures parsed from claims.csv and asserted against §3 | v4.1 §3.7 verbatim — every share is a poster; a hard-coded figure is a build failure even in tooling |
+| OG image routing | Face carries the live-counter card; all other pages default to the admitted-budget card | fragment-URL descents cannot carry their own OG tags; the surface speaks for them (DEVIATION, reported) |
+| manifest.webmanifest + icons | standalone, ground/theme #141210, SVG + 192/512 PNG + apple-touch-icon, all rasterized from the plumb bob | v4.1 §5: installable is fine; the installed icon is the site's mark, nothing new |
+| scripts/og.mjs committed | the card generator lives in the repo; fonts passed by path (instanced TTFs are tooling inputs, not shipped assets) | generated assets must be regenerable, or they are unauthored |
