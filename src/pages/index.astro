@@ -4,16 +4,14 @@ import Counter from '../components/Counter.astro';
 import Annot from '../components/Annot.astro';
 import AnnotLine from '../components/AnnotLine.astro';
 import CId from '../components/CId.astro';
-import G from '../components/G.astro';
 import { getClaim, claims, sources } from '../lib/data';
-import { abbrev, grouped, COUNTER_RATE } from '../lib/format';
+import { abbrev } from '../lib/format';
 
 const acknowledged = abbrev(getClaim('C-0013').amount!); // $101.1 bn
 const audited = abbrev(getClaim('C-0001').amount!);      // $7.010 tn
 const nip = abbrev(getClaim('C-0011').amount!);          // $73.3 bn
 const mip = abbrev(getClaim('C-0012').amount!);          // $27.8 bn
 const unreported = abbrev(getClaim('C-0009').amount!);   // $206.9 bn
-const rate = `~$${grouped(Math.round(COUNTER_RATE))} / sec`; // ~$3,206 / sec
 ---
 
 <Document title="THE BLACK LEDGER — Edition I" footColophon={false}>
@@ -37,11 +35,10 @@ const rate = `~$${grouped(Math.round(COUNTER_RATE))} / sec`; // ~$3,206 / sec
       <dt>Sources</dt><dd>{sources.length} registered · {claims.length} claims</dd>
       <dt>Opened</dt><dd>02 Jul 2026</dd>
     </dl>
-    <Annot>
-      <AnnotLine>Official registry</AnnotLine>
-      <AnnotLine key="Jurisdiction">United States of America</AnnotLine>
-      <li id="reading-line" style="display:none">{'— You are reading: '}<span id="local-time" class="mono"></span></li>
-    </Annot>
+    <ul class="annot" id="registry-annot">
+      <li>— Official registry</li>
+      <li>— Jurisdiction: United States of America</li>
+    </ul>
   </section>
 
   <!-- Contents (amendment v3.4 §1.2) — a flat index, directly after the registry strip -->
@@ -53,15 +50,6 @@ const rate = `~$${grouped(Math.round(COUNTER_RATE))} / sec`; // ~$3,206 / sec
       <p class="body"><a href="/chapters/subjects"><b>03 — Subjects</b></a> — six files: the totals, the leak, one estimate, the audits, a misused number, the unreported line.</p>
       <p class="body"><a href="/chapters/share"><b>04 — Your Share</b></a> — the acknowledged budget, per household.</p>
       <p class="body"><a href="/chapters/record"><b>05 — The Record</b></a> — every figure, its source, its confidence grade.</p>
-    </div>
-  </section>
-
-  <!-- What this is -->
-  <section class="section">
-    <div class="plabel">— What this is</div>
-    <div class="stack" style="margin-top:24px">
-      <p class="body">An open audit of the classified expenditure of the United States for <G t="fiscal-year">fiscal year</G> 2025 — compiled entirely from official disclosures, authenticated leaked documents, records released under the Freedom of Information Act, and published audits, designed for any reader.</p>
-      <p class="body">The United States publishes exactly two classified spending figures each year. The first, the National Intelligence Program <G t="topline">topline</G>, is required by statute — 50 U.S.C. §3306. The second, the Military Intelligence Program topline, has been disclosed voluntarily by the Department of Defense every year since 2007. For fiscal year 2025 the two figures total $101.1 billion. Below these toplines, disclosure ends. The department responsible for the majority of this spending has failed its financial audit eight consecutive times and is the only major federal agency never to have passed one.</p>
     </div>
   </section>
 
@@ -77,15 +65,11 @@ const rate = `~$${grouped(Math.round(COUNTER_RATE))} / sec`; // ~$3,206 / sec
   <section class="section">
     <Counter label="BEING SPENT AS YOU READ:" />
     <Annot>
-      <AnnotLine>This ticks up by about $3,206 every second — the classified spending the government admits to.</AnnotLine>
-      <AnnotLine key="Rate">{rate}</AnnotLine>
-      <AnnotLine>{acknowledged} — annual acknowledged classified expenditure</AnnotLine>
-      <AnnotLine>Updated every second</AnnotLine>
+      <AnnotLine>About $3,206 of acknowledged classified spending accrues every second.</AnnotLine>
       <AnnotLine key="Computation">{acknowledged} ÷ 31,536,000 sec / year</AnnotLine>
       <AnnotLine>NIP: {nip} (<CId id="C-0011" />) · MIP: {mip} (<CId id="C-0012" />)</AnnotLine>
       <AnnotLine key="Source">ODNI PR 39-25 · DoD MIP release · FY2025</AnnotLine>
     </Annot>
-    <p class="linkline"><a href="/chapters/meter">→ See Chapter 01 — The Meter</a></p>
   </section>
 
   <!-- Subject of audit -->
@@ -98,8 +82,9 @@ const rate = `~$${grouped(Math.round(COUNTER_RATE))} / sec`; // ~$3,206 / sec
     <Annot>
       <AnnotLine key="Ratio, unreported to acknowledged">2.05 : 1</AnnotLine>
       <AnnotLine>Acknowledged: <CId id="C-0013" /> · Unreported: <CId id="C-0009" /></AnnotLine>
+      <AnnotLine>Disclosure of the first figure is required by 50 U.S.C. §3306; the second is volunteered.</AnnotLine>
+      <AnnotLine>The department responsible for most of it has failed eight consecutive audits — the only major agency never to pass one.</AnnotLine>
     </Annot>
-    <p class="linkline"><a href="/chapters/reconciliation">→ See Chapter 02 — The Reconciliation</a></p>
     <p class="linkline"><a href="/chapters/record">Full registry of sources → Chapter 05</a></p>
   </section>
 
@@ -114,28 +99,30 @@ const rate = `~$${grouped(Math.round(COUNTER_RATE))} / sec`; // ~$3,206 / sec
   </section>
 
   <script>
-    // "You are reading" — visitor local time as HH:MM, DD Mon YYYY, updating each minute
-    // (v3.3 §8). The line is hidden by default; JS reveals it only when it has a real value,
-    // so no dangling "—" is ever rendered when JS is unavailable or the value is empty.
-    const el = document.getElementById('local-time');
-    const line = document.getElementById('reading-line');
-    if (el && line) {
+    // The clock (v3.4 §2.6): the visitor's local time as HH:MM, DD Mon YYYY, updating each
+    // minute. The entire line is created here — the static HTML contains no version of it,
+    // so without JavaScript the line simply does not exist.
+    const annot = document.getElementById('registry-annot');
+    if (annot) {
       const MONTHS = ['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec'];
-      const render = () => {
+      const value = () => {
         const now = new Date();
         const hh = String(now.getHours()).padStart(2, '0');
         const mm = String(now.getMinutes()).padStart(2, '0');
         const dd = String(now.getDate()).padStart(2, '0');
-        const val = `${hh}:${mm}, ${dd} ${MONTHS[now.getMonth()]} ${now.getFullYear()}`;
-        if (val && val.trim()) {
-          el.textContent = val;
-          line.style.display = '';
-        } else {
-          line.style.display = 'none';
-        }
+        return `${hh}:${mm}, ${dd} ${MONTHS[now.getMonth()]} ${now.getFullYear()}`;
       };
-      render();
-      setInterval(render, 60000);
+      const first = value();
+      if (first && first.trim()) {
+        const li = document.createElement('li');
+        li.append('— You are reading: ');
+        const span = document.createElement('span');
+        span.className = 'mono';
+        span.textContent = first;
+        li.append(span);
+        annot.append(li);
+        setInterval(() => { span.textContent = value(); }, 60000);
+      }
     }
   </script>
 </Document>

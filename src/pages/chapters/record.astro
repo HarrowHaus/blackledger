@@ -4,11 +4,12 @@ import Annot from '../../components/Annot.astro';
 import AnnotLine from '../../components/AnnotLine.astro';
 import { Content as Methodology } from '../../../docs/METHODOLOGY.md';
 import { claims, sources, corrections } from '../../lib/data';
-import { abbrev, rangeAbbrev } from '../../lib/format';
+import { abbrev, grouped, rangeAbbrev } from '../../lib/format';
 import type { Claim } from '../../lib/data';
 
 function amountCell(c: Claim): string {
   if (c.tier === 4) return rangeAbbrev(c); // Tier-4: ranges only (spec §5 05.1)
+  if (c.amount !== null && c.unit !== 'USD') return grouped(c.amount); // counts (C-0028), never $
   if (c.amount !== null) return abbrev(c.amount);
   if (c.low !== null && c.high !== null) return rangeAbbrev(c);
   return '—'; // status claim (e.g. C-0017)
@@ -127,8 +128,8 @@ const HUMAN_SOURCE_URL: Record<string, string> = {
 
     <div class="glossary" style="margin-top:48px">
       <div class="label" style="margin-bottom:16px">Glossary</div>
-      <p><strong id="g-outlays">Outlays</strong> — money actually paid out. <strong id="g-obligations">Obligations</strong> — money legally committed, which may be paid over several years. <strong id="g-appropriated">Appropriated</strong> — the amount Congress actually approved. <strong id="g-requested">Requested</strong> — the amount an agency asked for. <strong id="g-topline">Topline</strong> — a single total with no breakdown beneath it. <strong id="g-fiscal-year">Fiscal year</strong> — the government's accounting year, October through September; FY2025 ended 30 Sep 2025.</p>
-      <p style="margin-top:0.9em"><strong>MTS</strong> — Monthly Treasury Statement, the Treasury's monthly account of receipts and outlays. <strong>NIP / MIP</strong> — National and Military Intelligence Programs, the two disclosed classified toplines. <strong>R-1 / P-1</strong> — the Department of Defense's published research and procurement justification books, in which classified program line items appear with printed dollar amounts. <strong id="g-disclaimer-of-opinion">Disclaimer of opinion</strong> — an auditor's statement that the books cannot support an opinion at all. <strong>CBJ</strong> — Congressional Budget Justification; the FY2013 CBJ, disclosed in 2013, remains the only complete public map of the intelligence budget's interior.</p>
+      <p><strong id="gloss-outlays">Outlays</strong> — money actually paid out. <strong id="gloss-obligations">Obligations</strong> — money legally committed, which may be paid over several years. <strong id="gloss-appropriated">Appropriated</strong> — the amount Congress actually approved. <strong id="gloss-requested">Requested</strong> — the amount an agency asked for. <strong id="gloss-topline">Topline</strong> — a single total with no breakdown beneath it. <strong id="gloss-fiscal-year">Fiscal year</strong> — the government's accounting year, October through September; FY2025 ended 30 Sep 2025.</p>
+      <p style="margin-top:0.9em"><strong>MTS</strong> — Monthly Treasury Statement, the Treasury's monthly account of receipts and outlays. <strong>NIP / MIP</strong> — National and Military Intelligence Programs, the two disclosed classified toplines. <strong>R-1 / P-1</strong> — the Department of Defense's published research and procurement justification books, in which classified program line items appear with printed dollar amounts. <strong id="gloss-disclaimer-of-opinion">Disclaimer of opinion</strong> — an auditor's statement that the books cannot support an opinion at all. <strong>CBJ</strong> — Congressional Budget Justification; the FY2013 CBJ, disclosed in 2013, remains the only complete public map of the intelligence budget's interior.</p>
     </div>
   </section>
 

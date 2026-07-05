@@ -12,6 +12,8 @@ export interface DocPage {
   chapterName: string;
   /** the running-head / nav label for the chapter this page belongs to */
   chapterLabel: string;
+  /** dossier pages only: the FILE label used in next-links, e.g. "FILE 03/01" (v3.4 §2.3) */
+  fileLabel?: string;
 }
 
 // Top-level chapters for the header nav (spec §6).
@@ -30,12 +32,12 @@ const ORDER: Omit<DocPage, 'page' | 'fileNo'>[] = [
   { path: '/chapters/meter', chapterName: 'THE METER', chapterLabel: '01 — METER' },
   { path: '/chapters/reconciliation', chapterName: 'THE RECONCILIATION', chapterLabel: '02 — RECONCILIATION' },
   { path: '/chapters/subjects', chapterName: 'SUBJECTS', chapterLabel: '03 — SUBJECTS' },
-  { path: '/chapters/subjects/national-intelligence-program', chapterName: 'THE NATIONAL INTELLIGENCE PROGRAM', chapterLabel: '03 — SUBJECTS' },
-  { path: '/chapters/subjects/leaked-interior', chapterName: 'THE LEAKED INTERIOR', chapterLabel: '03 — SUBJECTS' },
-  { path: '/chapters/subjects/projection', chapterName: 'THE PROJECTION', chapterLabel: '03 — SUBJECTS' },
-  { path: '/chapters/subjects/audit', chapterName: 'THE AUDIT', chapterLabel: '03 — SUBJECTS' },
-  { path: '/chapters/subjects/adjustments', chapterName: 'THE ADJUSTMENTS', chapterLabel: '03 — SUBJECTS' },
-  { path: '/chapters/subjects/unreported-line', chapterName: 'THE UNREPORTED LINE', chapterLabel: '03 — SUBJECTS' },
+  { path: '/chapters/subjects/national-intelligence-program', chapterName: 'THE NATIONAL INTELLIGENCE PROGRAM', chapterLabel: '03 — SUBJECTS', fileLabel: 'FILE 03/01' },
+  { path: '/chapters/subjects/leaked-interior', chapterName: 'THE LEAKED INTERIOR', chapterLabel: '03 — SUBJECTS', fileLabel: 'FILE 03/02' },
+  { path: '/chapters/subjects/projection', chapterName: 'THE PROJECTION', chapterLabel: '03 — SUBJECTS', fileLabel: 'FILE 03/03' },
+  { path: '/chapters/subjects/audit', chapterName: 'THE AUDIT', chapterLabel: '03 — SUBJECTS', fileLabel: 'FILE 03/04' },
+  { path: '/chapters/subjects/adjustments', chapterName: 'THE ADJUSTMENTS', chapterLabel: '03 — SUBJECTS', fileLabel: 'FILE 03/05' },
+  { path: '/chapters/subjects/unreported-line', chapterName: 'THE UNREPORTED LINE', chapterLabel: '03 — SUBJECTS', fileLabel: 'FILE 03/06' },
   { path: '/chapters/share', chapterName: 'YOUR SHARE', chapterLabel: '04 — YOUR SHARE' },
   { path: '/chapters/record', chapterName: 'THE RECORD', chapterLabel: '05 — RECORD' },
 ];

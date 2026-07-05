@@ -2,6 +2,7 @@
 import '../styles/tokens.css';
 import '../styles/app.css';
 import { NAV, pageFor, nextPage, navFor, TOTAL_PAGES } from '../lib/document';
+import { claims, sources } from '../lib/data';
 
 interface Props {
   title: string;
@@ -62,7 +63,9 @@ const activeNav = navFor(pathname);
 
         {next && !hideNextChapter && (
           <a class="next-chapter" href={next.path}>
-            ↓ CHAPTER {next.chapterLabel.split(' ')[0]} — {next.chapterName}
+            {next.fileLabel
+              ? `↓ ${next.fileLabel} — ${next.chapterName}`
+              : `↓ CHAPTER ${next.chapterLabel.split(' ')[0]} — ${next.chapterName}`}
           </a>
         )}
       </main>
@@ -71,7 +74,7 @@ const activeNav = navFor(pathname);
         {footColophon && (
           <div class="foot__colophon">
             THE BLACK LEDGER · FIRST EDITION · MMXXVI<br />
-            COMPILED FROM 20 REGISTERED SOURCES · 27 CLAIMS · METHODOLOGY PUBLIC · CORRECTIONS PUBLIC<br />
+            COMPILED FROM {sources.length} REGISTERED SOURCES · {claims.length} CLAIMS · METHODOLOGY PUBLIC · CORRECTIONS PUBLIC<br />
             SET IN NEWSREADER AND IBM PLEX MONO · PROOF COPY
           </div>
         )}

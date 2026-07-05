@@ -28,14 +28,14 @@ const cited = cites.map(getClaim);
     <div class="plabel">— Registry entries</div>
     <ul class="annot" style="margin-top:12px">
       {cited.map((c) => (
-        <li>{'— '}<a href={`/chapters/record#${c.id}`}>{c.displayName}</a></li>
+        <li>{'— '}<a href={`/chapters/record#${c.id}`}>{c.displayName}</a></li>
       ))}
     </ul>
   </section>
 
   <nav class="dossier-nav">
-    <span>{prev ? <a href={`/chapters/subjects/${prev.slug}`}>← 03/{prev.n} {prev.name}</a> : <span></span>}</span>
+    <span>{prev ? <a href={`/chapters/subjects/${prev.slug}`}>← FILE 03/{prev.n} — {prev.name}</a> : <span></span>}</span>
     <a href="/chapters/subjects">03 — Subjects index</a>
-    <span>{next ? <a href={`/chapters/subjects/${next.slug}`}>03/{next.n} {next.name} →</a> : <span></span>}</span>
+    <span>{next ? <a href={`/chapters/subjects/${next.slug}`}>FILE 03/{next.n} — {next.name} →</a> : <span></span>}</span>
   </nav>
 </Document>

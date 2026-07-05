@@ -27,7 +27,7 @@ const parts = [
       <AnnotLine>In 2013 a leaked document revealed the intelligence budget's total request — the last time its inside was ever public.</AnnotLine>
       <ClaimRef id="C-0018" />
       <AnnotLine key="Source">FY2013 Congressional Budget Justification · Washington Post · 29 Aug 2013</AnnotLine>
-      <AnnotLine>Tier 2: authenticated leak, undisputed by government</AnnotLine>
+      <AnnotLine>Confidence 2 — Authenticated leak, undisputed by government</AnnotLine>
     </Annot>
   </section>
 
@@ -36,14 +36,14 @@ const parts = [
     <div class="scroll-x">
       <table class="dtable">
         <thead>
-          <tr><th>Component</th><th>FY2013 request</th><th>Tier</th><th>Ledger</th></tr>
+          <tr><th>Component</th><th>FY2013 request</th><th>Confidence</th><th>Ledger</th></tr>
         </thead>
         <tbody>
           {parts.map((p) => (
             <tr>
               <td>{p.label}</td>
               <td>{abbrev(getClaim(p.id).amount!)}</td>
-              <td>2</td>
+              <td>2 — Authenticated leak</td>
               <td><CId id={p.id} /></td>
             </tr>
           ))}
@@ -53,7 +53,7 @@ const parts = [
     <Annot>
       <AnnotLine>How that leaked 2013 request split between the individual spy agencies — the only such breakdown ever made public.</AnnotLine>
       <AnnotLine key="Source">Washington Post · The Black Budget · 29 Aug 2013</AnnotLine>
-      <AnnotLine>All components Tier 2 — kept separate from official figures, never added to them.</AnnotLine>
+      <AnnotLine>All components confidence 2 — kept separate from official figures, never added to them.</AnnotLine>
     </Annot>
   </section>
 
@@ -64,7 +64,7 @@ const parts = [
   <section class="section">
     <div class="stack">
       <p class="body">The figures on this page come from a single disclosed document: the classified budget justification for fiscal year 2013, published by the Washington Post in August 2013. The request totaled $52.6 billion (C-0018), and for the first time attributed that total to individual agencies — the Central Intelligence Agency at $14.7 billion (C-0019), the National Security Agency at $10.8 billion (C-0020), the National Reconnaissance Office at $10.3 billion (C-0021).</p>
-      <p class="body">The government has never disputed the document, which is why it is carried here at Tier 2. It is also thirteen years old. It is the last time the interior of the National Intelligence Program was visible in this detail, and every modeled figure elsewhere in this ledger that leans on it carries that age as a stated caveat.</p>
+      <p class="body">The government has never disputed the document, which is why it is carried here at confidence grade 2 — an authenticated leak. It is also thirteen years old. It is the last time the interior of the National Intelligence Program was visible in this detail, and every modeled figure elsewhere in this ledger that leans on it carries that age as a stated caveat.</p>
     </div>
   </section>
 </Dossier>

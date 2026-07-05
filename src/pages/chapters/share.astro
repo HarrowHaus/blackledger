@@ -7,8 +7,8 @@ import { getClaim } from '../../lib/data';
 import { exactUsd, grouped } from '../../lib/format';
 
 const acknowledged = exactUsd(getClaim('C-0013')); // $101,100,000,000
-const households = grouped(134000000);             // 134,000,000
-const share = '$754';                              // 101.1 bn ÷ 134 m ≈ 754 (approximate, C-0013)
+const households = grouped(getClaim('C-0028').amount!); // 134,000,000 (IRS SOI, C-0028)
+const share = '$754';                              // 101.1 bn ÷ 134 m ≈ 754 (approximate)
 ---
 
 <Document title="THE BLACK LEDGER — 04 Your Share">
@@ -35,7 +35,7 @@ const share = '$754';                              // 101.1 bn ÷ 134 m ≈ 754 
     </div>
     <Annot>
       <AnnotLine>About $754 for every household that files a federal return.</AnnotLine>
-      <AnnotLine>Ledger: <CId id="C-0013" /> · household count: to be registered as a Tier 1 claim at build (IRS SOI); until registered, label the result "approximate"</AnnotLine>
+      <AnnotLine>Ledger: <CId id="C-0013" /> · households: <CId id="C-0028" /> (approximate)</AnnotLine>
       <AnnotLine>This is the acknowledged portion only — before the unreported line, before the residual.</AnnotLine>
     </Annot>
   </section>

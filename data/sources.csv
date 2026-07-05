@@ -19,3 +19,4 @@ S-17,National Security Archive,George Washington University,https://nsarchive2.g
 S-18,The Black Vault / governmentattic / MuckRock,various,https://www.muckrock.com/,2026-07-02,3,,"FOIA release aggregators. Ingest adapters in build week 4."
 S-19,Contractor 10-K classified/restricted revenue disclosures,SEC EDGAR full-text,https://efts.sec.gov/LATEST/search-index?q=%22classified%20contracts%22,2026-07-02,1,,"NOT YET INGESTED. Bounds the contractor-facing slice: LMT NOC LDOS BAH SAIC GD RTX."
 S-20,AARO reports + ICIG Grusch determination + 2023 sworn testimony,DoD AARO / House Oversight,https://www.aaro.mil/,2026-07-02,4,,"Sworn testimony re: unreported SAP funding = Tier 4 until documents surface."
+S-21,IRS Statistics of Income — filing statistics,Internal Revenue Service,https://www.irs.gov/statistics/soi-tax-stats,2026-07-05,1,,"Registered per v3.4 §2.4 for the C-0028 household count."
