@@ -96,11 +96,11 @@ const THESIS =
     <p class="sounding__fig display num" id="sounding-fig"></p>
     <button class="sounding__ascend" type="button" id="ascend">× ASCEND</button>
   </div>
-  <nav class="gauge" id="gauge" aria-hidden="true" data-stratum="surface" hidden>
-    <span class="gauge__tick caps" data-tick="surface">SURFACE</span>
-    <span class="gauge__tick caps" data-tick="context">CONTEXT</span>
-    <span class="gauge__tick caps" data-tick="method">METHOD</span>
-    <span class="gauge__tick caps" data-tick="record">RECORD</span>
+  <nav class="gauge" id="gauge" aria-label="Depth" data-stratum="surface" hidden>
+    <button type="button" class="gauge__tick caps" data-tick="surface">SURFACE</button>
+    <button type="button" class="gauge__tick caps" data-tick="context">CONTEXT</button>
+    <button type="button" class="gauge__tick caps" data-tick="method">METHOD</button>
+    <button type="button" class="gauge__tick caps" data-tick="record">RECORD</button>
   </nav>
   <p class="visually-hidden" aria-live="polite" id="stratum-announce"></p>
   <span class="plumb" id="plumb" aria-hidden="true"></span>
@@ -528,25 +528,45 @@ const THESIS =
     sounding.dataset.stratum = name;
     gauge.dataset.stratum = name;
     currentGaugeTick?.classList.remove('is-current');
+    currentGaugeTick?.removeAttribute('aria-current');
     currentGaugeTick = gaugeTicks.get(name) ?? null;
     currentGaugeTick?.classList.add('is-current');
+    currentGaugeTick?.setAttribute('aria-current', 'true');
     announce.textContent = `Stratum: ${name.toUpperCase()}`;
   }
+
+  // the gauge tracks depth from scroll position directly — device-proof
+  let strataSections: HTMLElement[] = [];
+  const updateStratum = () => {
+    if (!openSlug || strataSections.length === 0) return;
+    const y = sounding.scrollTop + sounding.clientHeight * 0.45;
+    let name = 'surface';
+    for (const sec of strataSections) {
+      if (sec.offsetTop <= y) name = sec.dataset.stratum!;
+    }
+    if (sounding.dataset.stratum !== name) setStratum(name);
+  };
+  sounding.addEventListener('scroll', updateStratum, { passive: true });
+
+  // the gauge is an instrument: tapping a tick bores straight to that stratum
+  gauge.querySelectorAll<HTMLButtonElement>('[data-tick]').forEach((btn) => {
+    btn.addEventListener('click', () => {
+      if (!openSlug) return;
+      const article = document.getElementById(`descent-${openSlug}`);
+      const target = article?.querySelector<HTMLElement>(`section[data-stratum="${btn.dataset.tick}"]`);
+      if (!target) return;
+      const top = target.offsetTop;
+      if (overlayLenis) {
+        overlayLenis.scrollTo(top, { duration: 0.8, easing: (t: number) => 1 - Math.pow(1 - t, 3) });
+      } else {
+        sounding.scrollTo({ top, behavior: reduced ? 'auto' : 'smooth' });
+      }
+    });
+  });
 
   function buildTriggers(article: HTMLElement) {
     const sections = Array.from(article.querySelectorAll<HTMLElement>('[data-stratum]'));
     for (const sec of sections) {
-      triggers.push(
-        ScrollTrigger.create({
-          scroller: sounding,
-          trigger: sec,
-          start: 'top 55%',
-          end: 'bottom 55%',
-          onToggle: (self) => {
-            if (self.isActive) setStratum(sec.dataset.stratum!);
-          },
-        })
-      );
       const body = sec.querySelector<HTMLElement>('.stratum__body, .descent__caption');
       if (body) {
         const tw = gsap.fromTo(
@@ -624,6 +644,7 @@ const THESIS =
     soundingHead.hidden = false;
     gauge.hidden = false;
     sounding.scrollTop = 0;
+    strataSections = Array.from(article.querySelectorAll<HTMLElement>('section[data-stratum]'));
     setStratum('surface');
 
     if (!reduced) {
@@ -689,6 +710,7 @@ const THESIS =
     if (!openSlug) return;
     const article = document.getElementById(`descent-${openSlug}`);
     openSlug = null;
+    strataSections = [];
     exiting = false;
     triggers.forEach((t) => t.kill());
     triggers = [];

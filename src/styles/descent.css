@@ -119,9 +119,29 @@
   font-size: 0.5625rem;
   color: var(--bone-dim);
   display: inline-block;
+  background: none;
+  border: 0;
+  font-family: var(--font-mono);
+  letter-spacing: 0.14em;
+  cursor: pointer;
+  pointer-events: auto; /* the gauge is an instrument you can grab */
+  padding: 14px 6px; /* ≥44px hit target (v4.1 §2) */
+  margin: -14px -6px;
 }
 .gauge__tick.is-current {
   color: var(--ember);
+}
+.gauge__tick:hover {
+  color: var(--bone);
+}
+.gauge__tick.is-current:hover {
+  color: var(--ember);
+}
+@media (min-width: 720px) {
+  .gauge__tick {
+    text-align: right;
+    margin: -14px -6px;
+  }
 }
 
 /* ---- strata ---- */
