@@ -1,0 +1,233 @@
+/* THE BLACK LEDGER · EDITION II — base sheet (SPEC v4 §2 tokens, v4.1 §1–§2 micro-law).
+   Every rule derives from the concept: depth as proof; a sounding of a sealed budget.
+   Derivations live in docs/DESIGN-DECISIONS.md. */
+
+/* ---- §2 tokens (locked) + v4.1 §1 strata depths ---- */
+:root {
+  --ground: #141210;   /* page; warm near-black */
+  --bone: #E8E0CE;     /* primary type */
+  --bone-dim: #8F877A; /* metadata, gauge labels, strata keys (5.26:1 on ground, verified) */
+  --hairline: #2C2823; /* 1px rules only */
+  --ember: #C8511F;    /* the signal; never decoration, never backgrounds */
+
+  /* v4.1 §1 strata backgrounds — deeper is darker until bedrock, which is 4% warmer-lighter */
+  --stratum-surface: #141210;
+  --stratum-context: #131110;
+  --stratum-method: #12100E;
+  --stratum-record: #17140F;
+
+  --font-display: 'Fraunces', 'Fraunces-fallback', serif;
+  --font-mono: 'IBM Plex Mono', 'PlexMono-fallback', monospace;
+
+  /* leading tracks optical size (v4.1 §1) */
+  --leading-display: 0.95;
+  --leading-context: 1.6;
+  --leading-mono: 1.5;
+}
+
+/* ---- fonts: self-hosted, variable, swap, subset (v4 §1) ---- */
+@font-face {
+  font-family: 'Fraunces';
+  src: url('/fonts/fraunces-var.woff2') format('woff2');
+  font-weight: 300 600;
+  font-style: normal;
+  font-display: swap;
+}
+@font-face {
+  font-family: 'Fraunces';
+  src: url('/fonts/fraunces-italic.woff2') format('woff2');
+  font-weight: 400;
+  font-style: italic;
+  font-display: swap;
+}
+@font-face {
+  font-family: 'IBM Plex Mono';
+  src: url('/fonts/plexmono-400.woff2') format('woff2');
+  font-weight: 400;
+  font-style: normal;
+  font-display: swap;
+}
+@font-face {
+  font-family: 'IBM Plex Mono';
+  src: url('/fonts/plexmono-500.woff2') format('woff2');
+  font-weight: 500;
+  font-style: normal;
+  font-display: swap;
+}
+/* size-adjusted system fallbacks so nothing shifts while fonts load (v4.1 §2) */
+@font-face {
+  font-family: 'Fraunces-fallback';
+  src: local('Georgia'), local('Times New Roman');
+  size-adjust: 109.3%;
+  ascent-override: 89.5%;
+  descent-override: 23.3%;
+  line-gap-override: 0%;
+}
+@font-face {
+  font-family: 'PlexMono-fallback';
+  src: local('Courier New');
+  size-adjust: 100%;
+  ascent-override: 102.5%;
+  descent-override: 27.5%;
+  line-gap-override: 0%;
+}
+
+/* ---- ground rules ---- */
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+  border-radius: 0; /* radius 0 everywhere (v4 §2) */
+}
+
+html {
+  background: var(--ground);
+  color-scheme: dark;
+  -webkit-text-size-adjust: 100%;
+  text-size-adjust: 100%;
+}
+
+body {
+  background: var(--ground);
+  color: var(--bone);
+  font-family: var(--font-display);
+  font-optical-sizing: auto;
+  font-size: 1.125rem;
+  line-height: var(--leading-context);
+  /* prose sits: proportional oldstyle (v4.1 §1); data blocks re-assert tabular lining */
+  font-variant-numeric: oldstyle-nums proportional-nums;
+  text-rendering: optimizeLegibility;
+  -webkit-font-smoothing: antialiased;
+  -webkit-tap-highlight-color: transparent;
+  accent-color: var(--ember);
+}
+
+/* ink-settle entry — first paint is the ground arriving, ≤400ms, no preloader (v4.1 §2) */
+@media (prefers-reduced-motion: no-preference) {
+  body {
+    animation: ink-settle 400ms ease-out both;
+  }
+  @keyframes ink-settle {
+    from { opacity: 0; }
+    to { opacity: 1; }
+  }
+}
+
+/* highlighting a fact stamps it (v4.1 §1) */
+::selection {
+  background: var(--ember);
+  color: var(--ground);
+}
+
+/* focus is the signal, never the default blue ring (v4.1 §1) */
+:focus {
+  outline: none;
+}
+:focus-visible {
+  outline: 1px solid var(--ember);
+  outline-offset: 2px;
+}
+
+/* interaction states never invent colors (v4.1 §1) */
+a {
+  color: inherit;
+  text-decoration: none;
+}
+a:hover {
+  text-decoration: underline;
+  text-decoration-thickness: 1px;
+  text-decoration-color: var(--bone);
+  text-underline-offset: 3px;
+}
+a:active {
+  text-decoration: underline;
+  text-decoration-thickness: 1px;
+  text-underline-offset: 3px;
+  transform: translateY(1px);
+}
+
+/* the borehole has a lining: scrollbar thin, hairline track; ember thumb only in a Descent */
+html {
+  scrollbar-width: thin;
+  scrollbar-color: var(--hairline) var(--ground);
+}
+::-webkit-scrollbar { width: 6px; height: 6px; }
+::-webkit-scrollbar-track { background: var(--ground); }
+::-webkit-scrollbar-thumb { background: var(--hairline); }
+html.descending {
+  scrollbar-color: var(--ember) var(--ground);
+}
+html.descending ::-webkit-scrollbar-thumb { background: var(--ember); }
+
+/* ---- voice-by-depth type classes (v4 §2) ---- */
+.data,
+.num {
+  font-variant-numeric: tabular-nums lining-nums; /* data stands at attention */
+}
+
+.display {
+  font-family: var(--font-display);
+  font-optical-sizing: none;
+  font-variation-settings: 'opsz' 144, 'SOFT' 80;
+  font-weight: 340;
+  line-height: var(--leading-display);
+  font-variant-numeric: tabular-nums lining-nums;
+}
+
+.context-prose {
+  font-family: var(--font-display);
+  font-optical-sizing: none;
+  font-variation-settings: 'opsz' 28;
+  font-weight: 400;
+  font-size: 1.125rem;
+  line-height: var(--leading-context);
+  max-width: 34ch; /* mobile measure; desktop widens (v4.1 §1) */
+  hyphens: auto;
+  -webkit-hyphenate-limit-lines: 2;
+}
+@media (min-width: 720px) {
+  .context-prose { max-width: 58ch; }
+}
+
+.mono {
+  font-family: var(--font-mono);
+  font-weight: 400;
+  font-size: 0.8125rem;
+  line-height: var(--leading-mono);
+  font-variant-numeric: tabular-nums lining-nums;
+  hyphens: none;
+  max-width: 46ch;
+}
+
+/* letter-spaced true caps for mono labels; never uppercase Fraunces (v4.1 §1) */
+.caps {
+  font-family: var(--font-mono);
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  font-variant-numeric: tabular-nums lining-nums;
+}
+
+/* hanging punctuation on pulled numbers: $ and % hang outside the measure (v4.1 §1) */
+.hang {
+  text-indent: -0.55ch;
+}
+
+/* hairline rules only */
+hr {
+  border: 0;
+  border-top: 1px solid var(--hairline);
+}
+
+/* reduced motion: final states only (v4 §4) */
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+    scroll-behavior: auto !important;
+  }
+}

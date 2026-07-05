@@ -1,0 +1,42 @@
+---
+// THE BLACK LEDGER · EDITION II — page shell (SPEC v4 §0 thesis, §1 stack, v4.1 micro-law).
+// No header menu: a single wordmark top-left and RECORD top-right arrive with the pages
+// that use them (Phase 2). This shell owns the head, tokens, fonts, and the motion engine.
+import '../styles/sounding.css';
+
+interface Props {
+  title: string;
+  /** override only where a page has a more specific description; default is the one-sentence thesis (v4 §0) */
+  description?: string;
+}
+
+const THESIS =
+  'The United States admits $101.1 billion of classified spending a year — and fails to account for twice that. Every figure on this site is traceable to its source.';
+
+const { title, description = THESIS } = Astro.props;
+---
+
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+    <title>{title}</title>
+    <meta name="description" content={description} />
+    <meta name="theme-color" content="#141210" />
+    <meta property="og:title" content={title} />
+    <meta property="og:description" content={THESIS} />
+    <meta property="og:type" content="website" />
+    <link rel="preload" as="font" type="font/woff2" href="/fonts/fraunces-var.woff2" crossorigin />
+    <link rel="preload" as="font" type="font/woff2" href="/fonts/fraunces-italic.woff2" crossorigin />
+    <link rel="preload" as="font" type="font/woff2" href="/fonts/plexmono-400.woff2" crossorigin />
+    <link rel="preload" as="font" type="font/woff2" href="/fonts/plexmono-500.woff2" crossorigin />
+  </head>
+  <body>
+    <slot />
+    <script>
+      import { initDepth } from '../lib/sounding/motion';
+      initDepth();
+    </script>
+  </body>
+</html>
