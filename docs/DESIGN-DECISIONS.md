@@ -104,3 +104,27 @@
 | OG image routing | Face carries the live-counter card; all other pages default to the admitted-budget card | fragment-URL descents cannot carry their own OG tags; the surface speaks for them (DEVIATION, reported) |
 | manifest.webmanifest + icons | standalone, ground/theme #141210, SVG + 192/512 PNG + apple-touch-icon, all rasterized from the plumb bob | v4.1 §5: installable is fine; the installed icon is the site's mark, nothing new |
 | scripts/og.mjs committed | the card generator lives in the repo; fonts passed by path (instanced TTFs are tooling inputs, not shipped assets) | generated assets must be regenerable, or they are unauthored |
+
+## Phase 5.7 — The completeness pass (v4.1 §6)
+
+Rows the per-phase accretion had not yet stated explicitly:
+
+| element | decision | derivation (one line) |
+|---|---|---|
+| The five tokens | `#141210 / #E8E0CE / #8F877A / #2C2823 / #C8511F`, byte-exact from v4 §2 | locked by spec; the ground, the bone, the dim, the hairline, the signal — nothing else may exist |
+| Built-CSS color inventory vs tripwire (d) | the built output contains exactly 8 six-digit hexes: the 5 tokens + the 3 additional strata depths of v4.1 §1 (surface reuses the ground) | v4 §10(d) says five; v4.1 §1 mandates the strata values; where they conflict, v4.1 wins — the conflict and its resolution are recorded here |
+| Print white/black pair | `#fff` ground / `#000` ink exist only inside `@media print` | v4.1 §2 verbatim: on paper the ground becomes white and bone becomes ink-black — print colors are authored, not drift |
+| Fallback font families | `Fraunces-fallback` / `PlexMono-fallback` are `local()` metric shims of Georgia / Courier New, no files shipped | two typefaces ever (v4 §1); the shims exist so the real voices arrive without a shift, and vanish on first paint |
+| `<meta name="theme-color" #141210>` | | v4.1 §1 verbatim — the browser chrome sits on the same ground |
+| Disabled does not exist | no disabled state is styled or shipped anywhere | v4.1 §1 verbatim — nothing on this site is disabled |
+| The Pulse | scale 1→1.15→1, 300ms, power1.inOut, once per second, skipped when the tab is hidden and under reduced motion; beats the rail tick on the Face and the gauge tick in a Descent | v4.1 §3.2 verbatim — the budget never stops; neither does the site |
+| The blurred-tab title | on blur `document.title` = "Still counting — THE BLACK LEDGER"; on return the missed accrual renders tabular in the counter caption | v4.1 §3.6 verbatim — absence is the subject; the site notices yours |
+| Measures | context ≤34ch mobile / 58ch desktop; mono ≤46ch; `hyphens:auto` + `-webkit-hyphenate-limit-lines:2` in prose, no hyphenation in mono | v4.1 §1 verbatim — prose breathes, instruments do not break words |
+| Letter-spaced true caps | `.caps`: mono, 0.14em tracking, uppercase; Fraunces is never set in caps | v4.1 §1 verbatim |
+| Easing inventory | arrivals expo.out (v4 §3); FLIP + plumb-line expo.inOut (v4 §4, v4.1 §3.5); snap-settles cubic ease-out; the Pulse power1.inOut; stamp power2.out over 200ms (v4 §4) | every curve either quoted from spec or chosen as the quietest deceleration for a settling instrument |
+| Rulebook typographic characters | Astro's markdown smartpants renders the METHODOLOGY with curly quotes and real dashes; CSV strings pass through `curl()` | v4.1 §1: a straight quote in the built output is a defect, whatever the source format |
+| Descent SURFACE stratum | carries the caption only — the figure itself lives in the fixed header from the moment of the FLIP | the number is not repeated below itself; the surface of a borehole is the rim, not a second monument |
+| `→ return to the surface` on file pages | the 404's specified exit line reused as the files' way home | one phrase for one action, wherever the reader stands below the surface |
+| Sweep results | built output: 0 lorem/TODO/TBD/placeholder; 0 `console.log` in bundles; 0 straight double quotes in rendered copy; color and family inventories as above | recorded pre-proof so Phase 6 verifies a state already known clean |
+
+**Status: every element shipped in Edition II now carries a derivation. Nothing was found underived; nothing required cutting. The ledger is complete for Phase 6.**
