@@ -69,3 +69,23 @@
 | `[hidden] { display: none !important }` base guard | | a closed borehole leaves no chrome behind — no author display rule may resurrect hidden overlay parts (owner-reported defect, fixed) |
 | Monument-by-monument settle on desktop | Lenis-native snap: when wheel momentum dies, the feed glides to the nearest monument top (or the footer) | v4 §3: one number per viewport is the Face's discipline on every input, not only on touch (owner correction) |
 | Stratum-by-stratum settle in the Descent | same Lenis snap against stratum tops; CSS mandatory snap on touch | the borehole descends in strata, not in pixels — depth is discrete (owner correction) |
+
+## Phase 4 — Files + Record
+
+| element | decision | derivation (one line) |
+|---|---|---|
+| `/record` sits on the record stratum (`#17140F`) | whole-page background | the record page IS bedrock — the descent's bottom made addressable (v4 §9 "bedrock page") |
+| Record page voice split | data (register, sources, ledger rows) speaks mono; explanatory prose (methodology, glossary) speaks the context voice | §2's depth voices applied to one page: what is evidence stands at attention, what explains it sits |
+| Section labels REGISTER / HOW THIS SITE WORKS / SOURCES / GLOSSARY / CORRECTIONS / SHARE | authored mono caps labels (flagged) | an index, not advice — labels name strata of the record, they do not narrate reading |
+| Register rows are `<details>` collapsed | 28 rows, Confidence vocabulary, notes expand inline, deep links open their row | v4 §9 verbatim (collapsed rows); a ledger is scanned closed and opened deliberately |
+| `API:` metadata lines without the em-dash | plain mono key/value | v4 §7/§8: the em-dash annotation grammar is retired; metadata is instrument-plain |
+| Epigraph as the closing element | last content on /record, above only the colophon | v4 §8 verbatim: the epigraph moved from the surface to the record's foot — the constitutional sentence closes the audit |
+| Print stylesheet | white ground, ink-black bone, notes print expanded, URLs expand as footnotes, @page margin + page counters | v4.1 §2 verbatim: an audit should print; disclosure has no meaning on paper |
+| File pages = descent template, statically | context prose → mono equation + stamp → ledger rows on the record stratum; no overlay, no gauge | §5.2: files use the descent template; a page you arrived at by URL needs no borehole chrome to feel its strata |
+| File prose | 3–5 paragraphs per file, adapted from the Edition I dossier canon, all figures interpolated from claims.csv | §5.2 requires authored prose under §7; the Edition I dossiers are already voice-lawful canon — new words only where names changed |
+| File stamps carry the primary claim's grade | LANGLEY/FORT MEADE/THE DOCUMENT: 2 — Authenticated leak; THE BOOKS/THE UNREPORTED LINE: 1 — Official; SIX-POINT-FIVE: 3 — Released record | the stamp is the file's confidence, derived from its first-cited claim, never asserted |
+| Plumb-line transition | 1px ember line, scaleY 0→1 from top, 450ms expo.inOut, then navigation; Face→/record only; plain navigation under reduced motion | v4.1 §3.5 verbatim — the site's one page transition, the plumb line dropped to bedrock |
+| Edition I fully retired | /chapters/* routes, Document/Dossier layouts, 8 components, app/tokens stylesheets, Newsreader + old Plex files deleted | v4 §2/§8: prior structure is RETIRED and must not appear in Edition II — coexistence ended the moment its replacements shipped |
+| `curl()` at the data layer | straight quotes in CSV strings render as ’ “ ” ; the CSV stays byte-identical | v4.1 §1: a straight quote in the built output is a defect; the canon is data, the typography is ours |
+| Range claims in ledger rows | C-0024 renders `$18–24 billion (range)`, C-0027 `10–12%` | estimates render as ranges everywhere, never as points (v4 §7) |
+| Provenance JSON keeps machine quotes | the below-bedrock `<pre>` fragment is data display, excluded from the curly-quote law | the raw record is quoted as the machine wrote it — curling it would forge the evidence |

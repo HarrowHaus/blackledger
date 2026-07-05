@@ -85,6 +85,17 @@ function tier(v: string): Tier {
   throw new Error(`[data] invalid evidence_tier "${v}"`);
 }
 
+
+// Rendered copy carries real typographic characters (v4.1 §1): straight quotes
+// arriving from the CSV are curled at the data layer; the CSV itself is canon
+// and stays byte-identical.
+function curl(s: string): string {
+  if (!s) return s;
+  return s
+    .replace(/(\w)'(\w)/g, '$1\u2019$2') // apostrophes
+    .replace(/"([^"]*)"/g, '\u201C$1\u201D'); // paired double quotes
+}
+
 export const claims: Claim[] = parseCSV(claimsCsv).map((r) => {
   const amount = num(r.amount_usd);
   const low = num(r.amount_low);
@@ -102,8 +113,8 @@ export const claims: Claim[] = parseCSV(claimsCsv).map((r) => {
     sourceId: r.source_id,
     retrieved: r.retrieved,
     notes: r.notes,
-    displayName: r.display_name,
-    publicNote: r.public_note,
+    displayName: curl(r.display_name),
+    publicNote: curl(r.public_note),
     isRange: amount === null && low !== null && high !== null,
   };
 });

@@ -1,0 +1,607 @@
+---
+// THE BLACK LEDGER · EDITION II — /record, the bedrock page (SPEC v4 §9).
+// The full claims register (collapsed rows, Confidence vocabulary), the
+// methodology (v3.4 public preface + technical rulebook), sources with human
+// links + API: metadata lines, the anchored glossary, corrections, share
+// intents, and the constitutional epigraph as the closing element. It prints
+// (v4.1 §2): an audit should print.
+import Sounding from '../layouts/Sounding.astro';
+import { Content as Methodology } from '../../docs/METHODOLOGY.md';
+import { claims, sources, corrections } from '../lib/data';
+import type { Claim } from '../lib/data';
+import '../styles/descent.css';
+
+const grouper = new Intl.NumberFormat('en-US', { maximumFractionDigits: 0 });
+const usd = (n: number) => '$' + grouper.format(Math.round(n));
+
+function amountCell(c: Claim): string {
+  if (c.tier === 4 || (c.amount === null && c.low !== null && c.high !== null)) {
+    if (c.unit === 'percent') return `${c.low}–${c.high}%`;
+    const abs = Math.max(Math.abs(c.low ?? 0), Math.abs(c.high ?? 0));
+    if (abs >= 1e12) return `$${(c.low! / 1e12).toFixed(0)}–${(c.high! / 1e12).toFixed(0)} tn`;
+    return `$${(c.low! / 1e9).toFixed(0)}–${(c.high! / 1e9).toFixed(0)} bn`;
+  }
+  if (c.amount !== null && c.unit !== 'USD') return grouper.format(c.amount);
+  if (c.amount !== null) return usd(c.amount);
+  return c.unit; // status claims
+}
+
+const CONFIDENCE: Record<number, string> = {
+  1: '1 — Official',
+  2: '2 — Authenticated leak',
+  3: '3 — Released record',
+  4: '4 — Estimate',
+  5: '5 — Unverified',
+};
+
+const HUMAN_URL: Record<string, string> = {
+  'S-01':
+    'https://fiscaldata.treasury.gov/datasets/monthly-treasury-statement/summary-of-receipts-and-outlays-of-the-u-s-government/',
+  'S-02': 'https://www.usaspending.gov/search',
+  'S-03': 'https://www.usaspending.gov/explorer/agency',
+  'S-04': 'https://www.usaspending.gov/explorer/agency',
+};
+---
+
+<Sounding title="THE RECORD — THE BLACK LEDGER">
+  <header class="chrome">
+    <a class="chrome__mark caps" href="/" aria-label="The Black Ledger — home"
+      >THE BLAC<span class="wonk">K</span> LEDGER</a
+    >
+    <a class="chrome__record caps" href="/record" aria-current="page">RECORD</a>
+  </header>
+
+  <main class="record" id="main">
+    <h1 class="record__title caps">THE RECORD</h1>
+
+    <!-- the register -->
+    <section class="record__section" aria-labelledby="register-h">
+      <h2 class="record__h caps" id="register-h">REGISTER</h2>
+      <p class="record__note mono">
+        {String(claims.length)} claims, notes collapsed. Confidence runs 1 (the government published it)
+        to 5 (someone claimed it). Estimates are never added to official figures.
+      </p>
+      <div class="reg">
+        <div class="reg__head caps num" aria-hidden="true">
+          <span>Name</span><span class="reg__amt">Amount</span><span>Year</span><span>Confidence</span><span
+            >Source</span
+          >
+        </div>
+        {
+          claims.map((c) => (
+            <details class="reg__row" id={c.id}>
+              <summary class="reg__sum mono num">
+                <span class="reg__name">{c.displayName}</span>
+                <span class="reg__amt">{amountCell(c)}</span>
+                <span>{c.fiscalYear}</span>
+                <span>{CONFIDENCE[c.tier]}</span>
+                <span>{c.sourceId}</span>
+              </summary>
+              <p class="reg__note">{c.publicNote}</p>
+            </details>
+          ))
+        }
+      </div>
+    </section>
+
+    <!-- methodology: v3.4 public preface + the technical rulebook -->
+    <section class="record__section" aria-labelledby="method-h">
+      <h2 class="record__h caps" id="method-h">HOW THIS SITE WORKS</h2>
+      <div class="record__prose">
+        <p class="context-prose">
+          This site measures two gaps. The first: the difference between what the Treasury says the
+          government spent and what the government’s own tracking site can show — a difference of $1.7
+          trillion this year, most of it ordinary and explainable, some of it not. The second: what is
+          known about the inside of the secret budget, beneath the two totals the government publishes.
+        </p>
+        <p class="context-prose">
+          Every number carries a confidence grade from 1 to 5. Grade 1 means the government published
+          it. Grade 4 means we estimated it, and every estimate is shown as a range with its
+          assumptions printed beside it. Estimates are never mixed into official figures — anywhere,
+          ever.
+        </p>
+        <p class="context-prose">
+          Two famous claims are handled with care here. The Pentagon really has failed eight audits in
+          a row; that is grade 1, published by its own inspectors. But the “$21 trillion missing”
+          claim circulating online refers to accounting entries booked repeatedly in both directions —
+          proof the books are a mess, not proof the money vanished. This site says the first thing
+          loudly and refuses to say the second, because the difference is what makes the rest of this
+          document trustworthy.
+        </p>
+        <p class="context-prose">The full technical rulebook follows, unchanged, for readers who want it.</p>
+      </div>
+      <h3 class="record__h record__h--sub caps">THE TECHNICAL RULEBOOK</h3>
+      <div class="record__prose record__rulebook">
+        <Methodology />
+      </div>
+    </section>
+
+    <!-- sources -->
+    <section class="record__section" aria-labelledby="sources-h">
+      <h2 class="record__h caps" id="sources-h">SOURCES</h2>
+      <ul class="src">
+        {
+          sources.map((s) => (
+            <li class="src__row mono num" id={s.id}>
+              <span class="src__id caps">{s.id}</span>
+              <span class="src__body">
+                <a href={HUMAN_URL[s.id] ?? s.url} rel="noopener" target="_blank">
+                  {s.name}
+                </a>
+                <span class="src__meta">
+                  publisher: {s.publisher} · confidence ceiling: {s.tierCeiling}
+                </span>
+                {HUMAN_URL[s.id] && <span class="src__meta src__api">API: {s.url}</span>}
+              </span>
+            </li>
+          ))
+        }
+      </ul>
+    </section>
+
+    <!-- glossary with anchors -->
+    <section class="record__section" aria-labelledby="gloss-h">
+      <h2 class="record__h caps" id="gloss-h">GLOSSARY</h2>
+      <div class="record__prose">
+        <p class="context-prose">
+          <strong id="gloss-outlays">Outlays</strong> — money actually paid out.
+          <strong id="gloss-obligations">Obligations</strong> — money legally committed, which may be
+          paid over several years. <strong id="gloss-appropriated">Appropriated</strong> — the amount
+          Congress actually approved. <strong id="gloss-requested">Requested</strong> — the amount an
+          agency asked for. <strong id="gloss-topline">Topline</strong> — a single total with no
+          breakdown beneath it. <strong id="gloss-fiscal-year">Fiscal year</strong> — the government’s
+          accounting year, October through September; FY2025 ended 30 Sep 2025.
+        </p>
+        <p class="context-prose">
+          <strong>MTS</strong> — Monthly Treasury Statement, the Treasury’s monthly account of receipts
+          and outlays. <strong>NIP / MIP</strong> — National and Military Intelligence Programs, the
+          two disclosed classified toplines. <strong>R-1 / P-1</strong> — the Department of Defense’s
+          published research and procurement justification books, in which classified program line
+          items appear with printed dollar amounts.
+          <strong id="gloss-disclaimer-of-opinion">Disclaimer of opinion</strong> — an auditor’s
+          statement that the books cannot support an opinion at all. <strong>CBJ</strong> —
+          Congressional Budget Justification; the FY2013 CBJ, disclosed in 2013, remains the only
+          complete public map of the intelligence budget’s interior.
+        </p>
+      </div>
+    </section>
+
+    <!-- corrections -->
+    <section class="record__section" aria-labelledby="corr-h">
+      <h2 class="record__h caps" id="corr-h">CORRECTIONS</h2>
+      {
+        corrections.length === 0 ? (
+          <p class="record__note mono">No corrections registered. The register opened 02 Jul 2026.</p>
+        ) : (
+          <ul class="src">
+            {corrections.map((c) => (
+              <li class="src__row mono num">
+                <span class="src__id caps">{c.id}</span>
+                <span class="src__body">
+                  {c.date} · <a href={`#${c.claimId}`}>{c.claimId}</a> · {c.description} · {c.status}
+                </span>
+              </li>
+            ))}
+          </ul>
+        )
+      }
+      <p class="record__note mono">Public, append-only. Claims are versioned; nothing is silently edited.</p>
+    </section>
+
+    <!-- share -->
+    <section class="record__section record__section--noprint" aria-labelledby="share-h">
+      <h2 class="record__h caps" id="share-h">SHARE</h2>
+      <ul class="share mono">
+        <li><button type="button" id="copy-link">Copy link</button></li>
+        <li><a id="share-bsky" href="https://bsky.app/" rel="noopener" target="_blank">Share on Bluesky</a></li>
+        <li><a id="share-email" href="mailto:?subject=The%20Black%20Ledger" rel="noopener">Share by email</a></li>
+      </ul>
+    </section>
+
+    <!-- the epigraph closes the record (v4 §8: it moved here from the surface) -->
+    <footer class="record__close">
+      <p class="record__epigraph">
+        a regular Statement and Account of the Receipts and Expenditures of all public Money shall be
+        published from time to time.
+      </p>
+      <p class="record__attr mono num">Constitution of the United States · Article I, Section 9, Clause 7 · 1787</p>
+      <p class="record__colophon caps">PUBLISHED AS AN OPEN AUDIT · EDITION II · MMXXVI</p>
+    </footer>
+  </main>
+</Sounding>
+
+<style>
+  .chrome {
+    position: fixed;
+    inset: 0 0 auto 0;
+    z-index: 10;
+    display: flex;
+    justify-content: space-between;
+    padding: calc(16px + env(safe-area-inset-top)) calc(20px + env(safe-area-inset-right)) 0
+      calc(20px + env(safe-area-inset-left));
+    pointer-events: none;
+  }
+  .chrome a {
+    pointer-events: auto;
+    font-size: 0.625rem;
+    color: var(--bone-dim);
+    padding: 12px;
+    margin: -12px;
+  }
+  .chrome a:hover,
+  .chrome a:focus-visible,
+  .chrome a[aria-current='page'] {
+    color: var(--bone);
+  }
+  .wonk {
+    font-family: var(--font-display);
+    font-variation-settings: 'opsz' 9, 'WONK' 1;
+    font-weight: 500;
+    font-size: 1.15em;
+    letter-spacing: 0;
+  }
+
+  /* bedrock ground: the record page sits on the record stratum (4% warmer-lighter) */
+  :global(html),
+  :global(body) {
+    background: var(--stratum-record);
+  }
+
+  .record {
+    max-width: 880px;
+    margin: 0 auto;
+    padding: calc(96px + env(safe-area-inset-top)) calc(24px + env(safe-area-inset-right)) 80px
+      calc(24px + env(safe-area-inset-left));
+  }
+  .record__title {
+    font-size: 0.8125rem;
+    color: var(--bone);
+  }
+  .record__section {
+    margin-top: 72px;
+    display: grid;
+    gap: 20px;
+    justify-items: start;
+  }
+  .record__h {
+    font-size: 0.625rem;
+    color: var(--bone-dim);
+  }
+  .record__h--sub {
+    margin-top: 28px;
+  }
+  .record__note {
+    font-size: 0.75rem;
+    color: var(--bone-dim);
+    max-width: 60ch;
+  }
+  .record__prose {
+    display: grid;
+    gap: 1em;
+    max-width: 100%;
+  }
+
+  /* the register: collapsed rows */
+  .reg {
+    width: 100%;
+    border-top: 1px solid var(--hairline);
+  }
+  .reg__head,
+  .reg__sum {
+    display: grid;
+    grid-template-columns: minmax(180px, 2.2fr) minmax(110px, 1fr) 56px minmax(130px, 1fr) 48px;
+    gap: 12px;
+    align-items: baseline;
+  }
+  .reg__head {
+    font-size: 0.5625rem;
+    color: var(--bone-dim);
+    padding: 10px 0;
+    border-bottom: 1px solid var(--hairline);
+  }
+  .reg__row {
+    border-bottom: 1px solid var(--hairline);
+  }
+  .reg__sum {
+    font-size: 0.75rem;
+    color: var(--bone);
+    padding: 12px 0;
+    cursor: pointer;
+    list-style: none;
+  }
+  .reg__sum::-webkit-details-marker {
+    display: none;
+  }
+  .reg__sum:hover .reg__name {
+    text-decoration: underline;
+    text-decoration-thickness: 1px;
+    text-underline-offset: 3px;
+  }
+  .reg__amt {
+    text-align: right;
+  }
+  .reg__note {
+    font-family: var(--font-display);
+    font-size: 1rem;
+    line-height: var(--leading-context);
+    color: var(--bone-dim);
+    max-width: 58ch;
+    padding: 0 0 16px;
+  }
+  @media (max-width: 719px) {
+    .reg__head {
+      display: none;
+    }
+    .reg__sum {
+      grid-template-columns: 1fr auto;
+      grid-template-areas: 'name amt' 'meta meta';
+      row-gap: 4px;
+    }
+    .reg__name {
+      grid-area: name;
+    }
+    .reg__amt {
+      grid-area: amt;
+    }
+    .reg__sum span:nth-child(n + 3) {
+      grid-area: meta;
+      color: var(--bone-dim);
+      font-size: 0.625rem;
+    }
+    .reg__sum span:nth-child(4) {
+      justify-self: start;
+      margin-left: 64px;
+    }
+    .reg__sum span:nth-child(5) {
+      justify-self: end;
+    }
+  }
+
+  /* rulebook prose (markdown) */
+  .record__rulebook :global(h1),
+  .record__rulebook :global(h2),
+  .record__rulebook :global(h3) {
+    font-family: var(--font-mono);
+    font-size: 0.6875rem;
+    font-weight: 500;
+    letter-spacing: 0.14em;
+    text-transform: uppercase;
+    color: var(--bone-dim);
+    margin: 1.6em 0 0.6em;
+  }
+  .record__rulebook :global(p),
+  .record__rulebook :global(li) {
+    font-family: var(--font-display);
+    font-optical-sizing: none;
+    font-variation-settings: 'opsz' 28;
+    font-size: 1rem;
+    line-height: var(--leading-context);
+    color: var(--bone);
+    max-width: 62ch;
+  }
+  .record__rulebook :global(ul),
+  .record__rulebook :global(ol) {
+    padding-left: 1.2em;
+    display: grid;
+    gap: 0.4em;
+    margin: 0.6em 0;
+  }
+  .record__rulebook :global(strong) {
+    font-weight: 500;
+  }
+  .record__rulebook :global(code) {
+    font-family: var(--font-mono);
+    font-size: 0.8125rem;
+  }
+
+  /* sources */
+  .src {
+    list-style: none;
+    width: 100%;
+    display: grid;
+    border-top: 1px solid var(--hairline);
+  }
+  .src__row {
+    display: grid;
+    grid-template-columns: 48px 1fr;
+    gap: 14px;
+    padding: 12px 0;
+    border-bottom: 1px solid var(--hairline);
+    font-size: 0.75rem;
+  }
+  .src__id {
+    color: var(--bone-dim);
+    font-size: 0.625rem;
+  }
+  .src__body {
+    display: grid;
+    gap: 4px;
+  }
+  .src__body a {
+    color: var(--bone);
+    width: fit-content;
+    overflow-wrap: anywhere;
+  }
+  .src__meta {
+    color: var(--bone-dim);
+    font-size: 0.6875rem;
+    overflow-wrap: anywhere;
+  }
+
+  /* share */
+  .share {
+    list-style: none;
+    display: flex;
+    flex-wrap: wrap;
+    gap: 28px;
+    font-size: 0.75rem;
+  }
+  .share button {
+    background: none;
+    border: 0;
+    color: var(--bone);
+    font: inherit;
+    cursor: pointer;
+    padding: 12px 0;
+  }
+  .share a {
+    color: var(--bone);
+    display: inline-block;
+    padding: 12px 0;
+  }
+  .share button:hover,
+  .share a:hover {
+    text-decoration: underline;
+    text-decoration-thickness: 1px;
+    text-underline-offset: 3px;
+  }
+
+  /* the closing element: the epigraph */
+  .record__close {
+    margin-top: 110px;
+    display: grid;
+    gap: 14px;
+    justify-items: start;
+    border-top: 1px solid var(--hairline);
+    padding-top: 48px;
+  }
+  .record__epigraph {
+    font-family: var(--font-display);
+    font-style: italic;
+    font-size: 1.375rem;
+    line-height: var(--leading-context);
+    color: var(--bone);
+    max-width: 34ch;
+  }
+  @media (min-width: 720px) {
+    .record__epigraph {
+      max-width: 44ch;
+    }
+  }
+  .record__attr {
+    font-size: 0.625rem;
+    color: var(--bone-dim);
+  }
+  .record__colophon {
+    font-size: 0.5625rem;
+    color: var(--bone-dim);
+    margin-top: 26px;
+  }
+
+</style>
+
+<style is:global>
+  /* ---- an audit should print (v4.1 §2) ---- */
+  @media print {
+    html,
+    body {
+      background: #ffffff !important;
+    }
+    body {
+      color: #000000;
+      animation: none !important;
+    }
+    .chrome,
+    .record__section--noprint {
+      display: none !important;
+    }
+    .record {
+      padding: 0;
+      max-width: none;
+    }
+    .record__title,
+    .record__h,
+    .record__note,
+    .reg__head,
+    .reg__sum,
+    .reg__note,
+    .src__row,
+    .src__id,
+    .src__meta,
+    .record__epigraph,
+    .record__attr,
+    .record__colophon,
+    .record__prose p,
+    .record__rulebook p,
+    .record__rulebook li,
+    .record__rulebook h1,
+    .record__rulebook h2,
+    .record__rulebook h3 {
+      color: #000000 !important;
+    }
+    .reg__row,
+    .src__row,
+    .reg__head,
+    .reg,
+    .src,
+    .record__close {
+      border-color: #000000 !important;
+    }
+    .reg__row[open] .reg__note,
+    .reg__note {
+      display: block; /* notes print expanded: paper has no disclosure */
+    }
+    details.reg__row {
+      page-break-inside: avoid;
+    }
+    /* URL footnotes expand after links */
+    .src__body a[href^='http']::after,
+    .record__prose a[href^='http']::after {
+      content: ' (' attr(href) ')';
+      font-family: var(--font-mono);
+      font-size: 0.625rem;
+    }
+    @page {
+      margin: 18mm;
+      @bottom-right {
+        content: counter(page) ' / ' counter(pages);
+        font-family: 'IBM Plex Mono', monospace;
+        font-size: 8pt;
+      }
+    }
+  }
+
+</style>
+
+<script>
+  // share intents (v4 §9): built from the live page URL
+  const pageUrl = () => window.location.href;
+  const bsky = document.getElementById('share-bsky') as HTMLAnchorElement | null;
+  const email = document.getElementById('share-email') as HTMLAnchorElement | null;
+  const copy = document.getElementById('copy-link') as HTMLButtonElement | null;
+  if (bsky) {
+    const text = encodeURIComponent(
+      'The Black Ledger — an open audit of U.S. classified expenditure. ' + pageUrl()
+    );
+    bsky.href = `https://bsky.app/intent/compose?text=${text}`;
+  }
+  if (email) {
+    email.href = `mailto:?subject=The%20Black%20Ledger&body=${encodeURIComponent(pageUrl())}`;
+  }
+  if (copy) {
+    copy.addEventListener('click', async () => {
+      try {
+        await navigator.clipboard.writeText(pageUrl());
+        copy.textContent = 'Copied.';
+        setTimeout(() => {
+          copy.textContent = 'Copy link';
+        }, 2000);
+      } catch {
+        copy.textContent = pageUrl();
+      }
+    });
+  }
+
+  // deep-linked register rows open themselves
+  const openTarget = () => {
+    const id = decodeURIComponent(location.hash.slice(1));
+    if (!id) return;
+    const el = document.getElementById(id);
+    if (el instanceof HTMLDetailsElement) {
+      el.open = true;
+      el.scrollIntoView({ block: 'center' });
+    }
+  };
+  openTarget();
+  window.addEventListener('hashchange', openTarget);
+</script>

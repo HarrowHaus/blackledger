@@ -1,0 +1,176 @@
+---
+// THE BLACK LEDGER · EDITION II — a FILE page (SPEC v4 §5.2): the descent
+// template applied to a named subject — context → method → record.
+import Sounding from '../../layouts/Sounding.astro';
+import { FILE_PAGES } from '../../lib/sounding/filecontent';
+import { recordRow } from '../../lib/sounding/descents';
+import '../../styles/descent.css';
+
+export function getStaticPaths() {
+  return FILE_PAGES.map((f) => ({ params: { slug: f.slug }, props: { file: f } }));
+}
+
+const { file } = Astro.props;
+const rows = file.records.map(recordRow);
+---
+
+<Sounding title={`${file.name} — THE BLACK LEDGER`} description={file.stake}>
+  <header class="chrome">
+    <a class="chrome__mark caps" href="/" aria-label="The Black Ledger — home"
+      >THE BLAC<span class="wonk">K</span> LEDGER</a
+    >
+    <a class="chrome__record caps" href="/record">RECORD</a>
+  </header>
+
+  <main class="file" id="main">
+    <section class="file__strata" data-depth="context">
+      <h1 class="file__name caps">{file.name}</h1>
+      <p class="file__stake">{file.stake}</p>
+      <div class="file__context">
+        {file.context.map((p) => <p class="context-prose">{p}</p>)}
+      </div>
+    </section>
+
+    <section class="file__strata" data-depth="method">
+      <h2 class="visually-hidden">Method</h2>
+      <div class="equation mono num">
+        {file.equation.map((line) => <p>{line}</p>)}
+      </div>
+      <p class="stamp caps num">{file.stamp}</p>
+      {
+        file.assumptions.length > 0 && (
+          <ul class="assumptions mono">
+            {file.assumptions.map((a) => (
+              <li>{a}</li>
+            ))}
+          </ul>
+        )
+      }
+    </section>
+
+    <section class="file__strata file__strata--record" data-depth="record">
+      <h2 class="visually-hidden">Record</h2>
+      {
+        rows.map((r) => (
+          <dl class="ledgerrow mono num">
+            <div>
+              <dt class="caps">ID</dt>
+              <dd>{r.id}</dd>
+            </div>
+            <div>
+              <dt class="caps">METRIC</dt>
+              <dd>{r.metric}</dd>
+            </div>
+            <div>
+              <dt class="caps">AMOUNT</dt>
+              <dd>{r.amount}</dd>
+            </div>
+            <div>
+              <dt class="caps">YEAR</dt>
+              <dd>{r.year}</dd>
+            </div>
+            <div>
+              <dt class="caps">SOURCE</dt>
+              <dd>
+                <a href={r.sourceUrl} rel="noopener" target="_blank">
+                  {r.sourceName}
+                </a>
+              </dd>
+            </div>
+            <div>
+              <dt class="caps">RETRIEVED</dt>
+              <dd>{r.retrieved}</dd>
+            </div>
+          </dl>
+        ))
+      }
+      <p class="descent__recordlink mono"><a href="/record">→ the full record</a></p>
+      <p class="descent__recordlink mono"><a href="/">→ return to the surface</a></p>
+    </section>
+  </main>
+</Sounding>
+
+<style>
+  .chrome {
+    position: fixed;
+    inset: 0 0 auto 0;
+    z-index: 10;
+    display: flex;
+    justify-content: space-between;
+    padding: calc(16px + env(safe-area-inset-top)) calc(20px + env(safe-area-inset-right)) 0
+      calc(20px + env(safe-area-inset-left));
+    pointer-events: none;
+  }
+  .chrome a {
+    pointer-events: auto;
+    font-size: 0.625rem;
+    color: var(--bone-dim);
+    padding: 12px;
+    margin: -12px;
+  }
+  .chrome a:hover,
+  .chrome a:focus-visible {
+    color: var(--bone);
+  }
+  .wonk {
+    font-family: var(--font-display);
+    font-variation-settings: 'opsz' 9, 'WONK' 1;
+    font-weight: 500;
+    font-size: 1.15em;
+    letter-spacing: 0;
+  }
+  .visually-hidden {
+    position: absolute;
+    width: 1px;
+    height: 1px;
+    overflow: hidden;
+    clip-path: inset(50%);
+    white-space: nowrap;
+  }
+
+  .file {
+    max-width: 720px;
+    margin: 0 auto;
+    padding: calc(96px + env(safe-area-inset-top)) calc(24px + env(safe-area-inset-right)) 120px
+      calc(24px + env(safe-area-inset-left));
+  }
+  .file__strata {
+    display: grid;
+    gap: 26px;
+    justify-items: start;
+    padding: 56px 0;
+  }
+  .file__strata + .file__strata {
+    border-top: 1px solid var(--hairline);
+  }
+  .file__name {
+    font-size: 0.8125rem;
+    color: var(--bone);
+  }
+  .file__stake {
+    font-family: var(--font-display);
+    font-style: italic;
+    font-size: 1.375rem;
+    line-height: var(--leading-context);
+    color: var(--bone);
+    max-width: 34ch;
+  }
+  @media (min-width: 720px) {
+    .file__stake {
+      max-width: 58ch;
+    }
+  }
+  .file__context {
+    display: grid;
+    gap: 1em;
+  }
+  .file__context :global(.context-prose) {
+    font-size: 1.125rem;
+  }
+  /* bedrock on the file page: the record section sits on the record stratum */
+  .file__strata--record {
+    background: var(--stratum-record);
+    margin: 0 calc(-1 * (24px + env(safe-area-inset-left)));
+    padding: 56px calc(24px + env(safe-area-inset-left));
+  }
+</style>

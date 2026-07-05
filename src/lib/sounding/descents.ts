@@ -53,13 +53,24 @@ const HUMAN_URL: Record<string, string> = {
   'S-04': 'https://www.usaspending.gov/explorer/agency',
 };
 
-function recordRow(claimId: string) {
+export function recordRow(claimId: string) {
   const c = getClaim(claimId);
   const s = getSource(c.sourceId);
+  let amount: string;
+  if (c.amount !== null) {
+    amount = c.unit === 'USD' ? usd(c.amount) : grouper.format(c.amount);
+  } else if (c.low !== null && c.high !== null) {
+    amount =
+      c.unit === 'percent'
+        ? `${c.low}–${c.high}%`
+        : `$${(c.low / 1e9).toFixed(0)}–${(c.high / 1e9).toFixed(0)} billion (range)`;
+  } else {
+    amount = c.unit; // status claims
+  }
   return {
     id: c.id,
     metric: c.metric,
-    amount: c.amount !== null ? (c.unit === 'USD' ? usd(c.amount) : grouper.format(c.amount)) : c.unit,
+    amount,
     year: c.fiscalYear,
     sourceName: s.name,
     sourceUrl: HUMAN_URL[s.id] ?? s.url,

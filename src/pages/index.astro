@@ -103,6 +103,7 @@ const THESIS =
     <span class="gauge__tick caps" data-tick="record">RECORD</span>
   </nav>
   <p class="visually-hidden" aria-live="polite" id="stratum-announce"></p>
+  <span class="plumb" id="plumb" aria-hidden="true"></span>
 </Sounding>
 
 <style>
@@ -293,6 +294,20 @@ const THESIS =
   .foot__colophon {
     font-size: 0.5625rem;
     color: var(--bone-dim);
+  }
+
+  /* the plumb-line transition (v4.1 §3.5): the site's one page transition */
+  .plumb {
+    position: fixed;
+    top: 0;
+    left: 50%;
+    width: 1px;
+    height: 100vh;
+    background: var(--ember);
+    transform: scaleY(0);
+    transform-origin: top center;
+    z-index: 80;
+    pointer-events: none;
   }
 </style>
 
@@ -787,6 +802,21 @@ const THESIS =
   sounding.addEventListener('touchmove', (e) => {
     if (touchY - e.touches[0].clientY > 24) bottomIntent();
   }, { passive: true });
+
+  // the plumb-line transition (v4.1 §3.5): Face → /record only, nowhere else
+  const plumb = document.getElementById('plumb');
+  document.querySelectorAll<HTMLAnchorElement>('a[href="/record"]').forEach((a) => {
+    a.addEventListener('click', (e) => {
+      if (reduced || !plumb) return; // reduced motion: navigate plainly
+      e.preventDefault();
+      gsap.to(plumb, {
+        scaleY: 1,
+        duration: 0.45,
+        ease: 'expo.inOut',
+        onComplete: () => window.location.assign('/record'),
+      });
+    });
+  });
 
   // the Pulse (v4.1 §3.2): beats in the rail on the Face, in the gauge inside a descent
   if (!reduced) {
