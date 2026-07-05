@@ -12,6 +12,24 @@
   background: var(--stratum-surface);
   transition: background-color 500ms linear;
 }
+/* the borehole descends stratum by stratum: touch snaps natively; wheel snaps via Lenis */
+@media (pointer: coarse) {
+  .sounding {
+    scroll-snap-type: y mandatory;
+  }
+  .sounding .stratum {
+    scroll-snap-align: start;
+    scroll-snap-stop: always;
+  }
+  .sounding .below {
+    scroll-snap-align: end;
+  }
+}
+@media (prefers-reduced-motion: reduce) {
+  .sounding {
+    scroll-snap-type: none;
+  }
+}
 .sounding[hidden] {
   display: none;
 }

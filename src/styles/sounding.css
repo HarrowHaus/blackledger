@@ -82,6 +82,11 @@
   border-radius: 0; /* radius 0 everywhere (v4 §2) */
 }
 
+/* the hidden attribute always wins — a closed borehole leaves no chrome behind */
+[hidden] {
+  display: none !important;
+}
+
 html {
   background: var(--ground);
   color-scheme: dark;

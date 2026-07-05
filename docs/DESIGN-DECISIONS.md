@@ -66,3 +66,6 @@
 | Provenance fragments (v4.1 §3.4) | C-0009 descents show the actual USAspending JSON entry; others show their claims.csv rows as JSON | bedrock under bedrock is the raw data we actually hold — nothing staged |
 | File stake at bedrock only where a file cites the claim | C-0009 → THE UNREPORTED LINE, C-0017 → THE BOOKS | §5.2: files are "reachable from relevant RECORD strata" — relevance is citation, not decoration |
 | Grain shader not built | the §1 option stays unexercised | v4 §1/§6: optional and budget-gated; the quietest thing that serves depth is ground, not texture (recorded, not silent) |
+| `[hidden] { display: none !important }` base guard | | a closed borehole leaves no chrome behind — no author display rule may resurrect hidden overlay parts (owner-reported defect, fixed) |
+| Monument-by-monument settle on desktop | Lenis-native snap: when wheel momentum dies, the feed glides to the nearest monument top (or the footer) | v4 §3: one number per viewport is the Face's discipline on every input, not only on touch (owner correction) |
+| Stratum-by-stratum settle in the Descent | same Lenis snap against stratum tops; CSS mandatory snap on touch | the borehole descends in strata, not in pixels — depth is discrete (owner correction) |
