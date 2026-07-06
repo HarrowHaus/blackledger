@@ -221,8 +221,10 @@ const THESIS =
   }
 
   /* ---- the feed (v4 §1/§3) ---- */
+  /* while the pullback owns the scroll (html.pb-live) the feed's snap law is off:
+     the monuments are hidden, so mandatory snap would yank every touch to the footer */
   @media (pointer: coarse) {
-    :global(html) {
+    :global(html:not(.pb-live)) {
       scroll-snap-type: y mandatory;
     }
     .monument {
@@ -980,6 +982,7 @@ const THESIS =
         // the swap first — the canvas must have real size before the renderer measures it
         faceSnapOff?.();
         faceSnapOff = null;
+        document.documentElement.classList.add('pb-live'); // feed snap off: one scroll law at a time
         monuments.forEach((m) => {
           m.hidden = true;
         });
@@ -1031,6 +1034,7 @@ const THESIS =
                 window.clearInterval(dog);
                 console.log('%cRENDERER: DEMOTED (<45FPS × 3S) · TIER C RESTORED', 'font-family:monospace');
                 world.dispose();
+                document.documentElement.classList.remove('pb-live'); // the feed's snap law returns with the feed
                 pb.hidden = true;
                 scaleLine.hidden = true;
                 monuments.forEach((m) => {
