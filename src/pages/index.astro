@@ -41,23 +41,24 @@ const THESIS =
             class="monument__link"
             href={`#/sounding/${m.slug}`}
             data-sound={m.slug}
-            aria-label={`Sound this number: ${m.figure} ${m.caption}`}
           >
             <figure class="monument__fig">
               <Mark kind={i + 1} />
+              {!m.live && <span class="visually-hidden">{m.figure}</span>}
               <div
                 class={`monument__num display num hang${m.long ? ' monument__num--long' : ''}${m.live ? ' monument__num--live' : ''}`}
                 data-figure={m.figure}
                 data-live={m.live ? 'true' : undefined}
+                aria-hidden={m.live ? undefined : 'true'}
               >
                 {m.figure}
               </div>
               <figcaption class="monument__caption">
                 {m.caption}
                 {m.live && <span class="monument__away caps num" data-away aria-live="polite"></span>}
+                <span class="monument__ledger caps">{m.ledger}</span>
+                <span class="monument__sound caps">SOUND THIS NUMBER ↓</span>
               </figcaption>
-              <span class="monument__ledger caps">{m.ledger}</span>
-              <span class="monument__sound caps">SOUND THIS NUMBER ↓</span>
             </figure>
           </a>
         </section>
@@ -240,8 +241,16 @@ const THESIS =
     min-height: 1.2em;
   }
   .monument__ledger {
+    display: block;
+    margin-top: 18px;
     font-size: 0.5625rem;
+    font-style: normal;
     color: var(--bone-dim);
+  }
+  .monument__sound {
+    display: block;
+    margin-top: 18px;
+    font-style: normal;
   }
 
   /* ---- footer (v4 §9) ---- */
@@ -349,7 +358,7 @@ const THESIS =
           gsap.to(num, { y: 0, opacity: 1, duration: 0.9, ease: 'expo.out' });
         };
       } else {
-        const split = new SplitText(num, { type: 'words,chars' });
+        const split = new SplitText(num, { type: 'words,chars', aria: 'none' });
         gsap.set(split.chars, { y: '0.6em', opacity: 0 });
         arrive = () => {
           gsap.to(split.chars, { y: 0, opacity: 1, duration: 0.9, ease: 'expo.out', stagger: 0.02 });
