@@ -334,3 +334,68 @@
     transform: scaleX(var(--fill, 0));
   }
 }
+
+/* ---- THE PULLBACK (v7.1 §2): the Tier A/B spine ---- */
+.pullback__canvas {
+  position: fixed;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  display: block;
+  z-index: 1;
+  opacity: 0;
+}
+.pullback__track {
+  position: relative;
+  z-index: 2;
+}
+.pb-beat {
+  min-height: 260svh;
+  position: relative;
+}
+.pb-copy {
+  position: sticky;
+  top: 0;
+  min-height: 100svh;
+  display: grid;
+  align-content: end;
+  justify-items: center;
+  text-align: center;
+  padding: 24px calc(20px + env(safe-area-inset-right)) 16svh calc(20px + env(safe-area-inset-left));
+}
+.pb-copy .monument__link {
+  display: grid;
+  justify-items: center;
+  gap: 18px;
+}
+.pb-figure {
+  font-size: clamp(3.5rem, 14vw, 9.5rem);
+  letter-spacing: -0.01em;
+  color: var(--bone);
+  margin: 0;
+}
+.pb-caption {
+  font-family: var(--font-display);
+  font-style: italic;
+  font-size: 1.125rem;
+  line-height: var(--leading-context);
+  color: var(--bone);
+  max-width: 34ch;
+  margin: 0;
+}
+@media (min-width: 720px) {
+  .pb-caption { max-width: 58ch; }
+}
+/* the scale-line (v7.1 §2.2): the honest readout; the navigation, come P5 */
+.pullback__scale {
+  position: fixed;
+  left: calc(20px + env(safe-area-inset-left));
+  bottom: calc(18px + env(safe-area-inset-bottom));
+  z-index: 12;
+  font-size: 0.625rem;
+  color: var(--bone-dim);
+  margin: 0;
+}
+.pullback__scale span {
+  color: var(--bone);
+}

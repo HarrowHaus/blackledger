@@ -68,6 +68,45 @@ const THESIS =
       ))
     }
 
+
+    <!-- THE PULLBACK (v7.1 §2): Tier A/B spine — revealed by the boot, never fetched by Tier C -->
+    <div class="pullback" id="pullback" hidden>
+      <canvas class="pullback__canvas" id="pullback-canvas" aria-hidden="true"></canvas>
+      <div class="pullback__track" id="pullback-track">
+        <section class="pb-beat">
+          <div class="pb-copy">
+            <p class="pb-caption">One hundred dollars.</p>
+          </div>
+        </section>
+        <section class="pb-beat">
+          <div class="pb-copy">
+            <a class="monument__link" href={`#/sounding/${MONUMENTS[0].slug}`} data-sound={MONUMENTS[0].slug}>
+              <p class="pb-figure display num hang">{MONUMENTS[0].figure}</p>
+              <p class="pb-caption">{MONUMENTS[0].caption}</p>
+              <span class="monument__ledger caps">{MONUMENTS[0].ledger}</span>
+              <span class="monument__sound caps">SOUND THIS NUMBER ↓</span>
+            </a>
+          </div>
+        </section>
+        <section class="pb-beat"></section>
+        <section class="pb-beat"></section>
+        <section class="pb-beat"></section>
+        <section class="pb-beat">
+          <div class="pb-copy">
+            <a class="monument__link" href={`#/sounding/${MONUMENTS[4].slug}`} data-sound={MONUMENTS[4].slug}>
+              <p class="pb-figure display num hang">{MONUMENTS[4].figure}</p>
+              <p class="pb-caption">{MONUMENTS[4].caption}</p>
+              <span class="monument__ledger caps">{MONUMENTS[4].ledger}</span>
+              <span class="monument__sound caps">SOUND THIS NUMBER ↓</span>
+            </a>
+          </div>
+        </section>
+      </div>
+    </div>
+    <p class="pullback__scale caps num" id="scale-line" hidden>
+      IN FRAME: <span id="sl-bills">1</span> BILLS · <span id="sl-usd">$100</span>
+    </p>
+
     <footer class="foot">
       <section class="foot__files" aria-label="Files">
         <h2 class="caps foot__label">FILES</h2>
@@ -109,6 +148,7 @@ const THESIS =
   </nav>
   <p class="visually-hidden" aria-live="polite" id="stratum-announce"></p>
   <span class="plumb" id="plumb" aria-hidden="true"></span>
+
   <script type="application/json" id="mass-data" set:html={JSON.stringify(MASS)} />
 </Sounding>
 
@@ -438,16 +478,20 @@ const THESIS =
   }
 
   const mainLenis = getLenis();
-  if (mainLenis && !reduced) {
-    lenisSnap(
-      mainLenis,
-      () => {
-        const max = document.documentElement.scrollHeight - window.innerHeight;
-        return [...monuments.map((m) => Math.min(m.offsetTop, max)), max];
-      },
-      () => window.scrollY
-    );
-  }
+  let faceSnapOff: (() => void) | null = null;
+  const armFaceSnap = () => {
+    if (mainLenis && !reduced) {
+      faceSnapOff = lenisSnap(
+        mainLenis,
+        () => {
+          const max = document.documentElement.scrollHeight - window.innerHeight;
+          return [...monuments.map((m) => Math.min(m.offsetTop, max)), max];
+        },
+        () => window.scrollY
+      );
+    }
+  };
+  armFaceSnap();
 
   // the rail
   const ticks = new Map<string, HTMLElement>();
@@ -902,6 +946,114 @@ const THESIS =
       } else {
         window.addEventListener('load', boot, { once: true });
       }
+    }
+  }
+
+  // THE PULLBACK BOOT (v7.1 §2 + [PF]): type painted first; the scene fades in beneath.
+  // Gates: reduced motion, missing GL, low battery → Tier C (module never fetched).
+  // Watchdog: <45fps sustained 3s → dispose GL, restore the typographic site live.
+  {
+    const pb = document.getElementById('pullback');
+    const scaleLine = document.getElementById('scale-line');
+    const slBills = document.getElementById('sl-bills');
+    const slUsd = document.getElementById('sl-usd');
+    const params = new URLSearchParams(window.location.search);
+    const holdC = (why: string) =>
+      console.log(`%cRENDERER: SKIPPED (${why}) · TIER C HOLDS`, 'font-family:monospace');
+
+    const bootPullback = async () => {
+      if (!pb || !scaleLine || !slBills || !slUsd) return;
+      if (params.get('mass')) return; // the P1 keyframe harness owns the canvas in that mode
+      if (reduced) return holdC('reduced motion');
+      try {
+        const nav = navigator as Navigator & { getBattery?: () => Promise<{ charging: boolean; level: number }> };
+        const bat = await nav.getBattery?.();
+        if (bat && !bat.charging && bat.level < 0.15) return holdC('low battery');
+      } catch {
+        /* no battery API — proceed */
+      }
+      try {
+        const data = JSON.parse(document.getElementById('mass-data')!.textContent!);
+        const { mountPullback } = await import('../lib/mass/pullback');
+        const canvas = document.getElementById('pullback-canvas') as HTMLCanvasElement;
+
+        // the swap first — the canvas must have real size before the renderer measures it
+        faceSnapOff?.();
+        faceSnapOff = null;
+        monuments.forEach((m) => {
+          m.hidden = true;
+        });
+        document.querySelector('.rail')?.setAttribute('hidden', '');
+        pb.hidden = false;
+        scaleLine.hidden = false;
+        window.scrollTo(0, 0);
+
+        const world = await mountPullback(canvas, data, {
+          forceWebGL: params.get('gl') === '1',
+          portrait: window.matchMedia('(orientation: portrait)').matches,
+        });
+        gsap.fromTo(canvas, { opacity: 0 }, { opacity: 1, duration: 0.9, ease: 'power1.out' }); // ≤1.2s law
+
+        const track = document.getElementById('pullback-track')!;
+        const grouper2 = new Intl.NumberFormat('en-US', { maximumFractionDigits: 0 });
+        const update = () => {
+          const rect = track.getBoundingClientRect();
+          const total = rect.height - window.innerHeight;
+          const t = Math.min(1, Math.max(0, -rect.top / total));
+          world.setProgress(t);
+          const f = world.inFrame();
+          slBills.textContent = grouper2.format(f.bills);
+          slUsd.textContent = '$' + grouper2.format(f.usd);
+        };
+        window.addEventListener('scroll', update, { passive: true });
+        getLenis()?.on('scroll', update);
+        update();
+        ScrollTrigger.refresh();
+
+        // copy beats resolve on arrival, once (v7.1 §2.3; arrivals, never scrubs — v4 §3 law)
+        document.querySelectorAll<HTMLElement>('.pb-copy').forEach((el) => {
+          gsap.set(el, { opacity: 0 });
+          ScrollTrigger.create({
+            trigger: el.closest('.pb-beat'),
+            start: 'top 55%',
+            once: true,
+            onEnter: () => gsap.to(el, { opacity: 1, duration: 0.7, ease: 'power1.out' }),
+          });
+        });
+
+        // the watchdog ([PF]-01): the ladder is enforced live, not promised
+        if (params.get('dog') !== '0') {
+          let low = 0;
+          const dog = window.setInterval(() => {
+            if (document.hidden) return;
+            if (world.fps() < 45) {
+              if (++low >= 3) {
+                window.clearInterval(dog);
+                console.log('%cRENDERER: DEMOTED (<45FPS × 3S) · TIER C RESTORED', 'font-family:monospace');
+                world.dispose();
+                pb.hidden = true;
+                scaleLine.hidden = true;
+                monuments.forEach((m) => {
+                  m.hidden = false;
+                });
+                document.querySelector('.rail')?.removeAttribute('hidden');
+                window.removeEventListener('scroll', update);
+                armFaceSnap();
+                ScrollTrigger.refresh();
+              }
+            } else {
+              low = 0;
+            }
+          }, 1000);
+        }
+      } catch (e) {
+        holdC('unavailable');
+      }
+    };
+    if (document.readyState === 'complete') {
+      bootPullback();
+    } else {
+      window.addEventListener('load', () => bootPullback(), { once: true });
     }
   }
 

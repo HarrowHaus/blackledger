@@ -152,3 +152,22 @@ Rows the per-phase accretion had not yet stated explicitly:
 | First real-device tier evidence ([PF]-02) | Samsung S21 FE (6 GB): Tier B renders K1/K2 correctly; initial open "a bit slow" — dominated by the one-time 209 KB gz module fetch + shader compile in the bare harness | recorded toward §4.1's mid-Android floor; P2's deferred-boot law (type first, scene fades in ≤1.2 s later) exists precisely to hide this cost |
 | Real-device K2 confirmation | owner photo, Samsung S21 FE, Chrome/Android, Tier B: the admitted mass renders with worn-brick relief, correct caption, correct count | docs/proof/k2-device-s21fe.jpg — [PF]-02 evidence from the actual mid-Android floor device |
 | P2 note carried from the device photo | portrait framing crops the mass at the left edge and the caption sets with a widowed last word | §4.1 requires authored portrait crops per keyframe — the mobile camera positions become their own authored keyframes in P2 |
+
+## TRUE COUNT · P2 — the pullback (v7.1 §2, v7-CONSOLIDATED)
+
+| element | decision | derivation (one line) |
+|---|---|---|
+| Six beats on one spine | B0 one bill → B1 32 bills (one second) → B2 stack of 100 → B3 tray of 10,000 → B4 pallet of 1,000,000 → B5 the admitted mass of 1,011,000,000 | §2.1's single pullback rendered as the nesting law itself — each beat is exactly the unit below it, one hundred times over |
+| Staged-at-origin assemblies | each assembly is its own InstancedMesh at the origin; the camera pulls back between them rather than one mesh subdividing | implementation adaptation, never the image (v7.1 addendum): the eye sees one continuous retreat; the GPU never draws two scales at once |
+| Accumulation on scrub | the first 35% of each beat grows the drawn count from 1 → all; instance count is always a whole true number | the arrival is arithmetic — nothing fades in, it is counted in |
+| The scale-line reads drawn instances only | `IN FRAME: {bills} BILLS · ${usd}` computed from what the InstancedMesh is actually drawing this frame | §2.2's honest readout taken literally: the line may never claim a bill the GPU has not drawn |
+| Intermediate beats carry no copy | B2/B3/B4 have empty copy frames; the scale-line narrates the scale alone | no unauthored element: the spec authors copy for M-beats only; inventing captions for the tray and pallet would be unauthored visitor-facing copy |
+| Copy sits low in frame | `.pb-copy` bottom-aligned with 16svh clearance | the object owns the frame (§2.1); the words attend the mass, they do not cover it |
+| Swap before mount | monuments/rail hide and the pullback unhides before the world mounts | a canvas mounted inside `[hidden]` is 0 × 0 — the world must measure a real frame |
+| Face snap disarmed on boot, re-armed on demote | the Face's monument Lenis snap is captured as a disposer and switched with the surface | two navigation laws may not hold the same scroll at once — the hidden monuments' offsets read 0 and teleported the journey |
+| Camera ease `local^2.2` per beat | distance interpolates to the next beat's authored distance along an accelerating curve | the pull-back gathers speed the way counting does — slow at the unit, sweeping at the aggregate |
+| Portrait distance ×1.55 | portrait crops hold the whole assembly in frame | §4.1 authored portrait crops per keyframe; carried from the owner's S21 FE photo (P1 ledger, last entry) |
+| Live watchdog (45 fps / 3 s) | fps sampled on 1 s windows; three consecutive seconds under 45 disposes the world and restores the typographic site | [PF] demotion trigger verbatim; the demotion is a restoration, not an error |
+| `?dog=0` test hook | skips the watchdog only, for headless evidence capture where fps is meaningless | headless Chromium idles below 45 fps by nature; evidence of the journey must not be eaten by the guard built for phones |
+| Battery + reduced-motion gates | `getBattery < 0.15 && !charging` or reduced motion → Tier C, GL never fetched | [PF]-01/[PF] triggers verbatim |
+| Continuous animation loop during the journey | P1's park-the-loop stays for keyframes; the pullback runs a live loop while mounted, disposed on demote | a scrub is a film, not a photograph — and the loop dies with the world |

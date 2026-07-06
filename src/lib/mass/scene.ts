@@ -12,6 +12,11 @@ import * as THREE from 'three/webgpu';
 const GROUND = 0x141210;
 const BONE = 0xe8e0ce;
 
+export interface Box3D {
+  w: number;
+  h: number;
+  d: number;
+}
 export interface MassData {
   admitted: {
     bills: number;
@@ -19,6 +24,12 @@ export interface MassData {
     volumeM3: number;
   };
   billMM: { L: number; W: number; T: number };
+  units: { bill: Box3D; stack: Box3D; tray: Box3D; pallet: Box3D };
+  stackBills: number;
+  blockBills: number;
+  palletBills: number;
+  billsPerSecond: number;
+  perSecondUSD: number;
 }
 
 export interface MassHandle {
@@ -93,12 +104,11 @@ export async function mountMass(
   scene.add(bill);
 
   // ---- far LOD: the admitted mass as volumetric brick aggregates (§1.1) ----
-  // One pallet-brick = $100,000,000 of bills: footprint 1.0 × 1.2 m (standard pallet),
-  // height = the bills' true computed volume ÷ footprint. Nothing about the size is styled.
-  const palletVolume = data.admitted.volumeM3 / data.admitted.pallets;
-  const PAL_W = 1.0,
-    PAL_D = 1.2;
-  const palH = palletVolume / (PAL_W * PAL_D); // ≈ 0.94 m of money
+  // One pallet-brick = $100,000,000: the zero-air packing law (count.ts UNITS.pallet) —
+  // 100 trays of 10 × 10 stacks. Its dims ARE one million bills. Nothing is styled.
+  const PAL_W = data.units.pallet.w,
+    PAL_D = data.units.pallet.d;
+  const palH = data.units.pallet.h;
   const palletGeo = new THREE.BoxGeometry(PAL_W, palH, PAL_D);
   const palletMat = new THREE.MeshStandardMaterial({ color: BONE, roughness: 0.9, metalness: 0 });
   const COLS = 26,
@@ -152,7 +162,7 @@ export async function mountMass(
     mass.visible = true;
     const H = LAYERS * (palH + GAP);
     mass.position.y = -H / 2;
-    camera.position.set(-24, 7.5, 30);
+    camera.position.set(-34, 11, 44);
     camera.lookAt(0, 0, 0);
     key.position.set(-18, 30, 8); // one hard examination light from above-left
     key.intensity = 3.4;
