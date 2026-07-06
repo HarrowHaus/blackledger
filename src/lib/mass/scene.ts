@@ -164,6 +164,7 @@ export async function mountMass(
   function setKeyframe(k: 'k1' | 'k2') {
     if (k === 'k1') k1();
     else k2();
+    arm();
   }
 
   function resize() {
@@ -175,12 +176,20 @@ export async function mountMass(
     camera.updateProjectionMatrix();
   }
   resize();
-  window.addEventListener('resize', resize);
+  const onResize = () => {
+    resize();
+    arm();
+  };
+  window.addEventListener('resize', onResize);
 
   let frames = 0;
   let fpsWindowStart = performance.now();
   let fpsValue = 0;
-  renderer.setAnimationLoop(() => {
+  let settleLeft = 0;
+  // a static keyframe is a photograph, not a film: render a short settle burst, then park.
+  // The loop wakes on keyframe changes and resizes. (Owner device report: budget Android
+  // pays for every idle frame — so idle frames no longer exist.) P2's scrub will re-arm it.
+  const tick = () => {
     renderer.render(scene, camera);
     frames++;
     const now = performance.now();
@@ -189,7 +198,13 @@ export async function mountMass(
       frames = 0;
       fpsWindowStart = now;
     }
-  });
+    if (settleLeft > 0 && --settleLeft === 0) renderer.setAnimationLoop(null);
+  };
+  function arm(framesToRender = 8) {
+    settleLeft = framesToRender;
+    renderer.setAnimationLoop(tick);
+  }
+  arm();
 
   return {
     backend,
@@ -197,7 +212,7 @@ export async function mountMass(
     fps: () => fpsValue,
     dispose: () => {
       renderer.setAnimationLoop(null);
-      window.removeEventListener('resize', resize);
+      window.removeEventListener('resize', onResize);
       renderer.dispose();
     },
   };
