@@ -864,8 +864,11 @@ const THESIS =
   // dynamically imported here and ONLY here — reduced motion / Tier C never fetch it (PF-01).
   {
     const want = new URLSearchParams(window.location.search).get('mass');
+    if ((want === 'k1' || want === 'k2') && reduced) {
+      console.log('%cRENDERER: SKIPPED (reduced motion) · TIER C HOLDS', 'font-family:monospace');
+    }
     if ((want === 'k1' || want === 'k2') && !reduced) {
-      window.addEventListener('load', async () => {
+      const boot = async () => {
         try {
           const data = JSON.parse(document.getElementById('mass-data')!.textContent!);
           const wrap = document.createElement('div');
@@ -891,7 +894,14 @@ const THESIS =
         } catch (e) {
           console.log('%cRENDERER: UNAVAILABLE · TIER C HOLDS', 'font-family:monospace');
         }
-      });
+      };
+      // the load event may already be behind us on a fast connection — never wait for a
+      // train that has left (owner-reported defect: harness silently never mounted live)
+      if (document.readyState === 'complete') {
+        boot();
+      } else {
+        window.addEventListener('load', boot, { once: true });
+      }
     }
   }
 
