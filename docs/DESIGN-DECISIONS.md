@@ -128,3 +128,23 @@ Rows the per-phase accretion had not yet stated explicitly:
 | Sweep results | built output: 0 lorem/TODO/TBD/placeholder; 0 `console.log` in bundles; 0 straight double quotes in rendered copy; color and family inventories as above | recorded pre-proof so Phase 6 verifies a state already known clean |
 
 **Status: every element shipped in Edition II now carries a derivation. Nothing was found underived; nothing required cutting. The ledger is complete for Phase 6.**
+
+## TRUE COUNT · P1 — the mass rendering core (v7.1 §1, v7-CONSOLIDATED)
+
+| element | decision | derivation (one line) |
+|---|---|---|
+| §0.1 / C-01 cuts | executed as verified absence — no particle, dust, lamp, pointer-light, dolly, Rive, or world-dressing system has ever existed in this repo (grep evidence in session; all hits were substrings of arrive/clamp/derived) | the VOID list is absolute; absence proven is absence enforced |
+| three r185 (spec says r17x) | current npm release of the same WebGPURenderer API family | UX: the maintained renderer is the one that keeps falling back correctly / aesthetic: identical image; implementation adaptation, never the image (v7.1 addendum) |
+| Renderer baseline | one `WebGPURenderer`, `await init()`, automatic WebGL2 fallback, backend logged once: `RENDERER: WEBGPU · TIER A · BILLS IN LAW: 1,011,000,000` | v7-CONSOLIDATED verbatim; the console line carries the count so even devtools shows the law |
+| The money math (count.ts) | bills = C-0013 ÷ 100 asserted === 1,011,000,000; stacks/blocks/pallets at 100/10,000/1,000,000 bills; K3's 2,069,218,711 and the 32 bills/sec live rate asserted now as law | a wrong count is a build failure (v7.1 §1.1); audacity: true count |
+| Bill dimensions 156.1 × 66.3 × 0.1092 mm | BEP-published $100 bill dimensions | data governs proportion (§0.2) — the unit of the whole image is the real object |
+| Pallet brick = $100,000,000 | 1.0 × 1.2 m footprint (standard pallet), height 0.942 m = the bills' computed volume ÷ footprint | UX: a countable unit the eye can hold / aesthetic: warehouse bricks, not casino stacks; nothing about the size is styled |
+| K2 lattice 26 × 13 × 3, exactly 1,011 filled | the final row runs out three short of the 1,014-slot lattice | the incompleteness is the count made visible — a full box would be a lie of three hundred million dollars |
+| K1 authored keyframe | camera (0.13, 0.26, 0.46) looking at origin, bill yawed −0.28; key light hard from the left at 4.2, near-zero fill | §1.3 verbatim: one bill, flat, alone, lit hard from one side, on black — recorded as "authored" |
+| K2 authored keyframe | camera (−24, 7.5, 30), mass centered, one hard examination key from above-left, faint rim, void below | §1.3 verbatim: the admitted mass at full scale, hanging in the void, lit like evidence — "authored" |
+| Bone-on-ground monochrome bills | MeshStandardMaterial bone, roughness .86–.9, no green | v7.1 §1.2 verbatim: this is a ledger, not a casino |
+| Worn-edge bump map | procedural 256² canvas, noise concentrated at the rim, deterministic seed 1011 | §1.1's worn edges without a texture download; the seed is the pallet count — even the noise is counted |
+| `?mass=k1|k2` harness param | P1's keyframes render on the live deployment behind a query param; no visible surface change without it | the phase gate demands the live URL serve the phase's work before the pullback (P2) gives the mass its journey |
+| `&gl=1` force-WebGL hook | `forceWebGL: true` for Tier B testing | [PF]-02 needs tier evidence; a ladder you cannot stand on each rung of is scenery |
+| Dynamic import only | the 209 KB gz scene chunk is referenced by no HTML; reduced-motion never triggers the import | [PF]-01 verbatim: Tier C never even fetches GL |
+| Caption overlay in harness | DOM text (monument caption voice), never canvas text | TY-06: captions and prose stay real DOM text always |

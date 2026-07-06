@@ -7,7 +7,10 @@ import Descent from '../components/sounding/Descent.astro';
 import { MONUMENTS } from '../lib/sounding/monuments';
 import { DESCENTS } from '../lib/sounding/descents';
 import { FILES } from '../lib/sounding/files';
+import { massPayload } from '../lib/mass/count';
 import '../styles/descent.css';
+
+const MASS = massPayload(); // true-count law: derived + asserted at build (v7.1 §1)
 
 const THESIS =
   'The United States admits $101.1 billion of classified spending a year — and fails to account for twice that. Every figure on this site is traceable to its source.';
@@ -106,6 +109,7 @@ const THESIS =
   </nav>
   <p class="visually-hidden" aria-live="polite" id="stratum-announce"></p>
   <span class="plumb" id="plumb" aria-hidden="true"></span>
+  <script type="application/json" id="mass-data" set:html={JSON.stringify(MASS)} />
 </Sounding>
 
 <style>
@@ -854,6 +858,42 @@ const THESIS =
       });
     });
   });
+
+  // TRUE COUNT · P1 keyframe harness (v7.1 §1.3): ?mass=k1|k2 renders the authored
+  // keyframes on the live deployment without touching the surface. The GL module is
+  // dynamically imported here and ONLY here — reduced motion / Tier C never fetch it (PF-01).
+  {
+    const want = new URLSearchParams(window.location.search).get('mass');
+    if ((want === 'k1' || want === 'k2') && !reduced) {
+      window.addEventListener('load', async () => {
+        try {
+          const data = JSON.parse(document.getElementById('mass-data')!.textContent!);
+          const wrap = document.createElement('div');
+          wrap.style.cssText = 'position:fixed;inset:0;z-index:90;background:#141210';
+          const cv = document.createElement('canvas');
+          cv.style.cssText = 'width:100%;height:100%;display:block';
+          const cap = document.createElement('p');
+          cap.className = 'monument__caption';
+          cap.style.cssText =
+            'position:fixed;left:50%;bottom:calc(48px + env(safe-area-inset-bottom));transform:translateX(-50%);max-width:34ch;text-align:center;margin:0;z-index:91';
+          cap.textContent =
+            want === 'k1'
+              ? 'One hundred dollars.'
+              : '$101.1 billion. Two published numbers. Nothing beneath them.';
+          wrap.appendChild(cv);
+          document.body.appendChild(wrap);
+          document.body.appendChild(cap);
+          const { mountMass } = await import('../lib/mass/scene');
+          const forceWebGL = new URLSearchParams(window.location.search).get('gl') === '1';
+          const mass = await mountMass(cv, data, { forceWebGL });
+          mass.setKeyframe(want);
+          (window as unknown as { __mass: unknown }).__mass = mass; // evidence hook (fps, backend)
+        } catch (e) {
+          console.log('%cRENDERER: UNAVAILABLE · TIER C HOLDS', 'font-family:monospace');
+        }
+      });
+    }
+  }
 
   // the Pulse (v4.1 §3.2): beats in the rail on the Face, in the gauge inside a descent
   if (!reduced) {
